@@ -1,10 +1,12 @@
 "use client";
-import React from "react";
+import React,{useState} from "react";
 import { auth } from "@/firebase/config";
-import  "./settings.css"
+import "./settings.css"
+import DeleteAccountModal from "../../components/DeleteAccountModal";
 
 const Settings = function () {
     let user = auth.currentUser;
+    const [isModalOpen, setIsModalOpen] = useState(false);
     async function updateKey() {
         window.location.href = "/updategemini"
 
@@ -15,7 +17,7 @@ const Settings = function () {
 
     }
     async function deleteAccount() {
-        window.location.href  = "/deleteaccount"
+        window.location.href = "/deleteaccount"
 
     }
     async function handleLogout() {
@@ -40,37 +42,51 @@ const Settings = function () {
 
     }
     return (
-        <div>
-            <main>
-                <div className="ellipse ellipse-1"></div>
-                <div className="ellipse ellipse-2"></div>
-                <div className="ellipse ellipse-3"></div>
-                <div className="ellipse ellipse-4"></div>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#11011E] via-[#35013e] to-[#11011E] bg-[#11011E]p-4">
+            <div className="w-full max-w-md bg-[#FFFFFF05] border-[1px] border-white rounded-lg shadow-md p-6">
+                <h1 className="text-center text-2xl font-bold text-white mb-6">
+                    Settings
+                </h1>
 
-                <h1>Settings</h1>
-
-
-
-                <div className="settings-container">
-                    <div className="settings-section">
-                        <h2>Update Gemini Key</h2>
-                        <button className="btn" onClick={updateKey}>Update Key</button>
+                {/* Setting Options */}
+                <div className="space-y-4">
+                    {/* Update Gemini Key */}
+                    <div className="flex justify-between items-center border-[1px] border-white rounded-lg px-4 py-3">
+                        <span className="text-white font-medium">Update Gemini Key</span>
+                        <button className="bg-primary hover:bg-teal-400 text-white text-sm font-medium px-4 py-1 rounded-md transition" onClick={updateKey}>
+                            Update Key
+                        </button>
                     </div>
-                    <div className="settings-section">
-                        <h2>Update Data</h2>
-                        <button className="btn" onClick={updateData}>Update Data</button>
+
+                    {/* Update Data */}
+                    <div className="flex justify-between items-center border-[1px] border-white rounded-lg px-4 py-3">
+                        <span className="text-white font-medium">Update Data</span>
+                        <button className="bg-primary hover:bg-teal-400 text-white text-sm font-medium px-4 py-1 rounded-md transition" onClick={updateData}>
+                            Update Data
+                        </button>
                     </div>
-                    <div className="settings-section">
-                        <h2>Delete Account</h2>
-                        <button className="btn" onClick={deleteAccount}>Delete Account</button>
+
+                    {/* Delete Account */}
+                    <div className="flex justify-between items-center border-[1px] border-white rounded-lg px-4 py-3">
+                        <span className="text-white font-medium">Delete Account</span>
+                        <button onClick={() => setIsModalOpen(true)}
+                            className="bg-red-500 hover:bg-red-400 text-white text-sm font-medium px-4 py-1 rounded-md transition">
+                            Delete Account
+                        </button>
+                        {isModalOpen && (
+                            <DeleteAccountModal onClose={() => setIsModalOpen(false)} />
+                        )}
                     </div>
-                    <div className="settings-section">
-                        <h2>Logout</h2>
-                        <button className="btn" onClick={handleLogout}>Logout</button>
+
+                    {/* Logout */}
+                    <div className="flex justify-between items-center border-[1px] border-white rounded-lg px-4 py-3">
+                        <span className="text-white font-medium">Log Out</span>
+                        <button className="bg-primary hover:bg-teal-400 text-white text-sm font-medium px-4 py-1 rounded-md transition" onClick={handleLogout}>
+                            Logout
+                        </button>
                     </div>
                 </div>
-            </main>
-
+            </div>
         </div>
     )
 }

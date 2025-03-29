@@ -1,75 +1,43 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import { usePersonalDataStore } from "@/app/store";
 import { GoPerson } from "react-icons/go";
-import { BsJournals } from "react-icons/bs";
-import { MdWork } from "react-icons/md";
-import { GiAchievement, GiGraduateCap } from "react-icons/gi";
-import { PiCertificateLight } from "react-icons/pi";
-import { FaLanguage } from "react-icons/fa";
-import { BiBook } from "react-icons/bi";
-import { MdInterests, MdVolunteerActivism } from "react-icons/md";
-import { BsFillPersonLinesFill } from "react-icons/bs";
-import { AiOutlineLink, AiOutlineMail } from "react-icons/ai";
 import { BiWorld } from "react-icons/bi";
+import { AiOutlineLink, AiOutlineMail } from "react-icons/ai";
 import { FiPhone } from "react-icons/fi";
-import './scroll.css'
-
+import EducationInput from "./sections/EducationInput";
+import ExperienceInput from "./sections/ExperienceInput";
+import AchievementInput from "./sections/AchievementInput";
+import CertificationInput from "./sections/CertificationInput";
+import ProjectInput from "./sections/ProjectInput";
+import SkillsInput from "./sections/SkillsInput";
+import LanguageInput from "./sections/LanguageInput";
 
 export default function LeftSidebar() {
-  // Store and personal data management
   const { personalData, updatePersonalData } = usePersonalDataStore();
-  
-  // State for each section's items
-  const [education, setEducation] = useState<number[]>([]);
-  const [experience, setExperience] = useState<number[]>([]);
-  const [projects, setProjects] = useState<number[]>([]);
-  const [skills, setSkills] = useState<number[]>([]);
-  const [languages, setLanguages] = useState<number[]>([]);
-  const [awards, setAwards] = useState<number[]>([]);
-  const [certifications, setCertifications] = useState<number[]>([]);
-  const [interests, setInterests] = useState<number[]>([]);
-  const [publications, setPublications] = useState<number[]>([]);
-  const [volunteering, setVolunteering] = useState<number[]>([]);
-  const [references, setReferences] = useState<number[]>([]);
-
-
-  const [summaryContent, setSummaryContent] = useState("");
-
-
-  const handleChangePersonal = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangePersonal = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     updatePersonalData(name, value);
   };
 
-  const addItem = (setter: React.Dispatch<React.SetStateAction<number[]>>) => {
-    setter(prev => [...prev, prev.length + 1]);
-  };
-
   return (
-    <div className="w-[450px] bg-white h-fit overflow-y-scroll scrollbar-hide text-black">
+    <div className="w-full h-[1000px] overflow-scroll scrollbar-hidden bg-white text-black">
       {/* Basics Section */}
+
       <section className="p-6 border-b">
         <div className="flex items-center gap-2 mb-6">
           <GoPerson className="text-xl" />
           <h2 className="text-xl font-bold">Basics</h2>
         </div>
 
-
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Picture</label>
           <div className="flex items-center gap-2">
             <div className="w-12 h-12 bg-emerald-700 rounded-full flex items-center justify-center text-white text-xl">
-              {personalData.name?.[0] || 'M'}
+              {personalData.name?.[0] || "M"}
             </div>
-            {/* <input
-              type="text"
-              placeholder="Profile picture URL"
-              className="flex-1 p-2 border rounded-md"
-              name="pictureUrl"
-              value={personalData.pictureUrl || ''}
-              onChange={handleChangePersonal}
-            /> */}
             <button className="p-2 border rounded-md hover:bg-gray-50">
               <AiOutlineLink className="text-gray-500" />
             </button>
@@ -81,8 +49,8 @@ export default function LeftSidebar() {
           <input
             type="text"
             className="w-full p-2 border rounded-md"
-            name="fullName"
-            value={personalData.name || ''}
+            name="name"
+            value={personalData.name || ""}
             onChange={handleChangePersonal}
             placeholder="Your full name"
           />
@@ -94,7 +62,7 @@ export default function LeftSidebar() {
             type="text"
             className="w-full p-2 border rounded-md"
             name="headline"
-            value={personalData.headline || ''}
+            value={personalData.headline || ""}
             onChange={handleChangePersonal}
             placeholder="Your professional headline"
           />
@@ -108,7 +76,7 @@ export default function LeftSidebar() {
                 type="email"
                 className="w-full p-2 pl-8 border rounded-md"
                 name="email"
-                value={personalData.email || ''}
+                value={personalData.email || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your email"
               />
@@ -122,11 +90,58 @@ export default function LeftSidebar() {
                 type="url"
                 className="w-full p-2 pl-8 border rounded-md"
                 name="website"
-                value={personalData.github || ''}
+                value={personalData.website || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your website"
               />
               <BiWorld className="absolute left-2 top-3 text-gray-500" />
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Twitter</label>
+            <div className="relative">
+              <input
+                type="url"
+                className="w-full p-2 pl-8 border rounded-md"
+                name="twitter"
+                value={personalData.twitter || ""}
+                onChange={handleChangePersonal}
+                placeholder="Your Twitter profile"
+              />
+              <svg className="absolute left-2 top-3 text-gray-500 w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M22 4.5a9 9 0 01-2.6.7 4.5 4.5 0 00-7.7 4c-4 0-7.5-2-10-5a4.5 4.5 0 001.5 6c-1 0-2-.3-2.5-1v.1a4.5 4.5 0 003.5 4.4 4.5 4.5 0 01-2 .1 4.5 4.5 0 004.2 3A9 9 0 012 19c2 1 4 1.5 6.5 1.5 7.5 0 12-6 12-12v-.5a8.5 8.5 0 002-2.5z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">LinkedIn</label>
+            <div className="relative">
+              <input
+                type="url"
+                className="w-full p-2 pl-8 border rounded-md"
+                name="linkedin"
+                value={personalData.linkedin || ""}
+                onChange={handleChangePersonal}
+                placeholder="Your LinkedIn profile"
+              />
+              <svg className="absolute left-2 top-3 text-gray-500 w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <rect x="2" y="9" width="4" height="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="4" cy="4" r="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
           </div>
         </div>
@@ -139,7 +154,7 @@ export default function LeftSidebar() {
                 type="tel"
                 className="w-full p-2 pl-8 border rounded-md"
                 name="phone"
-                value={personalData.phone || ''}
+                value={personalData.phone || ""}
                 onChange={handleChangePersonal}
                 placeholder="+1 (123) 456-7890"
               />
@@ -148,367 +163,80 @@ export default function LeftSidebar() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Location </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              name="location"
-              value={personalData.address || ''}
-              onChange={handleChangePersonal}
-              placeholder="Your location"
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <BsJournals className="text-xl" />
-            <h2 className="text-xl font-bold">Summary</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        
-        {/* Rich Text Editor Toolbar */}
-        <div className="flex flex-wrap gap-2 mb-4 p-2 border rounded-md">
-          <button className="p-2 hover:bg-gray-100 rounded">B</button>
-          <button className="p-2 hover:bg-gray-100 rounded italic">I</button>
-          <button className="p-2 hover:bg-gray-100 rounded line-through">S</button>
-          <button className="p-2 hover:bg-gray-100 rounded">A</button>
-          <button className="p-2 hover:bg-gray-100 rounded">@</button>
-          <button className="p-2 hover:bg-gray-100 rounded">🔗</button>
-          <button className="p-2 hover:bg-gray-100 rounded">&lt;/&gt;</button>
-        </div>
-
-        <textarea
-          className="w-full p-3 border rounded-md min-h-[150px]"
-          value={summaryContent}
-          onChange={(e) => setSummaryContent(e.target.value)}
-          placeholder="Write your professional summary..."
-        />
-      </section>
-
-      {/* Sections with Add Item Functionality */}
-      {/* {[
-        { title: 'Experience', icon: MdWork, state: experience, setState: setExperience },
-        { title: 'Education', icon: GiGraduateCap, state: education, setState: setEducation },
-        { title: 'Skills', icon: GiAchievement, state: skills, setState: setSkills },
-        { title: 'Languages', icon: FaLanguage, state: languages, setState: setLanguages },
-        { title: 'Awards', icon: GiAchievement, state: awards, setState: setAwards },
-        { title: 'Certifications', icon: PiCertificateLight, state: certifications, setState: setCertifications },
-        { title: 'Interests', icon: MdInterests, state: interests, setState: setInterests },
-        { title: 'Projects', icon: BiBook, state: projects, setState: setProjects },
-        { title: 'Publications', icon: BsJournals, state: publications, setState: setPublications },
-        { title: 'Volunteering', icon: MdVolunteerActivism, state: volunteering, setState: setVolunteering },
-        { title: 'References', icon: BsFillPersonLinesFill, state: references, setState: setReferences }
-      ].map(({ title, icon: Icon, state, setState }) => (
-        <section key={title} className="p-6 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Icon className="text-xl" />
-              <h2 className="text-xl font-bold">{title}</h2>
-            </div>
-            <button className="p-2 hover:bg-gray-100 rounded-md">
-              <span className="sr-only">Toggle</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full p-2 pl-8 border rounded-md"
+                name="address"
+                value={personalData.address || ""}
+                onChange={handleChangePersonal}
+                placeholder="Your location"
+              />
+              <svg className="absolute left-2 top-3 text-gray-500 w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="12"
+                  cy="9"
+                  r="2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
-            </button>
-          </div>
-
-          <button
-            onClick={() => addItem(setState)}
-            className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-          >
-            + Add a new item
-          </button>
-
-          {state.map((id) => (
-            <div key={id} className="mt-4 p-4 border rounded-md">
             </div>
-          ))}
-        </section>
-      ))} */}
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <MdWork className="text-xl" />
-            <h2 className="text-xl font-bold">Experience</h2>
           </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
         </div>
-        <button
-          onClick={() => addItem(setExperience)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {experience.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
+
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">GitHub</label>
+            <div className="relative">
+              <input
+                type="url"
+                className="w-full p-2 pl-8 border rounded-md"
+                name="github"
+                value={personalData.github || ""}
+                onChange={handleChangePersonal}
+                placeholder="Your GitHub profile"
+              />
+              <svg
+                className="absolute left-2 top-3 text-gray-500 w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577v-2.234c-3.338.726-4.033-1.415-4.033-1.415-.546-1.388-1.333-1.758-1.333-1.758-1.089-.745.082-.729.082-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.809 1.304 3.495.996.108-.775.418-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.933 0-1.311.467-2.382 1.235-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.513 11.513 0 013.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.119 3.176.77.84 1.233 1.911 1.233 3.221 0 4.61-2.807 5.625-5.48 5.922.43.372.814 1.102.814 2.222v3.293c0 .322.218.694.825.576C20.565 21.796 24 17.298 24 12c0-6.627-5.373-12-12-12z"
+                />
+              </svg>
+            </div>
           </div>
-        ))}
+        </div>
       </section>
 
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <GiGraduateCap className="text-xl" />
-            <h2 className="text-xl font-bold">Education</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setEducation)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {education.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
+      <ExperienceInput />
 
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <GiAchievement className="text-xl" />
-            <h2 className="text-xl font-bold">Skills</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setSkills)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {skills.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
+      <EducationInput />
 
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <FaLanguage className="text-xl" />
-            <h2 className="text-xl font-bold">Languages</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setLanguages)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {languages.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
+      <SkillsInput />
 
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <GiAchievement className="text-xl" />
-            <h2 className="text-xl font-bold">Awards</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setAwards)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {awards.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
+      <AchievementInput />
 
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <PiCertificateLight className="text-xl" />
-            <h2 className="text-xl font-bold">Certifications</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setCertifications)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {certifications.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
+      <CertificationInput />
 
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <MdInterests className="text-xl" />
-            <h2 className="text-xl font-bold">Interests</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setInterests)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {interests.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
+      <ProjectInput />
 
-     {/* Projects section  */}
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <BiBook className="text-xl" />
-            <h2 className="text-xl font-bold">Projects</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setProjects)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {projects.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
-   {/* end  */}
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <BsJournals className="text-xl" />
-            <h2 className="text-xl font-bold">Publications</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setPublications)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {publications.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
+      <LanguageInput />
 
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <MdVolunteerActivism className="text-xl" />
-            <h2 className="text-xl font-bold">Volunteering</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setVolunteering)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {volunteering.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
-
-      <section className="p-6 border-b">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <BsFillPersonLinesFill className="text-xl" />
-            <h2 className="text-xl font-bold">References</h2>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
-            <span className="sr-only">Toggle</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-        <button
-          onClick={() => addItem(setReferences)}
-          className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
-        >
-          + Add a new item
-        </button>
-        {references.map((id) => (
-          <div key={id} className="mt-4 p-4 border rounded-md">
-          </div>
-        ))}
-      </section>
     </div>
   );
-};
+}
