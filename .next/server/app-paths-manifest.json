@@ -1,0 +1,8 @@
+{
+  "/page": "app/page.js",
+  "/atsresume/page": "app/atsresume/page.js",
+  "/ats-score/ats-skill/page": "app/ats-score/ats-skill/page.js",
+  "/sign-in/page": "app/sign-in/page.js",
+  "/home/page": "app/home/page.js",
+  "/ats-score/ats-next/page": "app/ats-score/ats-next/page.js"
+}
