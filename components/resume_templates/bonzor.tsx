@@ -26,15 +26,14 @@ export default function Resume() {
   const paddingTopBottom = 40; // pixels, padding for screen display
   const contentWrapperHeight = basePageHeight % 90;
   const availableContentHeight = basePageHeight - 2 * paddingTopBottom; // 1043px for content
-  
+
   const pageHeightClass = `h-[${basePageHeight}px]`;
   const contentHeightClass = `h-[${contentWrapperHeight}px] print:h-auto`;
-  
+
   // Refs and state for pagination
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [pageGroups, setPageGroups] = useState<any[]>([]);
   const [isMounted, setIsMounted] = useState(false);
-
 
   // Ensure component is mounted before measuring
   useEffect(() => {
@@ -55,10 +54,10 @@ export default function Resume() {
 
     // 2. Work Experience
     if (experiences.length) {
-      elements.push({ id: "experience-header", type: "section-header", section: "WORK EXPERIENCE" });
+      elements.push({ id: "experience-header-section", type: "section-header", section: "WORK EXPERIENCE" });
       experiences.forEach((exp, index) => {
         elements.push({
-          id: `experience-${index}-header`,
+          id: `experience-header-${index}`,
           type: "experience-header",
           data: exp,
           section: "WORK EXPERIENCE",
@@ -67,7 +66,7 @@ export default function Resume() {
           const descriptionItems = exp.description.split(",").map((detail) => detail.trim());
           descriptionItems.forEach((detail, i) =>
             elements.push({
-              id: `experience-${index}-desc-${i}`,
+              id: `experience-desc-${index}-${i}`,
               type: "experience-desc",
               data: { text: detail, parentId: index },
               section: "WORK EXPERIENCE",
@@ -79,17 +78,17 @@ export default function Resume() {
 
     // 3. Projects
     if (projects.length) {
-      elements.push({ id: "projects-header", type: "section-header", section: "PROJECTS" });
+      elements.push({ id: "projects-header-section", type: "section-header", section: "PROJECTS" });
       projects.forEach((proj, index) => {
         elements.push({
-          id: `project-${index}-header`,
+          id: `project-header-${index}`,
           type: "project-header",
           data: proj,
           section: "PROJECTS",
         });
         if (proj.description) {
           elements.push({
-            id: `project-${index}-desc`,
+            id: `project-desc-${index}`,
             type: "project-desc",
             data: { text: proj.description, parentId: index },
             section: "PROJECTS",
@@ -100,7 +99,7 @@ export default function Resume() {
 
     // 4. Skills
     if (skills.length) {
-      elements.push({ id: "skills-header", type: "section-header", section: "SKILLS" });
+      elements.push({ id: "skills-header-section", type: "section-header", section: "SKILLS" });
       skills.forEach((skill, index) =>
         elements.push({
           id: `skill-${index}`,
@@ -113,7 +112,7 @@ export default function Resume() {
 
     // 5. Education
     if (educations.length) {
-      elements.push({ id: "education-header", type: "section-header", section: "EDUCATION" });
+      elements.push({ id: "education-header-section", type: "section-header", section: "EDUCATION" });
       educations.forEach((edu, index) =>
         elements.push({
           id: `education-${index}`,
@@ -126,7 +125,7 @@ export default function Resume() {
 
     // 6. Certifications
     if (certificates.length) {
-      elements.push({ id: "certifications-header", type: "section-header", section: "CERTIFICATIONS" });
+      elements.push({ id: "certifications-header-section", type: "section-header", section: "CERTIFICATIONS" });
       certificates.forEach((certificate, index) =>
         elements.push({
           id: `certificate-${index}`,
@@ -139,7 +138,7 @@ export default function Resume() {
 
     // 7. Awards & Achievements
     if (achievements.length) {
-      elements.push({ id: "awards-header", type: "section-header", section: "AWARDS" });
+      elements.push({ id: "awards-header-section", type: "section-header", section: "AWARDS" });
       achievements.forEach((achievement, index) =>
         elements.push({
           id: `achievement-${index}`,
@@ -152,7 +151,7 @@ export default function Resume() {
 
     // 8. Languages & Interests (only Languages in current data)
     if (languages.length) {
-      elements.push({ id: "languages-header", type: "section-header", section: "LANGUAGES" });
+      elements.push({ id: "languages-header-section", type: "section-header", section: "LANGUAGES" });
       languages.forEach((language, index) =>
         elements.push({
           id: `language-${index}`,
@@ -166,9 +165,7 @@ export default function Resume() {
     return elements;
   };
 
-
   useEffect(() => {
-
     const elements = generateElements();
     const pageHeight = availableContentHeight;
     const pageGroupsTemp = [];
@@ -548,9 +545,9 @@ export default function Resume() {
     <div className="resume-container min-h-screen font-sans print:p-0">
       {/* Hidden content for measuring element heights */}
       <div
-  ref={contentRef}
-  className="absolute top-0 left-0 w-[230mm] opacity-0 pointer-events-none"
->
+        ref={contentRef}
+        className="absolute top-0 left-0 w-[230mm] opacity-0 pointer-events-none"
+      >
         {generateElements().map((element) => (
           <div key={element.id} id={element.id} className="break-words">
             {renderElement(element, true)}

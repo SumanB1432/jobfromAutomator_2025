@@ -11,30 +11,36 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
+    "/send-auto-mail/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/send-auto-mail/page.js"
+    ],
+    "/email_auth/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/email_auth/page.js"
+    ],
     "/atsresume/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/atsresume/page.js"
     ],
-    "/sign-in/page": [
+    "/atsresume/createresume/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/sign-in/page.js"
-    ],
-    "/home/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/home/page.js"
+      "static/css/app/atsresume/createresume/page.css",
+      "static/chunks/app/atsresume/createresume/page.js"
     ],
     "/ats-score/ats-next/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/ats-score/ats-next/page.js"
     ],
-    "/ats-score/ats-skill/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/ats-score/ats-skill/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

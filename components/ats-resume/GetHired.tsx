@@ -7,15 +7,14 @@ import { toast } from "react-toastify";
 import { ref, get, getDatabase } from "firebase/database";
 import { pdfjs, Document, Page } from "react-pdf";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import Modal from "@/app/Modal"; // Adjust the import path as necessary
 
 export default function GetHired() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const [jobData, setJobData] = useState(""); // Stores input data
-  const [inputValue, setInputValue] = useState(""); // Input field value
-  const [error, setError] = useState(""); // Error message state
+  const [jobData, setJobData] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [pdfText, setPdfText] = useState("");
   const [ats, setAts] = useState(null);
@@ -23,13 +22,13 @@ export default function GetHired() {
   const [apiKey, setApiKey] = useState("");
   const [atsData, setAtsData] = useState(null);
   const [skill, setSkill] = useState(null);
+  const [build,setBuild] = useState(false)
   const db = getDatabase(app);
   const auth = getAuth();
   pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.js`;
 
   useEffect(() => {
     let api_key = localStorage.getItem("api_key");
-    console.log(api_key);
     setApiKey(api_key);
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -53,7 +52,7 @@ export default function GetHired() {
     } else {
       console.warn("Skipping ATS analysis: No valid resume text or Job Description.");
     }
-  }, [jobData, pdfText]); // Added pdfText as dependency
+  }, [jobData, pdfText]);
 
   useEffect(() => {
     if (atsData != null) {
@@ -61,19 +60,7 @@ export default function GetHired() {
     }
   }, [atsData]);
 
-  // Handle body overflow when modal is open/closed
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden"; // Disable scrolling
-    } else {
-      document.body.style.overflow = "auto"; // Re-enable scrolling
-    }
-    return () => {
-      document.body.style.overflow = "auto"; // Cleanup on unmount
-    };
-  }, [isModalOpen]);
-
-  const handelDataSubmit = async function () {
+  const handelDataSubmit = async () => {
     if (!inputValue.trim()) {
       setError("This field is required.");
       return;
@@ -83,7 +70,7 @@ export default function GetHired() {
     setLoading(true);
   };
 
-  const ATS = function () {
+  const ATS = () => {
     console.log("from ATS");
     localStorage.setItem("JD", jobData);
     const skillsDataString = JSON.stringify(skill);
@@ -94,7 +81,7 @@ export default function GetHired() {
       localStorage.setItem("atsData", atsDataString);
       const encodedAtsData = encodeURIComponent(JSON.stringify(atsData));
       setLoading(false);
-      closeModal();
+      setIsModalOpen(false); // Close modal after submission
       window.location.href = `/ats-score/ats-next`;
     }
   };
@@ -111,7 +98,7 @@ export default function GetHired() {
     }
 
     try {
-      let get_score = async function () {
+      let get_score = async () => {
         try {
           const analysisResult = await analyzeResumeForATS(resumeText);
           const analysisSkills = await analyzeResumeForSkill(resumeText, jobDescription);
@@ -360,28 +347,12 @@ export default function GetHired() {
 
   const openModal = () => {
     setIsModalOpen(true);
-    setIsClosing(false);
     setInputValue("");
     setError("");
   };
 
   const closeModal = () => {
-    setIsClosing(true);
-    setTimeout(() => setIsModalOpen(false), 300);
-  };
-
-  const handleOptionSelect = (option: any) => {
-    console.log(`Selected: ${option}`);
-    closeModal();
-  };
-
-  const handleSubmit = () => {
-    if (!inputValue.trim()) {
-      setError("This field is required.");
-      return;
-    }
-    console.log("Saved Resume Data:", inputValue);
-    closeModal();
+    setIsModalOpen(false);
   };
 
   return (
@@ -409,8 +380,13 @@ export default function GetHired() {
             Create a professional resume with ease. Our builder features 30+ templates, step-by-step guidance, and endless customizable content options.
           </p>
           <div className="flex gap-x-4">
-            <button className="bg-[#0FAE96] hover:bg-[#288d7d] text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
-              Build your Resume
+            <button className="bg-[#0FAE96] hover:bg-[#288d7d] text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+              onClick={openModal}
+              disabled={loading}
+            >
+
+              {loading ? "Building..." : "Build your Resume"}
+              
             </button>
             <button
               className="bg-[#0FAE96] hover:bg-[#288d7d] text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
@@ -447,121 +423,18 @@ export default function GetHired() {
           </div>
         </div>
       </div>
-      {/* Modal Popup */}
-      {isModalOpen && (
-        <div
-          className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 pointer-events-auto z-50 ${isClosing ? "opacity-0" : "opacity-100"}`}
-        >
-          <div
-            className={`bg-[rgba(255,255,255,0.05)] backdrop-blur-2xl text-white p-6 rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-[rgba(255,255,255,0.08)] w-96 relative transition-transform duration-300 ${isClosing ? "scale-90 opacity-0" : "scale-100 opacity-100"}`}
-          >
-            {/* Close Button (X) */}
-            <button
-              className="absolute top-3 right-3 text-[rgba(255,255,255,0.9)] hover:text-[#0FAE96] text-xl font-bold transition-colors duration-200"
-              onClick={closeModal}
-              disabled={loading}
-            >
-              ×
-            </button>
-
-            <h2 className="text-2xl font-semibold text-[#0FAE96] mb-4 ">
-              Analyze Your Resume
-            </h2>
-            <p className="text-gray-300 mb-4  text-sm leading-relaxed">
-              Choose how you'd like to analyze your resume:
-            </p>
-
-            <div className="flex flex-col gap-4 items-center">
-              <button
-                className="bg-gradient-to-r from-[#0FAE96] to-[#7000FF] text-white font-semibold py-2 px-4 rounded-xl shadow-[0_6px_24px_rgba(15,174,150,0.6)] hover:shadow-[0_8px_32px_rgba(112,0,255,0.7)] hover:scale-105 transition-all duration-300 transform relative overflow-hidden group w-full"
-                onClick={handleGetExistingResume}
-                disabled={loading}
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.3)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer"></span>
-                <span className="relative z-10">
-                  {loading ? "Loading Resume..." : "Use Your Existing Resume"}
-                </span>
-              </button>
-
-              {/* OR Divider */}
-              <div className="flex items-center w-full">
-                <hr className="flex-grow border-[rgba(255,255,255,0.2)]" />
-                <span className="mx-4 text-gray-300 font-semibold ">OR</span>
-                <hr className="flex-grow border-[rgba(255,255,255,0.2)]" />
-              </div>
-
-              <button
-                className="bg-gradient-to-r from-[#0FAE96] to-[#7000FF] text-white font-semibold py-2 px-4 rounded-xl shadow-[0_6px_24px_rgba(15,174,150,0.6)] hover:shadow-[0_8px_32px_rgba(112,0,255,0.7)] hover:scale-105 transition-all duration-300 transform relative overflow-hidden group w-full"
-                onClick={() => document.getElementById("file-upload")?.click()}
-                disabled={loading}
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.3)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer"></span>
-                <span className="relative z-10">
-                  {loading ? "Loading Resume..." : "Upload a New Resume"}
-                </span>
-              </button>
-              <input
-                id="file-upload"
-                type="file"
-                accept=".pdf,.docx"
-                onChange={handleFileChange}
-                className="hidden"
-                disabled={loading}
-              />
-              <p className="text-center text-sm text-gray-300  leading-relaxed">
-                Drag your resume here or choose a file.<br />
-                PDF & DOCX only.
-              </p>
-
-              {file && (
-                <div className="bg-[rgba(112,0,255,0.1)] rounded-xl px-3 py-1 text-sm text-[rgba(255,255,255,0.9)] ">
-                  {file.name}
-                </div>
-              )}
-            </div>
-
-            <br />
-
-            {/* Input Field Label with Asterisk */}
-            <label className="text-white font-medium ">
-              Job Description <span className="text-[#E02529]">*</span>
-            </label>
-
-            {/* Input Field */}
-            <textarea
-              value={inputValue}
-              onChange={(e) => {
-                setInputValue(e.target.value);
-                setError("");
-              }}
-              placeholder="Enter Job Description"
-              className={`w-full h-40 p-4 rounded-xl text-black bg-white border-2  
-    ${error ? "border-[#E02529]" : "border-[rgba(255,255,255,0.2)]"} 
-    focus:outline-none focus:border-[#0FAE96] transition-all duration-300 resize-none`}
-              disabled={loading}
-            />
-
-            {/* Error Message (Shows Only If Empty) */}
-            {error && (
-              <p className="text-[#E02529] text-sm mt-1 ">{error}</p>
-            )}
-
-            {/* Submit Button */}
-            <div className="flex justify-end mt-4">
-              <button
-                className="bg-[#0FAE96] text-white font-semibold py-2 px-4 rounded-xl shadow-[0_4px_20px_rgba(15,174,150,0.5)] hover:bg-[#0E8C77] hover:scale-105 hover:shadow-[0_6px_30px_rgba(15,174,150,0.7)] transition-all duration-300 transform relative overflow-hidden"
-                onClick={handelDataSubmit}
-                disabled={loading}
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.2)] to-transparent animate-shimmer"></span>
-                <span className="relative z-10">
-                  {loading ? "Analyzing..." : "Submit"}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        loading={loading}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        error={error}
+        file={file}
+        handleFileChange={handleFileChange}
+        handelDataSubmit={handelDataSubmit}
+        handleGetExistingResume={handleGetExistingResume}
+      />
     </div>
   );
 }
