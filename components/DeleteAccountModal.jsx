@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function DeleteAccountModal({ onClose }) {
   const [reason, setReason] = useState("");
   const [confirmation, setConfirmation] = useState("");
+
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleDelete = () => {
     if (confirmation === "DELETE") {
@@ -14,40 +22,56 @@ export default function DeleteAccountModal({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
-        className="bg-gradient-to-b from-[#11011E] via-[#35013e] to-[#11011E] bg-[#11011E] border-[1px] border-white text-white p-10 rounded-lg shadow-lg max-w-md w-full relative animate-scaleIn"
+        className="bg-[#1A1A2E] border border-gray-600 text-white p-6 rounded-xl shadow-2xl max-w-md w-full relative animate-scaleIn"
+        onClick={(e) => e.stopPropagation()}
       >
+        {/* Close Button */}
         <button
-          className="absolute top-2 right-3 text-gray-300 hover:text-red-500 text-xl"
+          className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl"
           onClick={onClose}
         >
           &times;
         </button>
-        <h2 className="text-2xl font-bold text-center mb-4">Deleting Account</h2>
-        <p className="text-center text-sm text-gray-300 mb-4">
-          Deleting Account will remove all of your information from our
-          database. This cannot be undone.
+
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-center mb-3">Confirm Account Deletion</h2>
+        <p className="text-center text-sm text-gray-400 mb-6">
+          Deleting your account will permanently remove all data. This action cannot be undone.
         </p>
-        <p className="text-center text-sm mb-4">
-          To confirm this, type <span className="font-bold text-red-500">"DELETE"</span>
-        </p>
-        <input
-          type="text"
-          value={confirmation}
-          onChange={(e) => setConfirmation(e.target.value)}
-          placeholder="Type DELETE"
-          className="w-full p-2 rounded-md bg-transparent text-white border border-gray-700 focus:outline-none mb-4"
-        />
-        <textarea
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          placeholder="Enter your reason"
-          className="w-full p-2 rounded-md bg-transparent text-white border border-gray-700 focus:outline-none mb-4"
-        />
+
+        {/* Confirmation Input */}
+        <div className="mb-4">
+          <label className="text-sm block text-gray-300 mb-2 text-center">
+            Type <span className="font-bold text-red-500">"DELETE"</span> to confirm:
+          </label>
+          <input
+            type="text"
+            value={confirmation}
+            onChange={(e) => setConfirmation(e.target.value)}
+            placeholder="Type DELETE"
+            className="w-full p-2 rounded-lg bg-[#2E2E4E] text-white border border-gray-500 focus:ring-2 focus:ring-red-500 text-center"
+          />
+        </div>
+
+        {/* Reason Input */}
+        <div className="mb-4">
+          <textarea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="Enter your reason (optional)"
+            className="w-full p-2 rounded-lg bg-[#2E2E4E] text-white border border-gray-500 focus:ring-2 focus:ring-gray-400"
+          />
+        </div>
+
+        {/* Delete Button */}
         <button
           onClick={handleDelete}
-          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-md font-semibold transition"
+          className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold transition shadow-lg"
         >
           Delete Account
         </button>
