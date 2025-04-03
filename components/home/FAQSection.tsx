@@ -1,12 +1,12 @@
 /** @format */
 "use client";
 import { useState } from "react";
-import { motion } from "framer-motion"; // Import motion for animations
+import { motion } from "framer-motion"; // For smooth animations
 
 const FAQSection = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const toggleFAQ = (index:number) => {
+  const toggleFAQ = (index: number) => {
     setActiveIndex(index === activeIndex ? null : index);
   };
 
@@ -35,12 +35,12 @@ const FAQSection = () => {
   ];
 
   return (
-    <section className="py-16 px-6 md:px-16 lg:px-20 text-white">
+    <section className="py-16 px-6 md:px-16 lg:px-20 text-white bg-[#11011E]">
       <div className="max-w-3xl mx-auto text-center">
-        <h2 className="text-4xl md:text-4xl font-semibold mb-3">
+        <h2 className="text-3xl md:text-3xl font-raleway font-semibold mb-3 text-[#ECF1F0]">
           Your questions answered
         </h2>
-        <p className="text-[#B6B6B6] text-lg mb-8">
+        <p className="text-lg font-roboto text-[#B6B6B6] mb-8">
           Explore our FAQ section to learn more.
         </p>
       </div>
@@ -49,7 +49,9 @@ const FAQSection = () => {
         {faqs.map((faq, index) => (
           <motion.div
             key={index}
-            className={`border-b border-gray-600 pb-4 ${activeIndex === index ? "pb-6" : "pb-4"}`}
+            className={`border-b border-[#ffffff17] transition-all duration-500 ease-in-out ${
+              activeIndex === index ? "pb-6" : "pb-4"
+            }`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.3 }}
@@ -57,11 +59,11 @@ const FAQSection = () => {
           >
             <button
               onClick={() => toggleFAQ(index)}
-              className="w-full flex justify-between items-center text-left text-lg font-semibold hover:text-gray-300 transition-all duration-500 ease-in-out"
+              className="w-full flex justify-between items-center text-left text-xl font-raleway text-[#ECF1F0] hover:text-[#0FAE96] transition-colors duration-500 ease-in-out"
             >
               {faq.question}
               <span
-                className={`ml-2 transform transition-all duration-500 ease-in-out ${
+                className={`ml-2 transform transition-transform duration-500 ease-in-out text-xl font-raleway text-[#0FAE96] ${
                   activeIndex === index ? "rotate-180" : "rotate-0"
                 }`}
               >
@@ -74,7 +76,9 @@ const FAQSection = () => {
               }`}
             >
               {activeIndex === index && (
-                <p className="mt-4 text-gray-400 text-sm">{faq.answer}</p>
+                <p className="mt-4 font-roboto text-base text-[#B6B6B6]">
+                  {faq.answer}
+                </p>
               )}
             </div>
           </motion.div>

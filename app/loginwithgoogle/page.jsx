@@ -43,7 +43,7 @@ function SignInwithGoogle() {
           const subRef = ref(db, `user/${user.uid}/Payment/SubscriptionType`)
           const subSnapshot = await get(subRef);
           let subType = subSnapshot.val()
-          localStorage.setItem("SubscriptionType",subType)
+          localStorage.setItem("SubscriptionType", subType)
           try {
 
             const user = auth.currentUser;
@@ -141,14 +141,14 @@ function SignInwithGoogle() {
           }).then(async () => {
             await axios.post("http://localhost:3001/send-email", {
               email: email,
-              name: name|| "User",
-            }).then(()=>{
+              name: name || "User",
+            }).then(() => {
 
-            }).catch((err)=>{
+            }).catch((err) => {
               toast.error(err.message)
             });
-           
-      
+
+
             // setMessage("Login successful! Welcome email sent.");
             toast.success("Registered!", {
               position: "top-center",
@@ -172,7 +172,7 @@ function SignInwithGoogle() {
             const subRef = ref(db, `user/${user.uid}/Payment/SubscriptionType`)
             const subSnapshot = await get(subRef);
             let subType = subSnapshot.val()
-            localStorage.setItem("SubscriptionType",subType)
+            localStorage.setItem("SubscriptionType", subType)
             try {
 
               const user = auth.currentUser;
@@ -242,7 +242,7 @@ function SignInwithGoogle() {
                 } else if (subscriptionType === "GetResume") {
                   // Redirect to Resume page if the subscription type is "GetResume"
                   window.location.href = "/resume2";
-                } else if (subscriptionType === "Free" || subscriptionType === "Premium") {
+                } else if (subscriptionType === "FreeTrialStarted" || subscriptionType === "Premium") {
                   // Redirect to Demo page if the user has a FreeTrial or Premium subscription
                   window.location.href = "/home";
                 } else {
@@ -269,17 +269,25 @@ function SignInwithGoogle() {
   return (
 
 
-    <div>
-      <button type="button" className="btn-google" onClick={googleLogin} style={{color:"black"}} >
-        <Image src={google} alt="Google icon"
+    <div className="flex justify-center">
+      <button
+        type="button"
+        className="w-full flex items-center justify-center bg-[#1A1A2E] border border-gray-600 text-white p-3 rounded-lg hover:bg-[#0FAE96] transition"
+        onClick={googleLogin}
+      >
+        <Image
+          src={google}
+          alt="Google icon"
           style={{
-            width: '20px',
-            height: '20px',
-            marginRight: '10px'
-          }} />
+            width: '24px',
+            height: '24px',
+            marginRight: '12px'
+          }}
+        />
         Sign in with Google
       </button>
     </div>
+
   );
 }
 export default SignInwithGoogle;

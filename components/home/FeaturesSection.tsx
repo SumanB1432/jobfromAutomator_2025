@@ -1,4 +1,3 @@
-/** @format */
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -32,83 +31,98 @@ const FeaturesSection = () => {
     },
   ];
 
-  const featureRefs = useRef<(HTMLDivElement | null)[]>([]); // Reference for feature cards
-  const [isInView, setIsInView] = useState(false); // State to track visibility of cards
+  // Create refs for each feature card for animation
+  const sectionRef = useRef(null);
+  const [animatedCards, setAnimatedCards] = useState([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true); // Show the cards when in view
-          } else {
-            setIsInView(false); // Hide when out of view
-          }
-        });
+        if (entries[0].isIntersecting) {
+          // Stagger the animations when section comes into view
+          const timer = setTimeout(() => {
+            setAnimatedCards(features.map((_, i) => i));
+          }, 100);
+          return () => clearTimeout(timer);
+        }
       },
-      { threshold: 0.5 } // Trigger when 50% of the card is in view
+      { threshold: 0.2 }
     );
 
-    // Observe only non-null elements
-    featureRefs.current
-      .filter((card) => card !== null) // Filter valid elements
-      .forEach((card) => observer.observe(card));
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
 
-    // Cleanup observer on component unmount
     return () => {
-      featureRefs.current
-        .filter((card) => card !== null) // Filter valid elements
-        .forEach((card) => observer.unobserve(card));
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
     };
-  }, []);
+  }, [features.length]);
 
   return (
-    <div className="text-white py-16 px-4">
-      <div className="max-w-6xl space-y-4 mx-auto flex flex-col items-center">
-        {/* Section Header */}
-        <div className="px-4 py-2 space-x-3 border-[1px] border-[#FFFFFF0D] rounded-full flex items-center bg-[#FFFFFF05]">
-          <div className="w-3 h-3 bg-[#0FAE96] rounded-full"></div>
-          <div className="text-[#0FAE96] text-sm">Features</div>
+    <section 
+      ref={sectionRef}
+      className="bg-[#11011E] text-white py-12 md:py-20 px-4 overflow-hidden"
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Section Label - centered on mobile */}
+        <div className="flex justify-center">
+          <div className="flex items-center space-x-3 px-4 py-2 bg-[rgba(255,255,255,0.05)] border border-[#FFFFFF0D] rounded-full">
+            <div className="w-2.5 h-2.5 bg-[#0FAE96] rounded-full"></div>
+            <div className="text-sm text-[#0FAE96] font-medium">Features</div>
+          </div>
         </div>
-        <h2 className="text-3xl font-semibold text-center">
+
+        {/* Section Header - responsive text sizes */}
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-[#ECF1F0] text-center mt-6 max-w-3xl mx-auto leading-tight">
           Why Settle For Slow? Supercharge Your Job Hunt
         </h2>
-        <p className="text-lg mt-4 text-gray-300 text-center">
+
+        {/* Section Subheading - improved readability */}
+        <p className="mt-4 text-base md:text-lg text-[#B6B6B6] text-center max-w-2xl mx-auto">
           Transform tedious job applications into a breeze with our instant autofill technology.
         </p>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+        {/* Features Grid - better responsive layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-12">
           {features.map((feature, index) => (
             <div
               key={index}
-              ref={(el) => {
-                featureRefs.current[index] = el;
-              }} // Assign DOM element
-              className={`bg-[#FFFFFF05] border-[1px] border-[#ffffff17] backdrop-blur-3xl p-6 rounded-lg transition-all duration-500 ease-in-out transform ${
-                isInView
+              className={`bg-[rgba(255,255,255,0.02)] border border-[#ffffff17] backdrop-blur-xl rounded-2xl p-6 transition-all duration-500 ease-out transform ${
+                animatedCards.includes(index)
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10"
-              }`}
+              } hover:bg-[rgba(255,255,255,0.05)] hover:border-[#ffffff30] hover:shadow-lg hover:-translate-y-1`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              {/* Icon */}
-              <div className="flex justify-center items-center w-20 h-20 bg-[#2C223B] rounded-full mb-4">
-                <Image
-                  src={feature.icon}
-                  alt={`${feature.title} Icon`}
-                  width={36}
-                  height={36}
-                />
+              {/* Icon - better positioning */}
+              <div className="flex justify-center mb-6">
+                <div className="flex justify-center items-center w-16 h-16 bg-[#2C223B] rounded-full shadow-md">
+                  <Image
+                    src={feature.icon}
+                    alt={`${feature.title} Icon`}
+                    width={32}
+                    height={32}
+                    className="transform transition-transform duration-300 group-hover:scale-110"
+                  />
+                </div>
               </div>
-              {/* Title */}
-              <h3 className="text-lg font-semibold">{feature.title}</h3>
-              {/* Description */}
-              <p className="text-sm text-gray-400 mt-2">{feature.description}</p>
+              
+              {/* Title - improved typography */}
+              <h3 className="text-lg md:text-xl font-semibold text-[#ECF1F0] text-center mb-3">
+                {feature.title}
+              </h3>
+              
+              {/* Description - better readability */}
+              <p className="text-sm md:text-base text-[#B6B6B6] text-center leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

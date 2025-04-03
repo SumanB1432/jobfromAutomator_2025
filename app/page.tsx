@@ -5,39 +5,33 @@ import FeaturesSection from '@/components/home/FeaturesSection';
 import HeroSection from '@/components/home/HeroSection';
 import HowItWorks from '@/components/home/HowItWorks';
 import ResumeATSChecker from '@/components/home/ResumeATSChecker';
-// import { useAuthState } from 'react-firebase-hooks/auth';
-// import { auth } from '@/firebase/config';
-// import Resume from '@/app/Resume/page'
-// import Signup from '@/app/sign-up/page'
-// import SignupPage from "./sign-up/page";
+import PricingSection from '@/components/pricing/PricingSection';
+import TestimonialSection from "../components/TestimonialSection";
+import JobSeeker from "../components/JobSeeker";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function Mainpage() {
-
-  // const [user]= useAuthState(auth);
-  // const router= useRouter();
-  // const user = null; 
+export default function Mainpage({ params }) {
+  const router = useRouter();
   
+  useEffect(() => {
+    if (params?.referral) {
+      document.cookie = `referral=${params.referral}; path=/; max-age=${30 * 24 * 60 * 60}`;
+      router.push("/");  // Redirect to homepage
+    }
+  }, [params?.referral, router]);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/sign-up");
-  //   }
-  // }, [user, router]);
-
-  // if(!user){
-  //   router.push('/sign-up')
-  // }
-
- // console.log(user); 
   return (
-    <>
+    <div className='bg-[#11011E]'>
       <HeroSection />
-      <FeaturesSection />
       <CompaniesSection />
       <HowItWorks />
+      <FeaturesSection />
+      <PricingSection />
+      <TestimonialSection />
       <ResumeATSChecker />
       <FAQSection />
-      {/* <SignupPage/> */}
-    </>
+      <JobSeeker />
+    </div>
   );
 }

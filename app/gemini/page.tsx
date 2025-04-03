@@ -1,5 +1,6 @@
 "use client";
-import React, { useState,useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import { auth } from "@/firebase/config";
 import app from "@/firebase/config";
 import { toast } from "react-toastify";
@@ -14,18 +15,18 @@ const GeminiPage: React.FC = () => {
   const db = getDatabase(app);
   const router = useRouter();
 
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-        if (currentUser) {
-          console.log("User signed in:", currentUser); // Debugging user 
-        } else {
-          toast.error("You need to be signed in to upload your gemini kay!");
-          window.location.href = "/sign-in"
-        }
-      });
-  
-      return () => unsubscribe();
-    }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log("User signed in:", currentUser);
+      } else {
+        toast.error("You need to be signed in to upload your Gemini key!");
+        window.location.href = "/sign-in";
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,44 +84,42 @@ const GeminiPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-6">
-      <h1 className="text-3xl font-bold mb-4 text-purple-400">Enter Free Gemini Key</h1>
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-lg">
-        <div className="mb-4">
-          <iframe
-            className="w-full rounded-md"
-            height="250"
-            src="https://www.youtube.com/embed/5VbhMJKTbak?si=7N-YplG58Z6EXs4R"
-            title="YouTube video player"
-            allowFullScreen
-          ></iframe>
-        </div>
+    <main className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#11011E] via-[#35013E] to-[#11011E] p-6">
+      <div className="w-full max-w-md p-8 bg-[rgba(255,255,255,0.05)] rounded-2xl shadow-2xl border border-[rgba(255,255,255,0.1)] text-center">
+        <h1 className="text-2xl font-semibold font-raleway text-[#ECF1F0] mb-text-2xl font-raleway font-semibold mb-6 text-center animate-slideDown text-[#ECF1F0]">Enter Your Free Gemini Key</h1>
+        <iframe
+          className="w-full rounded-xl aspect-video mb-6"
+          src="https://www.youtube.com/embed/5VbhMJKTbak?si=7N-YplG58Z6EXs4R"
+          title="YouTube video player"
+          allowFullScreen
+        ></iframe>
         <form onSubmit={submitHandler} className="space-y-4">
           <input
             type="text"
             placeholder="Enter Your Gemini Key"
             required
-            className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            className="w-full p-3 border border-gray-600 rounded-lg bg-[#1A1A2E] text-white focus:ring-2 focus:ring-[#0FAE96]"
             onChange={(e) => setGeminiKey(e.target.value)}
             disabled={loading}
           />
           <a
             href="https://aistudio.google.com/app/apikey"
             target="_blank"
-            className="block text-purple-400 hover:underline text-center"
+            rel="noopener noreferrer"
+            className="block text-[#0FAE96] hover:underline"
           >
-            Get Gemini Key
+            Don’t have a key? Get your Gemini Key here
           </a>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-md font-bold transition-all"
+            className="w-full bg-[#0FAE96] text-white p-3 rounded-lg hover:opacity-90 transition duration-300 transform hover:scale-105"
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>
-    </div>
+    </main>
   );
 };
 

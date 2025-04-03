@@ -1,12 +1,12 @@
 "use client";
 
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import app, { auth } from "@/firebase/config";
+import app from "@/firebase/config";
 import { getDatabase, ref, set } from "firebase/database";
-import { Auth } from "firebase/auth";
 import axios from "axios";
+
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,19 +14,15 @@ function Register() {
   const [lname, setLname] = useState("");
   const [loading, setLoading] = useState(false);
 
-
-
-  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
     const auth = getAuth();
     const displayName = `${fname} ${lname}`;
 
     try {
-      console.log(fname, lname, email, password)
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log(user)
 
       if (user) {
         await updateProfile(user, { displayName });
@@ -35,45 +31,33 @@ function Register() {
         const db = getDatabase(app);
         const newDocRef = ref(db, "user/" + user.uid);
 
-        await set(newDocRef, { fname, lname, email, password }).then(() => {
-          toast.success("Registered! Check email for verification.", { position: "top-center" });
-        }).catch((err) => {
-          toast.error(err.message)
-        })
+        await set(newDocRef, { fname, lname, email, password });
+
+        toast.success("Registered! Check your email for verification.", { position: "top-center" });
+
         await axios.post("http://localhost:3001/send-email", {
           email: email,
-          name: fname + " " + lname || "User",
-        }).then(() => {
-        }).catch((err) => {
-          toast.error(err.message)
+          name: displayName || "User",
         });
-
-
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(error.message, { position: "bottom-center" });
-      } else {
-        toast.error("An unknown error occurred", { position: "bottom-center" });
-      }
-    }
-    finally {
+    } catch (error) {
+      toast.error(error.message || "An unknown error occurred", { position: "bottom-center" });
+    } finally {
       setLoading(false);
     }
-
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Sign Up</h1>
-        <p className="text-gray-600 mb-4">Achieve career success with Job Form Automator! Start auto-applying now!</p>
+    <main className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#11011E] via-[#35013E] to-[#11011E] p-6">
+      <div className="w-full max-w-md p-8 bg-[rgba(255,255,255,0.05)] rounded-2xl shadow-2xl border border-[rgba(255,255,255,0.1)]">
+        <h1 className="text-2xl font-semibold font-raleway text-[#ECF1F0] mb-text-2xl font-raleway font-semibold mb-6 text-center animate-slideDown text-[#ECF1F0]">Sign Up</h1>
+        <p className="text-gray-400 text-center mb-4">Achieve career success with Job Form Automator! Start auto-applying now!</p>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <input
             type="text"
             placeholder="First Name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            className="w-full p-3 border border-gray-600 rounded-lg bg-[#1A1A2E] text-white focus:ring-2 focus:ring-[#0FAE96]"
             onChange={(e) => setFname(e.target.value)}
             required
             disabled={loading}
@@ -81,7 +65,7 @@ function Register() {
           <input
             type="text"
             placeholder="Last Name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            className="w-full p-3 border border-gray-600 rounded-lg bg-[#1A1A2E] text-white focus:ring-2 focus:ring-[#0FAE96]"
             onChange={(e) => setLname(e.target.value)}
             required
             disabled={loading}
@@ -89,7 +73,7 @@ function Register() {
           <input
             type="email"
             placeholder="Email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            className="w-full p-3 border border-gray-600 rounded-lg bg-[#1A1A2E] text-white focus:ring-2 focus:ring-[#0FAE96]"
             onChange={(e) => setEmail(e.target.value)}
             required
             disabled={loading}
@@ -97,7 +81,7 @@ function Register() {
           <input
             type="password"
             placeholder="Password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            className="w-full p-3 border border-gray-600 rounded-lg bg-[#1A1A2E] text-white focus:ring-2 focus:ring-[#0FAE96]"
             onChange={(e) => setPassword(e.target.value)}
             required
             disabled={loading}
@@ -105,15 +89,15 @@ function Register() {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
+            className="w-full bg-[#0FAE96] text-white p-3 rounded-lg hover:opacity-90 transition duration-300 transform hover:scale-105"
             disabled={loading}
           >
             {loading ? "Signing up..." : "Sign up"}
           </button>
         </form>
 
-        <p className="mt-4 text-gray-600">
-          Already registered? <a href="/sign-in" className="text-purple-600 hover:underline">Login</a>
+        <p className="text-center text-gray-400 mt-4">
+          Already registered? <a href="/sign-in" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Login</a>
         </p>
       </div>
     </main>

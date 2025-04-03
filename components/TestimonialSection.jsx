@@ -15,14 +15,13 @@ const TestimonialSection = () => {
   ];
 
   return (
-    <div className="text-white py-8 sm:py-12 lg:py-16">
-      <div className="max-w-6xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl font-semibold">
+    <div className="py-12 lg:py-16 bg-[#11011E]">
+      <div className="max-w-[1440px] mx-auto text-center px-[90px]">
+        <h2 className="font-raleway font-bold text-2xl sm:text-3xl text-[#ECF1F0]">
           Trusted by Job Seekers Everywhere
         </h2>
-        <p className="text-sm sm:text-lg mt-4 text-gray-300">
-          See how we&apos;re streamlining the job search process and saving time
-          for users like you.
+        <p className="mt-4 font-roboto text-sm sm:text-lg text-[#B6B6B6]">
+          See how we&apos;re streamlining the job search process and saving time for users like you.
         </p>
         <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           {Array(4)
@@ -30,32 +29,32 @@ const TestimonialSection = () => {
             .map((testimonial, index) => (
               <motion.div
                 key={index}
-                className="bg-[#FFFFFF05] border-[1px] border-[#FFFFFF17] p-4 sm:p-6 rounded-lg"
+                className="bg-[rgba(255,255,255,0.02)] border border-[#ffffff17] p-6 rounded-[18px]"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.3 }}
                 transition={{ duration: 0.6 }}
               >
                 <div className="flex items-center gap-4 text-left">
-                  <div>
+                  <div className="flex-shrink-0">
                     <Image
                       src={testimonial.image}
                       alt={`${testimonial.name}'s picture`}
-                      width={160}
-                      height={160}
-                      className="rounded-full"
+                      width={64}
+                      height={64}
+                      className="rounded-full border border-[#FFFFFF]"
                     />
                   </div>
-                  <div>
-                    <h3 className="text-sm sm:text-lg font-medium">
+                  <div className="text-left">
+                    <h3 className="font-raleway font-semibold text-lg text-[#ECF1F0]">
                       {testimonial.name}
                     </h3>
-                    <p className="text-sm sm:text-xl text-gray-400">
+                    <p className="mt-1 font-roboto text-sm text-[#B6B6B6]">
                       {testimonial.role}
                     </p>
                   </div>
                 </div>
-                <p className="mt-4 text-left text-sm sm:text-base text-[#B6B6B6]">
+                <p className="mt-4 font-roboto text-sm text-[#B6B6B6] text-left">
                   {testimonial.feedback}
                 </p>
               </motion.div>
