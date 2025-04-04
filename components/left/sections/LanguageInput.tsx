@@ -58,30 +58,43 @@ export default function LanguageInput() {
   };
 
   return (
-    <section className="p-6 border-b">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <FaLanguage className="text-xl" />
-          <h2 className="text-xl font-bold">Languages</h2>
+    <section className="p-6 border-b border-[rgba(255,255,255,0.05)] bg-gradient-to-b from-main-bg via-[rgba(17,1,30,0.95)] to-main-bg text-text-subtitle shadow-2xl rounded-xl">
+      {/* Header Section */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <FaLanguage className="text-2xl text-white drop-shadow-glow" />
+          <h2 className="text-2xl font-extrabold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent animate-pulse">
+            Languages
+          </h2>
         </div>
       </div>
 
-      {/* Display Languages */}
+      {/* Display Languages List */}
       {languages.length > 0 && (
-        <div className="mb-4 space-y-2">
+        <div className="mb-6 space-y-4">
           {languages.map((language) => (
-            <div key={language.id} className="p-2 bg-gray-100 rounded-md flex justify-between items-center">
+            <div
+              key={language.id}
+              className="p-4 bg-gray-800/50 backdrop-blur-md rounded-xl flex justify-between items-center transition-all duration-300 hover:shadow-glow hover:scale-[1.02]"
+            >
               <div>
-                <strong>{language.heading}</strong>
-                <p className="text-sm text-gray-600">{language.option}</p>
+                <strong className="text-lg font-semibold text-white drop-shadow-md">
+                  {language.heading}
+                </strong>
+                <p className="text-sm text-gray-300">{language.option}</p>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => handleEdit(language.id)}>
-                  <Pencil className="w-4 h-4 text-blue-700" />
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleEdit(language.id)}
+                  className="p-2 rounded-full bg-blue-600/20 hover:bg-blue-600/40 transition-all duration-300"
+                >
+                  <Pencil className="w-5 h-5 text-blue-400" />
                 </button>
-                <button onClick={() => handleDelete(language.id)}>
-                  <Trash2 className="w-4 h-4 text-red-700" />
+                <button
+                  onClick={() => handleDelete(language.id)}
+                  className="p-2 rounded-full bg-red-600/20 hover:bg-red-600/40 transition-all duration-300"
+                >
+                  <Trash2 className="w-5 h-5 text-red-400" />
                 </button>
               </div>
             </div>
@@ -89,60 +102,69 @@ export default function LanguageInput() {
         </div>
       )}
 
-      {/* Add Language Button */}
+      {/* Add New Language Button */}
       <button
-        onClick={() => setIsOpen(true)}
-        className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
+        onClick={() => {
+          setIsOpen(true);
+          setEditId(null);
+        }}
+        className="w-full p-4 border-2 border-dashed border-gray-600 rounded-xl text-gray-400 bg-[rgba(255,255,255,0.05)] backdrop-blur-md hover:border-gray-500 hover:text-white transition-all duration-300 shadow-inner hover:shadow-glow"
       >
         + {editId ? "Edit Language" : "Add a new language"}
       </button>
 
-      {/* Modal */}
+      {/* Language Modal */}
       {isOpen && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={() => setIsOpen(false)}
-        >
-          <div
-            className="bg-[#141414] text-white p-6 rounded-lg w-[400px] shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-6 z-50">
+          <div className="bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] text-white p-8 rounded-2xl w-full max-w-[650px] shadow-2xl backdrop-blur-md border border-gray-700">
             {/* Modal Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">{editId ? "Edit Language" : "Add Language"}</h2>
-              <button onClick={() => setIsOpen(false)}>
-                <FaTimes size={18} />
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                {editId ? "Edit Language" : "Add Language"}
+              </h2>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 rounded-full bg-gray-700/50 hover:bg-gray-600/70 transition-all duration-300"
+              >
+                <FaTimes size={20} className="text-gray-300" />
               </button>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                name="language"
-                placeholder="Enter language"
-                className="w-full p-2 border rounded-md bg-black text-white"
-                value={formData.language}
-                onChange={handleChange}
-              />
+            {/* Language Form */}
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 gap-5 mb-6">
+                <input
+                  type="text"
+                  name="language"
+                  placeholder="Enter language"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
+                  value={formData.language}
+                  onChange={handleChange}
+                  required
+                />
 
-              <select
-                name="option"
-                className="w-full p-2 border rounded-md bg-black text-white"
-                value={formData.option}
-                onChange={handleChange}
-              >
-                <option value="">Select proficiency</option>
-                {fluencyLevels.map((level, index) => (
-                  <option key={index} value={level}>
-                    {level}
-                  </option>
-                ))}
-              </select>
+                <select
+                  name="option"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow text-gray-600"
+                  value={formData.option}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select proficiency</option>
+                  {fluencyLevels.map((level, index) => (
+                    <option key={index} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              {/* Submit Button */}
+              {/* Modal Footer */}
               <div className="flex justify-end">
-                <button type="submit" className="px-4 py-2 bg-white text-black rounded-md">
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-[#0eae95] text-white rounded-lg shadow-md hover:from-green-600 hover:to-green-800 hover:shadow-glow transition-all duration-300"
+                >
                   {editId ? "Update" : "Save"}
                 </button>
               </div>

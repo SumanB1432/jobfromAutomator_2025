@@ -14,6 +14,7 @@ interface ModalProps {
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handelDataSubmit: () => void;
   handleGetExistingResume: () => void;
+  actionType: "build" | "analyze" | null;
 }
 
 export default function Modal({
@@ -27,6 +28,7 @@ export default function Modal({
   handleFileChange,
   handelDataSubmit,
   handleGetExistingResume,
+  actionType,
 }: ModalProps) {
   const [isClosing, setIsClosing] = useState(false);
 
@@ -42,7 +44,8 @@ export default function Modal({
   }, [isOpen]);
 
   if (!isOpen) return null;
-
+  const modalHeading = actionType === "build" ? "Build Your Resume" : "Analyze Your Resume";
+  let desc = modalHeading.toLowerCase()
   return (
     <div
       className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 pointer-events-auto z-50 ${isClosing ? "opacity-0" : "opacity-100"}`}
@@ -62,10 +65,10 @@ export default function Modal({
         </button>
 
         <h2 className="text-2xl font-semibold text-[#0FAE96] mb-4">
-          Analyze Your Resume
+          {modalHeading}
         </h2>
         <p className="text-gray-300 mb-4 text-sm leading-relaxed">
-          Choose how you'd like to analyze your resume:
+          Choose how you'd like to {desc}:
         </p>
 
         <div className="flex flex-col gap-4 items-center">

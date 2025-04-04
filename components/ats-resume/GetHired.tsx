@@ -18,13 +18,13 @@ export default function GetHired() {
   const [user, setUser] = useState<User | null>(null);
   const [pdfText, setPdfText] = useState("");
   const [ats, setAts] = useState(null);
-  const [buildLoading, setBuildLoading] = useState(false); // Separate loading state for building
-  const [analyzeLoading, setAnalyzeLoading] = useState(false)
-  // const [loading, setLoading] = useState(false);
+  const [buildLoading, setBuildLoading] = useState(false);
+  const [analyzeLoading, setAnalyzeLoading] = useState(false);
   const [apiKey, setApiKey] = useState("");
   const [atsData, setAtsData] = useState(null);
   const [skill, setSkill] = useState(null);
-  const [build, setBuild] = useState(false)
+  const [build, setBuild] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [actionType, setActionType] = useState<"build" | "analyze" | null>(null);
   const db = getDatabase(app);
   const auth = getAuth();
@@ -51,7 +51,12 @@ export default function GetHired() {
   useEffect(() => {
     if (pdfText && pdfText.trim().length > 0 && jobData) {
       console.log("Sending text for ATS analysis:", pdfText);
-      sendResumeForAnalysis(pdfText, jobData);
+      if (actionType === "build") {
+        // For build, just store data in localStorage and proceed
+        storeDataInLocalStorage(pdfText, jobData);
+      } else if (actionType === "analyze") {
+        sendResumeForAnalysis(pdfText, jobData);
+      }
     } else {
       console.warn("Skipping ATS analysis: No valid resume text or Job Description.");
     }
@@ -63,6 +68,16 @@ export default function GetHired() {
     }
   }, [atsData]);
 
+  const storeDataInLocalStorage = (resumeText: string, jobDescription: string) => {
+    localStorage.setItem("resumeText", resumeText); // Store resume text
+    localStorage.setItem("jobDescription", jobDescription); // Store job description
+    console.log("Data stored in localStorage:", { resumeText, jobDescription });
+    // Redirect or proceed to next step
+    if(actionType=="build"){
+    window.location.href = `/atsresume/createresume`;
+    }
+  };
+
   const handelDataSubmit = async () => {
     if (!inputValue.trim()) {
       setError("This field is required.");
@@ -70,10 +85,14 @@ export default function GetHired() {
     }
     setJobData(inputValue);
     console.log("Saved Job Description:", inputValue);
-    if (actionType === "build") {
-      setBuildLoading(true);
-    } else if (actionType === "analyze") {
-      setAnalyzeLoading(true);
+    setBuildLoading(true); // Only set buildLoading since this is for "Build"
+
+    if (pdfText && pdfText.trim().length > 0) {
+      // Data is ready, store it
+      storeDataInLocalStorage(pdfText, inputValue);
+    } else {
+      setError("Please upload or select a resume before submitting.");
+      setBuildLoading(false);
     }
   };
 
@@ -87,14 +106,13 @@ export default function GetHired() {
       const atsDataString = JSON.stringify(atsData);
       localStorage.setItem("atsData", atsDataString);
       const encodedAtsData = encodeURIComponent(JSON.stringify(atsData));
-      setAnalyzeLoading(false); // CHANGED: Use analyzeLoading instead of loading
-      setIsModalOpen(false); // Close modal after submission
+      setAnalyzeLoading(false);
+      setIsModalOpen(false);
 
-      // Redirect based on actionType
       if (actionType === "analyze") {
-        window.location.href = `/ats-score/ats-next`;
+        window.location.href = `/ats-score/ats-next`; // Updated to redirect to ats-resume/ats-next for analyze
       } else if (actionType === "build") {
-        window.location.href = `atsresume/createresume`;
+        window.location.href = `/atsresume/createresume`; // Keep this for build
       }
     }
   };
@@ -121,15 +139,119 @@ export default function GetHired() {
           setSkill(analysisSkills);
           setAtsData(analysisResult);
         } catch (error) {
-          setAnalyzeLoading(false); // CHANGED: Use analyzeLoading instead of loading
+          setAnalyzeLoading(false);
           toast.error(error.message);
         }
       };
       get_score();
     } catch (error) {
-      setAnalyzeLoading(false); // CHANGED: Use analyzeLoading instead of loading
+      setAnalyzeLoading(false);
       console.error("Error analyzing resume:", error);
     }
+  };
+
+  // Keep other functions like analyzeResumeForATS and analyzeResumeForSkill as they are
+
+  const handleGetExistingResume = async () => {
+    console.log("Fetching existing resume...");
+    setBuildLoading(true);
+
+    if (!user) {
+      console.warn("User not signed in! Cannot fetch resume.");
+      toast.error("You need to be signed in to access your resume.");
+      setBuildLoading(false);
+      return;
+    }
+
+    const userId = user.uid;
+    console.log("User ID:", userId);
+
+    try {
+      const userDocRef = ref(db, `user/${userId}/forms/keyvalues/URD`);
+      const snapshot = await get(userDocRef);
+
+      if (snapshot.exists()) {
+        let resumeText = snapshot.val();
+        console.log("Retrieved Resume Data:", resumeText);
+
+        if (resumeText && resumeText.trim().length > 0) {
+          setPdfText(resumeText);
+        } else {
+          console.warn("Fetched resume is empty.");
+        }
+      } else {
+        console.log("No resume data found in database.");
+      }
+    } catch (error) {
+      console.error("Error fetching resume:", error);
+    } finally {
+      setBuildLoading(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBuildLoading(true);
+
+    if (e.target.files && e.target.files.length > 0) {
+      console.log("File uploaded!");
+      const uploadedFile = e.target.files[0];
+      setFile(uploadedFile);
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        if (!event.target?.result) {
+          setBuildLoading(false);
+          return;
+        }
+
+        try {
+          const typedarray = new Uint8Array(event.target.result as ArrayBuffer);
+          const pdfDocument = await pdfjs.getDocument({ data: typedarray }).promise;
+          let fullText = "";
+
+          for (let i = 1; i <= pdfDocument.numPages; i++) {
+            const page = await pdfDocument.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items
+              .map((item: any) => ("str" in item ? item.str : ""))
+              .join(" ");
+            fullText += pageText + "\n";
+          }
+
+          setPdfText(fullText);
+          setBuildLoading(false);
+        } catch (error) {
+          console.error("Error processing PDF:", error);
+          setBuildLoading(false);
+        }
+      };
+
+      reader.readAsArrayBuffer(uploadedFile);
+    } else {
+      setBuildLoading(false);
+    }
+    console.log(pdfText, "text");
+  };
+
+  const openModalForBuild = () => {
+    setActionType("build");
+    setIsModalOpen(true);
+    setInputValue("");
+    setError("");
+  };
+
+  const openModalForAnalyze = () => {
+    setActionType("analyze");
+    setIsModalOpen(true);
+    setInputValue("");
+    setError("");
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setActionType(null);
+    setBuildLoading(false);
+    setAnalyzeLoading(false);
   };
 
   async function analyzeResumeForATS(resumeText: any) {
@@ -278,128 +400,6 @@ export default function GetHired() {
     }
   }
 
-  const handleGetExistingResume = async () => {
-    console.log("Fetching existing resume...");
-    if (actionType === "build") {
-      setBuildLoading(true);
-    } else if (actionType === "analyze") {
-      setAnalyzeLoading(true);
-    }
-
-    if (!user) {
-      console.warn("User not signed in! Cannot fetch resume.");
-      toast.error("You need to be signed in to access your resume.");
-      setBuildLoading(false);
-      setAnalyzeLoading(false);
-      return;
-    }
-
-    const userId = user.uid;
-    console.log("User ID:", userId);
-
-    try {
-      const userDocRef = ref(db, `user/${userId}/forms/keyvalues/URD`);
-      const snapshot = await get(userDocRef);
-
-      if (snapshot.exists()) {
-        let resumeText = snapshot.val();
-        console.log("Retrieved Resume Data:", resumeText);
-
-        if (resumeText && resumeText.trim().length > 0) {
-          setPdfText(resumeText);
-        } else {
-          console.warn("Fetched resume is empty.");
-        }
-      } else {
-        console.log("No resume data found in database.");
-      }
-    } catch (error) {
-      console.error("Error fetching resume:", error);
-    } finally {
-     // CHANGED: Reset appropriate loading state based on actionType
-     if (actionType === "build") {
-      setBuildLoading(false);
-    } else if (actionType === "analyze") {
-      setAnalyzeLoading(false);
-    }
-  }
-};
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    // CHANGED: Set appropriate loading state based on actionType
-    if (actionType === "build") {
-      setBuildLoading(true);
-    } else if (actionType === "analyze") {
-      setAnalyzeLoading(true);
-    }
-
-    if (e.target.files && e.target.files.length > 0) {
-      console.log("File uploaded!");
-      const uploadedFile = e.target.files[0];
-      setFile(uploadedFile);
-
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        if (!event.target?.result) {
-          setBuildLoading(false); // CHANGED: Use buildLoading instead of loading
-          setAnalyzeLoading(false); // CHANGED: Use analyzeLoading instead of loading
-          return;
-        }
-
-        try {
-          const typedarray = new Uint8Array(event.target.result as ArrayBuffer);
-          const pdfDocument = await pdfjs.getDocument({ data: typedarray }).promise;
-          let fullText = "";
-
-          for (let i = 1; i <= pdfDocument.numPages; i++) {
-            const page = await pdfDocument.getPage(i);
-            const textContent = await page.getTextContent();
-            const pageText = textContent.items
-              .map((item: any) => ("str" in item ? item.str : ""))
-              .join(" ");
-            fullText += pageText + "\n";
-          }
-
-          setPdfText(fullText);
-        } catch (error) {
-          // CHANGED: Reset appropriate loading state based on actionType
-          if (actionType === "build") {
-            setBuildLoading(false);
-          } else if (actionType === "analyze") {
-            setAnalyzeLoading(false);
-          }
-        }
-      };
-
-      reader.readAsArrayBuffer(uploadedFile);
-    } else {
-      setBuildLoading(false); // CHANGED: Use buildLoading instead of loading
-      setAnalyzeLoading(false); // CHANGED: Use analyzeLoading instead of loading
-    }
-    console.log(pdfText, "text");
-  };
-
-  const openModalForBuild = () => {
-    setActionType("build"); // ADDED: Set actionType to "build"
-    setIsModalOpen(true);
-    setInputValue("");
-    setError("");
-  };
-
-  const openModalForAnalyze = () => {
-    setActionType("analyze"); // ADDED: Set actionType to "analyze"
-    setIsModalOpen(true);
-    setInputValue("");
-    setError("");
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setActionType(null); // ADDED: Reset actionType
-    setBuildLoading(false); // ADDED: Reset buildLoading
-    setAnalyzeLoading(false); // ADDED: Reset analyzeLoading
-  };
-
   return (
     <div className={`bg-gradient-to-b font-sans from-[#11011E] via-[#35013e] to-[#11011E] bg-[#11011E] text-white pt-16 px-6 md:px-16 lg:px-20 ${isModalOpen ? "pointer-events-none" : "pointer-events-auto"}`}>
       <div className="bg-[#FFFFFF05] rounded-xl px-10 py-16 border-[1.5px] border-[#ffffff17] max-w-7xl mx-auto flex flex-col lg:flex-row justify-between animate-fadeIn">
@@ -427,18 +427,16 @@ export default function GetHired() {
           <div className="flex gap-x-4">
             <button className="bg-[#0FAE96] hover:bg-[#288d7d] text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
               onClick={openModalForBuild}
-              disabled={buildLoading || analyzeLoading} // Disable only if either is loading
+              disabled={buildLoading} // Only disable "Build" button when buildLoading is true
             >
-
-              {buildLoading  ? "Building..." : "Build your Resume"}
-              
+              {buildLoading ? "Building..." : "Build your Resume"}
             </button>
             <button
               className="bg-[#0FAE96] hover:bg-[#288d7d] text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
               onClick={openModalForAnalyze}
-              disabled={buildLoading || analyzeLoading} // Disable only if either is loading
+              disabled={analyzeLoading} // Only disable "Analyze" button when analyzeLoading is true
             >
-              {analyzeLoading  ? "Analyzing..." : "Analyze Your Resume"}
+              {analyzeLoading ? "Analyzing..." : "Analyze Your Resume"}
             </button>
           </div>
 
@@ -471,15 +469,17 @@ export default function GetHired() {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        // CHANGED: Pass appropriate loading state based on actionType
-        loading={actionType === "build" ? buildLoading : analyzeLoading}
+        loading={buildLoading || analyzeLoading} // Pass either loading state to Modal, but buttons handle their own loading
         inputValue={inputValue}
         setInputValue={setInputValue}
         error={error}
         file={file}
+        setFile={setFile}
+        setLoading={setLoading}
         handleFileChange={handleFileChange}
         handelDataSubmit={handelDataSubmit}
         handleGetExistingResume={handleGetExistingResume}
+        actionType={actionType} // Pass actionType to Modal if needed
       />
     </div>
   );

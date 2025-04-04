@@ -11,25 +11,25 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/contactUs/page": [
+    "/atsresume/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/contactUs/page.js"
+      "static/chunks/app/atsresume/page.js"
+    ],
+    "/ats-score/ats-next/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/ats-score/ats-next/page.js"
     ],
     "/[referral]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/[referral]/page.js"
     ],
-    "/settings/page": [
+    "/ats-score/ats-skill/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/settings/page.js"
-    ],
-    "/payment/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/payment/page.js"
+      "static/chunks/app/ats-score/ats-skill/page.js"
     ],
     "/atsresume/createresume/page": [
       "static/chunks/webpack.js",
@@ -37,10 +37,20 @@
       "static/css/app/atsresume/createresume/page.css",
       "static/chunks/app/atsresume/createresume/page.js"
     ],
-    "/_not-found/page": [
+    "/updateresume/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/updateresume/page.js"
+    ],
+    "/home/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/home/page.js"
+    ],
+    "/policy/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/policy/page.js"
     ]
   }
 }

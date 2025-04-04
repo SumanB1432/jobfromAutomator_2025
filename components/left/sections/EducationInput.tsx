@@ -6,7 +6,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import { GiGraduateCap } from "react-icons/gi";
 
 export default function EducationInput() {
-  const {educations, addEducation, updateEducation, deleteEducation } = useEducationStore(); 
+  const { educations, addEducation, updateEducation, deleteEducation } =
+    useEducationStore();
   const [isOpen, setIsOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
 
@@ -20,14 +21,17 @@ export default function EducationInput() {
   });
 
   // Handle Form Changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // Form Submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.institute || !formData.typeofstudy || !formData.areaofstudy) return;
+    if (!formData.institute || !formData.typeofstudy || !formData.areaofstudy)
+      return;
 
     if (editId) {
       updateEducation(
@@ -36,7 +40,7 @@ export default function EducationInput() {
         formData.areaofstudy,
         formData.typeofstudy,
         formData.dateRange,
-        formData.score,
+        formData.score
       );
     } else {
       addEducation(
@@ -44,12 +48,19 @@ export default function EducationInput() {
         formData.areaofstudy,
         formData.typeofstudy,
         formData.dateRange,
-        formData.score,
+        formData.score
       );
     }
 
     // Reset Form and Close Modal
-    setFormData({ institute: "", dateRange: "", areaofstudy: "", typeofstudy: "", score: "", location: "" });
+    setFormData({
+      institute: "",
+      dateRange: "",
+      areaofstudy: "",
+      typeofstudy: "",
+      score: "",
+      location: "",
+    });
     setEditId(null);
     setIsOpen(false);
   };
@@ -70,8 +81,6 @@ export default function EducationInput() {
       setEditId(id);
     }
   };
-  
-
 
   // Handle Delete
   const handleDelete = (id: string) => {
@@ -79,131 +88,161 @@ export default function EducationInput() {
   };
 
   return (
-    <section className="p-6 border-b">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <GiGraduateCap className="text-xl" />
-          <h2 className="text-xl font-bold">Education</h2>
+    <section className="p-6 border-b border-[rgba(255,255,255,0.05)] bg-gradient-to-b from-main-bg via-[rgba(17,1,30,0.95)] to-main-bg text-text-subtitle shadow-2xl rounded-xl">
+      {/* Header Section */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <GiGraduateCap className="text-2xl text-white drop-shadow-glow" />
+          <h2 className="text-2xl font-extrabold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent animate-pulse">
+            Education
+          </h2>
         </div>
-        <button className="p-2 hover:bg-gray-100 rounded-md">
-          <span className="sr-only">Toggle</span>
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
       </div>
+
+      {/* Display Education List */}
       {educations.length > 0 && (
-        <div>
+        <div className="mb-6 space-y-4">
           {educations.map((education) => (
-            <div key={education.id} className="flex justify-between items-center border-b py-2">
-              <span>{education.institute}</span>
-              <div className="flex gap-2">
-                <button onClick={() => handleEdit(education.id)}>
-                  <Pencil className="w-4 h-4 text-blue-700" />
+            <div
+              key={education.id}
+              className="p-4 bg-gray-800/50 backdrop-blur-md rounded-xl flex justify-between items-center transition-all duration-300 hover:shadow-glow hover:scale-[1.02]"
+            >
+              <div>
+                <strong className="text-lg font-semibold text-white drop-shadow-md">
+                  {education.institute}
+                </strong>
+                <p className="text-sm text-gray-300">{education.typeofstudy}</p>
+                <p className="text-sm text-gray-300">{education.areaofstudy}</p>
+                <p className="text-sm text-gray-400">{education.dateRange}</p>
+                {education.score && (
+                  <p className="text-xs text-gray-500">
+                    Score: {education.score}
+                  </p>
+                )}
+                {education.location && (
+                  <p className="text-xs text-gray-500">
+                    Location: {education.location}
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleEdit(education.id)}
+                  className="p-2 rounded-full bg-blue-600/20 hover:bg-blue-600/40 transition-all duration-300"
+                >
+                  <Pencil className="w-5 h-5 text-blue-400" />
                 </button>
-                <button onClick={() => handleDelete(education.id)}>
-                  <Trash2 className="w-4 h-4 text-red-700" />
+                <button
+                  onClick={() => handleDelete(education.id)}
+                  className="p-2 rounded-full bg-red-600/20 hover:bg-red-600/40 transition-all duration-300"
+                >
+                  <Trash2 className="w-5 h-5 text-red-400" />
                 </button>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Add New Education Button */}
       <button
         onClick={() => {
           setIsOpen(true);
           setEditId(null);
         }}
-        className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
+        className="w-full p-4 border-2 border-dashed border-gray-600 rounded-xl text-gray-400 bg-[rgba(255,255,255,0.05)] backdrop-blur-md hover:border-gray-500 hover:text-white transition-all duration-300 shadow-inner hover:shadow-glow"
       >
         + Add a new item
       </button>
-      <div className="flex items-center justify-center">
-        {isOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-opacity-50">
-            <div className="bg-[#141414] text-white p-6 rounded-lg w-[600px] shadow-lg">
-              {/* Header */}
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Add Education</h2>
-                <button onClick={() => setIsOpen(false)}>
-                  <FaTimes size={18} />
-                </button>
-              </div>
 
-              {/* Form */}
-              <div className="grid grid-cols-2 gap-4 mb-4">
+      {/* Education Modal */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-6 z-50">
+          <div className="bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] text-white p-8 rounded-2xl w-full max-w-[650px] shadow-2xl backdrop-blur-md border border-gray-700">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                {editId ? "Edit Education" : "Add Education"}
+              </h2>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 rounded-full bg-gray-700/50 hover:bg-gray-600/70 transition-all duration-300"
+              >
+                <FaTimes size={20} className="text-gray-300" />
+              </button>
+            </div>
+
+            {/* Education Form */}
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-2 gap-5 mb-6">
                 <input
                   type="text"
-                  name="institute" // Corrected to match formData key
+                  name="institute"
                   placeholder="Institute"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.institute}
                   onChange={handleChange}
+                  required
                 />
-
                 <input
                   type="text"
-                  name="typeofstudy" // Corrected to match formData key
+                  name="typeofstudy"
                   placeholder="Type of Study"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.typeofstudy}
                   onChange={handleChange}
+                  required
                 />
-
                 <input
                   type="text"
-                  name="areaofstudy" // Corrected to match formData key
+                  name="areaofstudy"
                   placeholder="Area of Study"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.areaofstudy}
                   onChange={handleChange}
+                  required
                 />
                 <input
                   type="number"
                   name="score"
                   placeholder="Score"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.score}
                   onChange={handleChange}
                   step="0.01" // Allows decimal values
                 />
                 <input
-                  type="text"
+                  type="date"
                   name="dateRange"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.dateRange}
-                  placeholder="Date Range"
                   onChange={handleChange}
+                  onFocus={(e) => e.target.showPicker()} // Show the date picker
+                  required
                 />
                 <input
                   type="text"
                   name="location"
                   placeholder="Location"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.location}
                   onChange={handleChange}
                 />
               </div>
-              {/* Footer */}
+
+              {/* Modal Footer */}
               <div className="flex justify-end">
-                <button className="px-4 py-2 bg-white text-black rounded-md" onClick={handleSubmit}>
-                {editId ? 'Update' : 'Create'}
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-[#0eae95] text-white rounded-lg shadow-md hover:from-green-600 hover:to-green-800 hover:shadow-glow transition-all duration-300"
+                >
+                  {editId ? "Update" : "Create"}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }

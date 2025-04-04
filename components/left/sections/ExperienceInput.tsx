@@ -6,7 +6,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useExperienceStore } from "@/app/store";
 
 export default function ExperienceInput() {
-  const { experiences, addExperience, updateExperience, deleteExperience } = useExperienceStore();
+  const { experiences, addExperience, updateExperience, deleteExperience } =
+    useExperienceStore();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     company: "",
@@ -18,17 +19,15 @@ export default function ExperienceInput() {
 
   const [editId, setEditId] = useState<string | null>(null);
 
-  // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.company || !formData.position) return; // Prevent empty submissions
+    if (!formData.company || !formData.position) return;
 
     if (editId !== null) {
       updateExperience(
@@ -49,8 +48,14 @@ export default function ExperienceInput() {
       );
     }
 
-    setFormData({ company: "", position: "", dateRange: "", location: "", description: "" }); // Reset form
-    setIsOpen(false); // Close modal after submission
+    setFormData({
+      company: "",
+      position: "",
+      dateRange: "",
+      location: "",
+      description: "",
+    });
+    setIsOpen(false);
     setEditId(null);
   };
 
@@ -68,27 +73,52 @@ export default function ExperienceInput() {
   };
 
   return (
-    <section className="p-6 border-b">
+    <section className="p-6 border-b border-[rgba(255,255,255,0.05)] bg-gradient-to-b from-main-bg via-[rgba(17,1,30,0.95)] to-main-bg text-text-subtitle shadow-2xl rounded-xl">
       {/* Header Section */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <MdWork className="text-xl" />
-          <h2 className="text-xl font-bold">Experience</h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <MdWork className="text-2xl text-white drop-shadow-glow" />
+          <h2 className="text-2xl font-extrabold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent animate-pulse">
+            Experience
+          </h2>
         </div>
       </div>
 
       {/* Display Experience List */}
       {experiences.length > 0 && (
-        <div>
+        <div className="mb-6 space-y-4">
           {experiences.map((experience) => (
-            <div key={experience.id} className="flex justify-between items-center p-2 border-b">
-              <span>{experience.company}</span>
-              <div className="flex gap-2">
-                <button onClick={() => handleEdit(experience.id)}>
-                  <Pencil className="w-4 h-4 text-blue-700" />
+            <div
+              key={experience.id}
+              className="p-4 bg-gray-800/50 backdrop-blur-md rounded-xl flex justify-between items-center transition-all duration-300 hover:shadow-glow hover:scale-[1.02]"
+            >
+              <div>
+                <strong className="text-lg font-semibold text-white drop-shadow-md">
+                  {experience.company}
+                </strong>
+                <p className="text-sm text-gray-300">{experience.position}</p>
+                <p className="text-sm text-gray-400">{experience.dateRange}</p>
+                {experience.location && (
+                  <p className="text-xs text-gray-500">
+                    Location: {experience.location}
+                  </p>
+                )}
+                <p className="text-xs text-gray-400 mt-1">
+                  {experience.description}
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleEdit(experience.id)}
+                  className="p-2 rounded-full bg-blue-600/20 hover:bg-blue-600/40 transition-all duration-300"
+                >
+                  <Pencil className="w-5 h-5 text-blue-400" />
                 </button>
-                <button onClick={() => handleDelete(experience.id)}>
-                  <Trash2 className="w-4 h-4 text-red-700" />
+                <button
+                  onClick={() => handleDelete(experience.id)}
+                  className="p-2 rounded-full bg-red-600/20 hover:bg-red-600/40 transition-all duration-300"
+                >
+                  <Trash2 className="w-5 h-5 text-red-400" />
                 </button>
               </div>
             </div>
@@ -102,31 +132,36 @@ export default function ExperienceInput() {
           setIsOpen(true);
           setEditId(null);
         }}
-        className="w-full p-3 border-2 border-dashed rounded-md text-gray-500 hover:bg-gray-50 transition-colors"
+        className="w-full p-4 border-2 border-dashed border-gray-600 rounded-xl text-gray-400 bg-[rgba(255,255,255,0.05)] backdrop-blur-md hover:border-gray-500 hover:text-white transition-all duration-300 shadow-inner hover:shadow-glow"
       >
         + Add a new item
       </button>
 
       {/* Experience Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-[#141414] text-white p-6 rounded-lg w-[600px] shadow-lg">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-6 z-50">
+          <div className="bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] text-white p-8 rounded-2xl w-full max-w-[650px] shadow-2xl backdrop-blur-md border border-gray-700">
             {/* Modal Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">{editId ? "Edit Experience" : "Add Experience"}</h2>
-              <button onClick={() => setIsOpen(false)}>
-                <FaTimes size={18} />
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                {editId ? "Edit Experience" : "Add Experience"}
+              </h2>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 rounded-full bg-gray-700/50 hover:bg-gray-600/70 transition-all duration-300"
+              >
+                <FaTimes size={20} className="text-gray-300" />
               </button>
             </div>
 
             {/* Experience Form */}
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-4 mb-4">
+            <form onSubmit={handleSubmit} className="bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E]">
+              <div className="grid grid-cols-2 gap-5 mb-6">
                 <input
                   type="text"
                   name="company"
                   placeholder="Company"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.company}
                   onChange={handleChange}
                   required
@@ -135,35 +170,38 @@ export default function ExperienceInput() {
                   type="text"
                   name="position"
                   placeholder="Position"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.position}
                   onChange={handleChange}
                   required
                 />
                 <input
-                  type="text"
+                  type="date"
                   name="dateRange"
                   placeholder="DD MM YYYY - Present"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.dateRange}
                   onChange={handleChange}
+                  onFocus={(e) => e.target.showPicker()}
                 />
                 <input
                   type="text"
                   name="location"
                   placeholder="Location"
-                  className="w-full p-2 bg-black border rounded-md"
+                  className="w-full p-3 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   value={formData.location}
                   onChange={handleChange}
                 />
               </div>
 
               {/* Description Textarea */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Description</label>
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2 text-gray-300">
+                  Description
+                </label>
                 <textarea
                   name="description"
-                  className="w-full p-3 bg-black border rounded-md min-h-[150px]"
+                  className="w-full p-4 bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] border border-gray-700 rounded-lg min-h-[160px] text-white placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all duration-300 shadow-inner hover:shadow-glow"
                   placeholder="Write your professional experience..."
                   value={formData.description}
                   onChange={handleChange}
@@ -172,7 +210,10 @@ export default function ExperienceInput() {
 
               {/* Modal Footer */}
               <div className="flex justify-end">
-                <button type="submit" className="px-4 py-2 bg-white text-black rounded-md">
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-[#0eae95] text-white rounded-lg shadow-md hover:from-green-600 hover:to-green-800 hover:shadow-glow transition-all duration-300"
+                >
                   {editId ? "Update" : "Create"}
                 </button>
               </div>

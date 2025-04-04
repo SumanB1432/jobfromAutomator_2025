@@ -20,23 +20,25 @@ const CreateResume: React.FC = () => {
   const [resumeData, setResumeData] = useState<any>(null); // Store fetched data
   const [loading, setLoading] = useState(false);
   const [apiKey, setApiKey] = useState("");
+  const [job_description, setJD] = useState("");
+  const [previous_resume_data, setRD] = useState("")
   const { selectedTemplate } = useThemeStore(); // Get selected template from store
-  
+
 
   const db = getDatabase(app);
   console.log(uid, "uid");
   const datapath = ref(db, "user/" + uid + "/" + "resume_data/" + "newData/");
 
-// In CreateResume.tsx
-const templateComponents : any = {
-  'bonzor': Resume,
-  'luxary': Luxary,
-  'unique': Unique,
-  'new resume': NewResume,
-};
+  // In CreateResume.tsx
+  const templateComponents: any = {
+    'bonzor': Resume,
+    'luxary': Luxary,
+    'unique': Unique,
+    'new resume': NewResume,
+  };
 
-// Fix the selected template logic
-const SelectedTemplateComponent = templateComponents[selectedTemplate.toLowerCase()] || Resume;
+  // Fix the selected template logic
+  const SelectedTemplateComponent = templateComponents[selectedTemplate.toLowerCase()] || Resume;
 
 
   useEffect(() => {
@@ -62,6 +64,11 @@ const SelectedTemplateComponent = templateComponents[selectedTemplate.toLowerCas
     const auth = getAuth();
     setUid(auth.currentUser ? auth.currentUser.uid : null);
     let api_key = localStorage.getItem("api_key");
+    let JD = localStorage.getItem("jobDescription");
+    let RD = localStorage.getItem("resumeText")
+    console.log(RD,JD);
+    setJD(JD);
+    setRD(RD);
     if (!api_key) {
       console.error("API Key is missing in localStorage!");
       return;
@@ -94,16 +101,7 @@ const SelectedTemplateComponent = templateComponents[selectedTemplate.toLowerCas
     // };
 
     // fetchDataAsync();
-    let previous_resume_data = "SUMAN BERA  Phone: 8768814455  E - mail :   suman80bera@gmail.com  LinkedIn :   Linkedin.com  GitHub   Link :   Github.com  EXPERIENCE  FunctionUp,   Backend Developer Trainee.  May 2022 -   PRESENT  ●   Upskilling   in making backend applications by using Node.Js,  Express & MongoDB.  ●   Built the backend of 5 group projects with my teammates.  PROJECTS  ●   E - Commerce Dashboard   |   DEPLOYMENT LINK  [Jan - 23 ]  Tech Stack :   Developed backend   and frontend of   an   e - commerce  dashboard   using   node.js, react.js,   Mongo DB ,   Express,   and   JWT for  authentication &   authorization .  ●   URL Shortener   |   GITHUB LINK  [Jul - 21]  Tech Stack :   Developed backend of a website like Tiny URL and  Bit.ly which shortens along URL using the short ID npm   package.  Used   Redis for caching   URLs   to improve performance.  ●   Book Management   |   GITHUB LINK  [Jul - 21]  Tech Stack :   Developed   the   backend of a website like Books Wagon  where users can register,   publish books and give ratings to each  book.  ●   Open To Intern   |   GITHUB LINK  [Jul - 21]  Tech Stack :   A website   that   registers colleges and students looking  for internships.   Used JWT for authentication and authorization,   and  AWS S3 service for storing files.  ●   Blog Management   |   GITHUB LINK  [Jun - 21]  Tech Stack :   Developed   the   backend of a website like NEWBREED  BLOG where users can create their own   accounts , publish blogs and  give ratings to each blog .  SKILLS  ●   Node.Js  ●   Java Script  ●   MongoDB  ●   JWT  ●   AWS S3  ●   Data Structure & Algorithm.  ●   HTML & CSS  ●   Redis  ●   Git  ●   Postman  ●   MySQL  ●   Typescript  ●   React   Js(Basic)  ●   Python  EDUCATION  Siliguri Institute of Technology   -  B.Tech  Electrical Engineering, 8.5 cgpa  June 2018   -   May 2022  Bagnabarh High School,   -  12th,   82%  July 2016   -   July 2018  Bagnabarh High School,   -  10th,   83%  July 2015   -   July 2016  Soft Skills  ●   Team Work.  ●   Time Management.  ●   Quick Learner  ●   Self Motivated. currentCtc 1; ExpectedCtc 2; NoticePeriod 15; Location remote"
-    let job_description = `Writing clean and well structured HTML, CSS and JavaScript code to create layout,style,functionality of webpages.
-     Adding and improving functionalities to the various domains of websites.
-Developing new user-facing features using various front-end libraries and frameworks((e.g., React, Angular, Vue.js) to enhance user engagement and functionality.
-Building reusable components and front-end libraries for future use.
-Collaborating closely with UI/UX designers to translate design mockups and wireframes into functional web interfaces, paying attention to detail and design consistency.
-Optimizing components for maximum performance across a vast array of web-capable devices and browsers.
-Using version control systems like Git to manage code changes, collaborate with team members, and maintain a clean and organized codebase.
-Effectively communicating with designers, back-end developers, project managers, and other team members to ensure seamless integration of front-end components with the overall project.
-Understanding business requirements and translating them into technical requirements.`
+
     async function analyzeResumeForSkill() {
       // console.log("from analyzer",);
 
@@ -237,7 +235,7 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
     analyzeResumeForSkill()
     // setResumeData(sampleData);
     // fillResumeData(sampleData)
-  }, [apiKey]);
+  }, [job_description, previous_resume_data, apiKey]);
 
   useEffect(() => {
     setResumeData(resumeData);
@@ -280,7 +278,7 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
         <Rightsidebar />
         <button
           className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200 print:hidden"
-          onClick={()=>handlePrint()}
+          onClick={() => handlePrint()}
         >
           Print
         </button>

@@ -1,8 +1,8 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js",
-  "/settings/page": "app/settings/page.js",
-  "/payment/page": "app/payment/page.js",
-  "/atsresume/createresume/page": "app/atsresume/createresume/page.js"
+  "/atsresume/page": "app/atsresume/page.js",
+  "/updateresume/page": "app/updateresume/page.js",
+  "/policy/page": "app/policy/page.js",
+  "/atsresume/createresume/page": "app/atsresume/createresume/page.js",
+  "/ats-score/ats-next/page": "app/ats-score/ats-next/page.js",
+  "/home/page": "app/home/page.js"
 }

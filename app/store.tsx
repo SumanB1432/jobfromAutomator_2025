@@ -68,21 +68,17 @@ type Project = {
 
 type ProjectStore = {
   projects: Project[];
-  addProject: (
-    name: string,
-    details: string,
-    date: string,
-    website: string
-  ) => void;
-  updateProject: (id: string, name: string, details: string) => void;
+  addProject: (name: string, description: string, date: string, website: string) => void;
+  updateProject: (id: string, name: string, description: string, date: string, website: string) => void;
   deleteProject: (id: string) => void;
 };
 
 export const useProjectStore = create<ProjectStore>((set) => ({
   projects: [],
+
   addProject: (name, description, website, date) => {
     const newProject: Project = {
-      id: Date.now().toString(), // Use a timestamp as a unique ID
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9), // More unique ID
       name,
       description,
       website,
@@ -92,13 +88,17 @@ export const useProjectStore = create<ProjectStore>((set) => ({
       projects: [...state.projects, newProject],
     }));
   },
-  updateProject: (id, name, details) => {
+
+  updateProject: (id, name, description, date, website) => {
     set((state) => ({
       projects: state.projects.map((project) =>
-        project.id === id ? { ...project, name, details } : project
+        project.id === id 
+          ? { ...project, name, description, date, website } 
+          : project
       ),
     }));
   },
+
   deleteProject: (id) => {
     set((state) => ({
       projects: state.projects.filter((project) => project.id !== id),
@@ -112,38 +112,23 @@ type Education = {
   areaofstudy: string;
   typeofstudy: string;
   dateRange: string;
-  score: string,
-  location: string
+  score: string;
+  location: string;
 };
 
 type EducationStore = {
   educations: Education[];
-  addEducation: (
-    institute: string,
-    areaofstudy: string,
-    typeofstudy: string,
-    dateRange: string,
-    score: string
-  ) => void; // Add education
-  
-  updateEducation: (
-    id: string,
-    institute: string,
-    areaofstudy: string,
-    typeofstudy: string,
-    dateRange: string,
-    score: string
-  ) => void; // Update education
+  addEducation: (institute: string, areaofstudy: string, typeofstudy: string, dateRange: string, score: string) => void;
+  updateEducation: (id: string, institute: string, areaofstudy: string, typeofstudy: string, dateRange: string, score: string) => void;
   deleteEducation: (id: string) => void;
 };
 
 export const useEducationStore = create<EducationStore>((set) => ({
   educations: [],
 
-  // Add a new education entry
   addEducation: (institute, areaofstudy, typeofstudy, dateRange, score) => {
     const newEducation: Education = {
-      id: Date.now().toString(), // Generate unique ID using timestamp
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
       institute,
       areaofstudy,
       typeofstudy,
@@ -156,32 +141,16 @@ export const useEducationStore = create<EducationStore>((set) => ({
     }));
   },
 
-  // Update an existing education entry
-  updateEducation: (
-    id,
-    institute,
-    areaofstudy,
-    typeofstudy,
-    dateRange,
-    score
-  ) => {
+  updateEducation: (id, institute, areaofstudy, typeofstudy, dateRange, score) => {
     set((state) => ({
       educations: state.educations.map((education) =>
-        education.id === id
-          ? {
-              ...education,
-              institute,
-              areaofstudy,
-              typeofstudy,
-              dateRange,
-              score,
-            }
+        education.id === id 
+          ? { ...education, institute, areaofstudy, typeofstudy, dateRange, score } 
           : education
       ),
     }));
   },
 
-  // Delete an education entry
   deleteEducation: (id) => {
     set((state) => ({
       educations: state.educations.filter((education) => education.id !== id),
@@ -200,29 +169,17 @@ type Certificate = {
 
 type CertificateStore = {
   certificates: Certificate[];
-  addCertificate: (
-    title: string,
-    awarder: string,
-    date: string,
-    link: string
-  ) => void; // Add certificate
-  updateCertificate: (
-    id: string,
-    title: string,
-    awarder: string,
-    date: string,
-    link: string
-  ) => void; // Update certificate
+  addCertificate: (title: string, awarder: string, date: string, link: string) => void;
+  updateCertificate: (id: string, title: string, awarder: string, date: string, link: string) => void;
   deleteCertificate: (id: string) => void;
 };
 
 export const useCertificateStore = create<CertificateStore>((set) => ({
   certificates: [],
 
-  // Add a new certificate entry
   addCertificate: (title, awarder, date, link) => {
     const newCertificate: Certificate = {
-      id: Date.now().toString(), // Generate unique ID using timestamp
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9), // Unique ID
       title,
       awarder,
       date,
@@ -233,23 +190,17 @@ export const useCertificateStore = create<CertificateStore>((set) => ({
     }));
   },
 
-  // Update an existing certificate entry
   updateCertificate: (id, title, awarder, date, link) => {
     set((state) => ({
       certificates: state.certificates.map((certificate) =>
-        certificate.id === id
-          ? { ...certificate, title, awarder, date, link }
-          : certificate
+        certificate.id === id ? { ...certificate, title, awarder, date, link } : certificate
       ),
     }));
   },
 
-  // Delete a certificate entry
   deleteCertificate: (id) => {
     set((state) => ({
-      certificates: state.certificates.filter(
-        (certificate) => certificate.id !== id
-      ),
+      certificates: state.certificates.filter((certificate) => certificate.id !== id),
     }));
   },
 }));
@@ -272,7 +223,7 @@ type ExperienceStore = {
     dateRange: string,
     location: string,
     description: string
-  ) => void; // Add experience
+  ) => void;
   updateExperience: (
     id: string,
     company: string,
@@ -280,17 +231,16 @@ type ExperienceStore = {
     dateRange: string,
     location: string,
     description: string
-  ) => void; // Update experience
+  ) => void;
   deleteExperience: (id: string) => void;
 };
 
 export const useExperienceStore = create<ExperienceStore>((set) => ({
   experiences: [],
 
-  // Add a new experience entry
   addExperience: (company, position, dateRange, location, description) => {
     const newExperience: Experience = {
-      id: Date.now().toString(), // Generate unique ID
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9), // Unique ID
       company,
       position,
       dateRange,
@@ -302,37 +252,19 @@ export const useExperienceStore = create<ExperienceStore>((set) => ({
     }));
   },
 
-  // Update an existing experience entry
-  updateExperience: (
-    id,
-    company,
-    position,
-    dateRange,
-    location,
-    description
-  ) => {
+  updateExperience: (id, company, position, dateRange, location, description) => {
     set((state) => ({
       experiences: state.experiences.map((experience) =>
         experience.id === id
-          ? {
-              ...experience,
-              company,
-              position,
-              dateRange,
-              location,
-              description,
-            }
+          ? { ...experience, company, position, dateRange, location, description }
           : experience
       ),
     }));
   },
 
-  // Delete an experience entry
   deleteExperience: (id) => {
     set((state) => ({
-      experiences: state.experiences.filter(
-        (experience) => experience.id !== id
-      ),
+      experiences: state.experiences.filter((experience) => experience.id !== id),
     }));
   },
 }));
@@ -353,19 +285,17 @@ type SkillStore = {
 export const useSkillStore = create<SkillStore>((set) => ({
   skills: [],
 
-  // Add a new skill entry
   addSkill: (heading, items) => {
     const newSkill: Skill = {
-      id: Date.now().toString(), // Generate unique ID
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9), // Unique ID
       heading,
       items,
     };
     set((state) => ({
-      skills: [...state.skills, newSkill], // Fix incorrect reference to 'experiences'
+      skills: [...state.skills, newSkill],
     }));
   },
 
-  // Update an existing skill entry
   updateSkill: (id, heading, items) => {
     set((state) => ({
       skills: state.skills.map((skill) =>
@@ -374,7 +304,6 @@ export const useSkillStore = create<SkillStore>((set) => ({
     }));
   },
 
-  // Delete a skill entry
   deleteSkill: (id) => {
     set((state) => ({
       skills: state.skills.filter((skill) => skill.id !== id),
@@ -388,18 +317,20 @@ type Achievement = {
   name: string;
   details: string;
 };
+
 type AchievementStore = {
   achievements: Achievement[];
   addAchievement: (name: string, details: string) => void;
   updateAchievement: (id: string, name: string, details: string) => void;
   deleteAchievement: (id: string) => void;
 };
+
 export const useAchievementStore = create<AchievementStore>((set) => ({
   achievements: [],
 
   addAchievement: (name, details) => {
     const newAchievement: Achievement = {
-      id: Date.now().toString(), // Generate unique ID
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9), // Unique ID
       name,
       details,
     };
@@ -407,6 +338,7 @@ export const useAchievementStore = create<AchievementStore>((set) => ({
       achievements: [...state.achievements, newAchievement],
     }));
   },
+
   updateAchievement: (id, name, details) => {
     set((state) => ({
       achievements: state.achievements.map((achievement) =>
@@ -414,11 +346,10 @@ export const useAchievementStore = create<AchievementStore>((set) => ({
       ),
     }));
   },
+
   deleteAchievement: (id) => {
     set((state) => ({
-      achievements: state.achievements.filter(
-        (achievement) => achievement.id !== id
-      ),
+      achievements: state.achievements.filter((achievement) => achievement.id !== id),
     }));
   },
 }));
@@ -437,9 +368,10 @@ type LanguageStore = {
 
 export const useLanguageStore = create<LanguageStore>((set) => ({
   languages: [],
+
   addLanguage: (heading, option) => {
     const newLanguage: Language = {
-      id: Date.now().toString(), // Generate unique ID
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9), // Unique ID
       heading,
       option,
     };
@@ -447,6 +379,7 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
       languages: [...state.languages, newLanguage],
     }));
   },
+
   updateLanguage: (id, heading, option) => {
     set((state) => ({
       languages: state.languages.map((language) =>
@@ -454,6 +387,7 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
       ),
     }));
   },
+
   deleteLanguage: (id) => {
     set((state) => ({
       languages: state.languages.filter((language) => language.id !== id),
