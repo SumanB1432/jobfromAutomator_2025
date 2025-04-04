@@ -11,15 +11,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/send-auto-mail/page": [
+    "/contactUs/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/send-auto-mail/page.js"
-    ],
-    "/referral/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/referral/page.js"
+      "static/chunks/app/contactUs/page.js"
     ],
     "/[referral]/page": [
       "static/chunks/webpack.js",
@@ -31,30 +26,21 @@
       "static/chunks/main-app.js",
       "static/chunks/app/settings/page.js"
     ],
-    "/sign-in/page": [
+    "/payment/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/sign-in/page.js"
+      "static/chunks/app/payment/page.js"
     ],
-    "/sign-up/page": [
+    "/atsresume/createresume/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/sign-up/page.js"
+      "static/css/app/atsresume/createresume/page.css",
+      "static/chunks/app/atsresume/createresume/page.js"
     ],
-    "/gemini/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/gemini/page.js"
-    ],
-    "/home/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/home/page.js"
-    ],
-    "/demo/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/demo/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

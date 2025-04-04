@@ -521,3 +521,53 @@ export const useTemplateStore = create<TemplateStore>((set) => ({
 
   setActiveTemplate: (id) => set({ activeTemplateId: id }),
 }));
+
+interface ThemeState {
+  selectedFont: string;
+  setSelectedFont: (font: string) => void;
+  fontWeight: string; // e.g., '400', '700'
+  setFontWeight: (weight: string) => void;
+  fontStyle: string; // e.g., 'normal', 'italic'
+  setFontStyle: (style: string) => void;
+  fontSubset: string; // e.g., 'latin', 'cyrillic', 'greek'
+  setFontSubset: (subset: string) => void;
+  fontSize: number;
+  setFontSize: (size: number) => void;
+  lineHeight: number;
+  setLineHeight: (height: number) => void;
+  primaryColor: string;
+  setPrimaryColor: (color: string) => void;
+  backgroundColor: string;
+  setBackgroundColor: (color: string) => void;
+  hideIcons: boolean;
+  setHideIcons: (hide: boolean) => void;
+  underlineLinks: boolean;
+  setUnderlineLinks: (underline: boolean) => void;
+  selectedTemplate: string; // New state for selected template
+  setSelectedTemplate: (template: string) => void; // Setter for selected template
+}
+
+export const useThemeStore = create<ThemeState>((set) => ({
+  selectedFont: 'Open Sans',
+  setSelectedFont: (font) => set({ selectedFont: font }),
+  fontWeight: '400',
+  setFontWeight: (weight) => set({ fontWeight: weight }),
+  fontStyle: 'normal',
+  setFontStyle: (style) => set({ fontStyle: style }),
+  fontSubset: 'latin', // Default font subset
+  setFontSubset: (subset) => set({ fontSubset: subset }),
+  fontSize: 14.2,
+  setFontSize: (size) => set({ fontSize: size }),
+  lineHeight: 1.5,
+  setLineHeight: (height) => set({ lineHeight: height }),
+  primaryColor: '#dc2626',
+  setPrimaryColor: (color) => set({ primaryColor: color }),
+  backgroundColor: '#ffffff',
+  setBackgroundColor: (color) => set({ backgroundColor: color }),
+  hideIcons: false,
+  setHideIcons: (hide) => set({ hideIcons: hide }),
+  underlineLinks: true,
+  setUnderlineLinks: (underline) => set({ underlineLinks: underline }),
+  selectedTemplate: 'bonzor', // Use lowercase here
+  setSelectedTemplate: (template) => set({ selectedTemplate: template.toLowerCase() }),
+}));

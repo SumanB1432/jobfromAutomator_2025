@@ -8,8 +8,11 @@ import { ref, getDatabase, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import app from "@/firebase/config";
 import fillResumeData from "../../oneclick/page"; // Import the function
-import sampleData from "../../sampleResume.json";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useThemeStore } from "@/app/store";
+import Luxary from "@/components/resume_templates/luxary";
+import Unique from "@/components/resume_templates/Unique";
+import NewResume from "@/components/resume_templates/new";
 
 const CreateResume: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -17,7 +20,42 @@ const CreateResume: React.FC = () => {
   const [resumeData, setResumeData] = useState<any>(null); // Store fetched data
   const [loading, setLoading] = useState(false);
   const [apiKey, setApiKey] = useState("");
-  const [geminiClient, setGeminiClient] = useState<GoogleGenerativeAI | null>(null); // Initialize as null
+  const { selectedTemplate } = useThemeStore(); // Get selected template from store
+  
+
+  const db = getDatabase(app);
+  console.log(uid, "uid");
+  const datapath = ref(db, "user/" + uid + "/" + "resume_data/" + "newData/");
+
+// In CreateResume.tsx
+const templateComponents : any = {
+  'bonzor': Resume,
+  'luxary': Luxary,
+  'unique': Unique,
+  'new resume': NewResume,
+};
+
+// Fix the selected template logic
+const SelectedTemplateComponent = templateComponents[selectedTemplate.toLowerCase()] || Resume;
+
+
+  useEffect(() => {
+    const fetchDataAsync = async () => {
+      try {
+        const snapshot = await get(datapath);
+        if (snapshot.exists()) {
+          console.log("Retrieved Data:", snapshot.val());
+        } else {
+          console.log("No data available");
+        }
+      } catch (error) {
+        console.error("Error retrieving data:", error);
+      }
+    };
+
+    fetchDataAsync();
+  });
+
 
 
   useEffect(() => {
@@ -30,32 +68,34 @@ const CreateResume: React.FC = () => {
     }
     console.log(api_key);
     setApiKey(api_key);
-    setGeminiClient(new GoogleGenerativeAI(api_key)); // Initialize here after apiKey is set
   }, []);
 
+  const geminiClient = new GoogleGenerativeAI(apiKey);
 
   useEffect(() => {
-    if (apiKey && geminiClient) {
-      async function analyzeResumeForSkill() {
-        // console.log("from analyzer",);
+    // if (!uid) return;
 
-        const prompt = `You are an AI that generates structured resume data in JSON format. Below, I will provide previous resume data and a job description. Your task is to carefully analyze both, understand the job requirements, and update the resume while ensuring that all fields remain correctly structured.
+    // const db = getDatabase(app);
+    // const datapath = ref(db, `user/${uid}/resume_data/newData/`);
 
-### Instructions:
-1. **Retain personal details exactly as they are** without any modifications if any fields are not there then not set as N/A, just give empty string.
-2. **Modify the 'skills' section** to align with the job description while maintaining the structure. Ensure that all skills are grouped under relevant headings and formatted as in the example JSON.
-3. **Update the 'experiences' section** by emphasizing responsibilities and achievements relevant to the job description. Retain the same structure and formatting.
-4. **Preserve the JSON structure** exactly as shown in the example, ensuring that key names remain unchanged.
-5. **Ensure uniformity in field values** (e.g., the format of dates, lists, objects) so that the modified resume is consistent with the example structure.
-6.if any fields are not there then not set as N/A, just give empty string.
+    // const fetchDataAsync = async () => {
+    //   try {
+    //     const snapshot = await get(datapath);
+    //     if (snapshot.exists()) {
+    //       console.log("Retrieved Data:", snapshot.val());
+    //       setResumeData(snapshot.val()); // Store data in state
+    //       fillResumeData(snapshot.val()); // Fill Zustand state
+    //     } else {
+    //       console.log("No data available");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error retrieving data:", error);
+    //   }
+    // };
 
-
-### Input Data:
-**Previous Resume Data:**
-${"SUMAN BERA  Phone: 8768814455  E - mail :   suman80bera@gmail.com  LinkedIn :   Linkedin.com  GitHub   Link :   Github.com  EXPERIENCE  FunctionUp,   Backend Developer Trainee.  May 2022 -   PRESENT  ●   Upskilling   in making backend applications by using Node.Js,  Express & MongoDB.  ●   Built the backend of 5 group projects with my teammates.  PROJECTS  ●   E - Commerce Dashboard   |   DEPLOYMENT LINK  [Jan - 23 ]  Tech Stack :   Developed backend   and frontend of   an   e - commerce  dashboard   using   node.js, react.js,   Mongo DB ,   Express,   and   JWT for  authentication &   authorization .  ●   URL Shortener   |   GITHUB LINK  [Jul - 21]  Tech Stack :   Developed backend of a website like Tiny URL and  Bit.ly which shortens along URL using the short ID npm   package.  Used   Redis for caching   URLs   to improve performance.  ●   Book Management   |   GITHUB LINK  [Jul - 21]  Tech Stack :   Developed   the   backend of a website like Books Wagon  where users can register,   publish books and give ratings to each  book.  ●   Open To Intern   |   GITHUB LINK  [Jul - 21]  Tech Stack :   A website   that   registers colleges and students looking  for internships.   Used JWT for authentication and authorization,   and  AWS S3 service for storing files.  ●   Blog Management   |   GITHUB LINK  [Jun - 21]  Tech Stack :   Developed   the   backend of a website like NEWBREED  BLOG where users can create their own   accounts , publish blogs and  give ratings to each blog .  SKILLS  ●   Node.Js  ●   Java Script  ●   MongoDB  ●   JWT  ●   AWS S3  ●   Data Structure & Algorithm.  ●   HTML & CSS  ●   Redis  ●   Git  ●   Postman  ●   MySQL  ●   Typescript  ●   React   Js(Basic)  ●   Python  EDUCATION  Siliguri Institute of Technology   -  B.Tech  Electrical Engineering, 8.5 cgpa  June 2018   -   May 2022  Bagnabarh High School,   -  12th,   82%  July 2016   -   July 2018  Bagnabarh High School,   -  10th,   83%  July 2015   -   July 2016  Soft Skills  ●   Team Work.  ●   Time Management.  ●   Quick Learner  ●   Self Motivated. currentCtc 1; ExpectedCtc 2; NoticePeriod 15; Location remote"}
-
-**Job Description:**
-${`Writing clean and well structured HTML, CSS and JavaScript code to create layout,style,functionality of webpages.
+    // fetchDataAsync();
+    let previous_resume_data = "SUMAN BERA  Phone: 8768814455  E - mail :   suman80bera@gmail.com  LinkedIn :   Linkedin.com  GitHub   Link :   Github.com  EXPERIENCE  FunctionUp,   Backend Developer Trainee.  May 2022 -   PRESENT  ●   Upskilling   in making backend applications by using Node.Js,  Express & MongoDB.  ●   Built the backend of 5 group projects with my teammates.  PROJECTS  ●   E - Commerce Dashboard   |   DEPLOYMENT LINK  [Jan - 23 ]  Tech Stack :   Developed backend   and frontend of   an   e - commerce  dashboard   using   node.js, react.js,   Mongo DB ,   Express,   and   JWT for  authentication &   authorization .  ●   URL Shortener   |   GITHUB LINK  [Jul - 21]  Tech Stack :   Developed backend of a website like Tiny URL and  Bit.ly which shortens along URL using the short ID npm   package.  Used   Redis for caching   URLs   to improve performance.  ●   Book Management   |   GITHUB LINK  [Jul - 21]  Tech Stack :   Developed   the   backend of a website like Books Wagon  where users can register,   publish books and give ratings to each  book.  ●   Open To Intern   |   GITHUB LINK  [Jul - 21]  Tech Stack :   A website   that   registers colleges and students looking  for internships.   Used JWT for authentication and authorization,   and  AWS S3 service for storing files.  ●   Blog Management   |   GITHUB LINK  [Jun - 21]  Tech Stack :   Developed   the   backend of a website like NEWBREED  BLOG where users can create their own   accounts , publish blogs and  give ratings to each blog .  SKILLS  ●   Node.Js  ●   Java Script  ●   MongoDB  ●   JWT  ●   AWS S3  ●   Data Structure & Algorithm.  ●   HTML & CSS  ●   Redis  ●   Git  ●   Postman  ●   MySQL  ●   Typescript  ●   React   Js(Basic)  ●   Python  EDUCATION  Siliguri Institute of Technology   -  B.Tech  Electrical Engineering, 8.5 cgpa  June 2018   -   May 2022  Bagnabarh High School,   -  12th,   82%  July 2016   -   July 2018  Bagnabarh High School,   -  10th,   83%  July 2015   -   July 2016  Soft Skills  ●   Team Work.  ●   Time Management.  ●   Quick Learner  ●   Self Motivated. currentCtc 1; ExpectedCtc 2; NoticePeriod 15; Location remote"
+    let job_description = `Writing clean and well structured HTML, CSS and JavaScript code to create layout,style,functionality of webpages.
      Adding and improving functionalities to the various domains of websites.
 Developing new user-facing features using various front-end libraries and frameworks((e.g., React, Angular, Vue.js) to enhance user engagement and functionality.
 Building reusable components and front-end libraries for future use.
@@ -63,7 +103,25 @@ Collaborating closely with UI/UX designers to translate design mockups and wiref
 Optimizing components for maximum performance across a vast array of web-capable devices and browsers.
 Using version control systems like Git to manage code changes, collaborate with team members, and maintain a clean and organized codebase.
 Effectively communicating with designers, back-end developers, project managers, and other team members to ensure seamless integration of front-end components with the overall project.
-Understanding business requirements and translating them into technical requirements.`}
+Understanding business requirements and translating them into technical requirements.`
+    async function analyzeResumeForSkill() {
+      // console.log("from analyzer",);
+
+      const prompt = `You are an AI that generates structured resume data in JSON format. Below, I will provide previous resume data and a job description. Your task is to carefully analyze both, understand the job requirements, and update the resume while ensuring that all fields remain correctly structured.
+
+### Instructions:
+1. **Retain personal details exactly as they are** without any modifications.
+2. **Modify the 'skills' section** to align with the job description while maintaining the structure. Ensure that all skills are grouped under relevant headings and formatted as in the example JSON.
+3. **Update the 'experiences' section** by emphasizing responsibilities and achievements relevant to the job description. Retain the same structure and formatting.
+4. **Preserve the JSON structure** exactly as shown in the example, ensuring that key names remain unchanged.
+5. **Ensure uniformity in field values** (e.g., the format of dates, lists, objects) so that the modified resume is consistent with the example structure.
+
+### Input Data:
+**Previous Resume Data:**
+${previous_resume_data}
+
+**Job Description:**
+${job_description}
 
 ### Output Format:
 Return the updated resume in **JSON format** ensuring all key names, structures, and data formats are identical to the following example:
@@ -149,47 +207,37 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
 
 
 
-        try {
-          setLoading(true);
-          const model = geminiClient.getGenerativeModel({ model: "gemini-2.0-flash" });
-          const response = await model.generateContent(prompt);
-          const textResponse = response.response.candidates[0].content.parts[0].text;
-          setLoading(false);
+      try {
+        const model = geminiClient.getGenerativeModel({ model: "gemini-2.0-flash" });
+        const response = await model.generateContent(prompt);
+        const textResponse = response.response.candidates[0].content.parts[0].text;
 
-
-          if (!textResponse) {
-            return { message: "Empty response from Gemini API." };
-          }
-          console.log("response", textResponse)
-
-          const regex = /```json([\s\S]*?)```/;
-          const match = textResponse.match(regex);
-
-          if (!match) {
-            return { message: "No valid JSON output found in Gemini API response." };
-          }
-          console.log("match", match[1])
-          const parsedJSON = JSON.parse(match[1]);
-          setResumeData(parsedJSON)
-          return parsedJSON;
-        } catch (error: any) { // Type error as 'any' to access error properties
-          setLoading(false);
-          console.error("Error processing Gemini API response:", error);
-
-          if (error instanceof Error && error.message.includes('403')) {
-            console.warn("Gemini API 403 Error encountered, but response might still be valid. Proceeding.");
-            // You might choose to handle 403 errors differently here,
-            // for now, we'll just warn and proceed.
-          } else {
-            return { message: "Failed to process Gemini API response.", error: error?.message };
-          }
-          // If it's a 403 or other error, still return an error message (or handle as needed)
-          return { message: "Error during Gemini API processing", error: error?.message }; // Or just return, depending on desired behavior
+        if (!textResponse) {
+          return { message: "Empty response from Gemini API." };
         }
+        console.log("response", textResponse)
+
+        const regex = /```json([\s\S]*?)```/;
+        const match = textResponse.match(regex);
+
+        if (!match) {
+          return { message: "No valid JSON output found in Gemini API response." };
+        }
+        console.log("match", match[1])
+        const parsedJSON = JSON.parse(match[1]);
+        setResumeData(parsedJSON)
+        return parsedJSON;
+      } catch (error) {
+        setLoading(false);
+        console.error("Error processing Gemini API response:", error);
+        return { message: "Failed to process Gemini API response.", error: error.message };
       }
-      analyzeResumeForSkill();
     }
-  }, [apiKey, geminiClient]);
+
+    analyzeResumeForSkill()
+    // setResumeData(sampleData);
+    // fillResumeData(sampleData)
+  }, [apiKey]);
 
   useEffect(() => {
     setResumeData(resumeData);
@@ -197,16 +245,20 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
   }, [resumeData])
 
   const handlePrint = useReactToPrint({
-    content: () => contentRef.current,
+    contentRef,
     pageStyle: `
       @page {
-        size: 250mm 350mm;
-        margin: 10;
+        size: 250mm 350mm; /* Custom page size */
+        margin: 10; /* Remove margins to use full width */
       }
+        * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
       header, footer {
-        display: none!important;
+        display: none !important;
       }
-      `,
+    `,
   });
 
   return (
@@ -219,8 +271,8 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
         ref={contentRef}
         className="w-[250mm] h-screen p-4 bg-gray-200 overflow-y-auto scrollbar-hidden print:h-auto print:p-0 print:w-[250mm] mx-auto"
       >
-        <div className="resume-container w-full max-w-[250mm] bg-gray-200 mx-auto p-4 print:p-0 print:w-full">
-          <Resume />
+        <div className="resume-container w-full max-w-[250mm] bg-gray-200 mx-auto p-4 print:p-0 print:w-full print:bg-white">
+          <SelectedTemplateComponent /> {/* Dynamically render selected template */}
         </div>
       </div>
 
@@ -228,7 +280,7 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
         <Rightsidebar />
         <button
           className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200 print:hidden"
-          onClick={handlePrint}
+          onClick={()=>handlePrint()}
         >
           Print
         </button>

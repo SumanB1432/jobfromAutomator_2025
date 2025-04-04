@@ -23,32 +23,39 @@ export default function LeftSidebar() {
   };
 
   return (
-    <div className="w-full h-[1000px] overflow-scroll scrollbar-hidden bg-white text-black">
+    <div className="w-full h-[1000px] overflow-y-scroll scrollbar-none bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] text-text-subtitle shadow-2xl rounded-xl">
       {/* Basics Section */}
+      <section className="p-8 border-b border-[rgba(255,255,255,0.05)] bg-[#0F011E] backdrop-blur-md">
+        <div className="flex items-center gap-4 mb-10 relative">
+          <GoPerson className="text-3xl text-primary-accent drop-shadow-lg animate-pulse-slow" />
+          <h2 className="text-3xl font-extrabold font-raleway text-transparent bg-gradient-to-r from-pink-300 to-green-400 bg-clip-text tracking-wider">
+            Basics
+          </h2>
 
-      <section className="p-6 border-b">
-        <div className="flex items-center gap-2 mb-6">
-          <GoPerson className="text-xl" />
-          <h2 className="text-xl font-bold">Basics</h2>
+          <div className="absolute -top-4 -left-4 w-20 h-20 bg-emphasis-purple opacity-20 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Picture</label>
-          <div className="flex items-center gap-2">
-            <div className="w-12 h-12 bg-emerald-700 rounded-full flex items-center justify-center text-white text-xl">
+        <div className="mb-8">
+          <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+            Picture
+          </label>
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary-accent via-[#0F8E76] to-[#0F6E56] rounded-full flex items-center justify-center text-pure-white text-2xl font-raleway shadow-lg ring-4 ring-[rgba(15,174,150,0.2)] transition-transform hover:scale-110 hover:ring-[rgba(15,174,150,0.4)] duration-300">
               {personalData.name?.[0] || "M"}
             </div>
-            <button className="p-2 border rounded-md hover:bg-gray-50">
-              <AiOutlineLink className="text-gray-500" />
+            <button className="p-3 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm hover:bg-[rgba(15,174,150,0.1)] hover:border-primary-accent transition-all duration-300">
+              <AiOutlineLink className="text-text-subtitle hover:text-primary-accent transition-colors duration-200" />
             </button>
           </div>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Full Name</label>
+        <div className="mb-8">
+          <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+            Full Name
+          </label>
           <input
             type="text"
-            className="w-full p-2 border rounded-md"
+            className="w-full p-4 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
             name="name"
             value={personalData.name || ""}
             onChange={handleChangePersonal}
@@ -56,11 +63,13 @@ export default function LeftSidebar() {
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Headline</label>
+        <div className="mb-8">
+          <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+            Headline
+          </label>
           <input
             type="text"
-            className="w-full p-2 border rounded-md"
+            className="w-full p-4 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
             name="headline"
             value={personalData.headline || ""}
             onChange={handleChangePersonal}
@@ -68,49 +77,60 @@ export default function LeftSidebar() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+              Email
+            </label>
             <div className="relative">
               <input
                 type="email"
-                className="w-full p-2 pl-8 border rounded-md"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
                 name="email"
                 value={personalData.email || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your email"
               />
-              <AiOutlineMail className="absolute left-2 top-3 text-gray-500" />
+              <AiOutlineMail className="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtitle hover:text-primary-accent transition-colors duration-200" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Website</label>
+            <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+              Website
+            </label>
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-2 pl-8 border rounded-md"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
                 name="website"
                 value={personalData.website || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your website"
               />
-              <BiWorld className="absolute left-2 top-3 text-gray-500" />
+              <BiWorld className="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtitle hover:text-primary-accent transition-colors duration-200" />
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+
+        <div className="grid grid-cols-2 gap-6 mt-6">
           <div>
-            <label className="block text-sm font-medium mb-2">Twitter</label>
+            <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+              Twitter
+            </label>
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-2 pl-8 border rounded-md"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
                 name="twitter"
                 value={personalData.twitter || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your Twitter profile"
               />
-              <svg className="absolute left-2 top-3 text-gray-500 w-4 h-4" viewBox="0 0 24 24" fill="none">
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtitle w-6 h-6 hover:text-primary-accent transition-colors duration-200"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
                 <path
                   d="M22 4.5a9 9 0 01-2.6.7 4.5 4.5 0 00-7.7 4c-4 0-7.5-2-10-5a4.5 4.5 0 001.5 6c-1 0-2-.3-2.5-1v.1a4.5 4.5 0 003.5 4.4 4.5 4.5 0 01-2 .1 4.5 4.5 0 004.2 3A9 9 0 012 19c2 1 4 1.5 6.5 1.5 7.5 0 12-6 12-12v-.5a8.5 8.5 0 002-2.5z"
                   stroke="currentColor"
@@ -119,19 +139,24 @@ export default function LeftSidebar() {
               </svg>
             </div>
           </div>
-
           <div>
-            <label className="block text-sm font-medium mb-2">LinkedIn</label>
+            <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+              LinkedIn
+            </label>
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-2 pl-8 border rounded-md"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
                 name="linkedin"
                 value={personalData.linkedin || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your LinkedIn profile"
               />
-              <svg className="absolute left-2 top-3 text-gray-500 w-4 h-4" viewBox="0 0 24 24" fill="none">
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtitle w-6 h-6 hover:text-primary-accent transition-colors duration-200"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
                 <path
                   d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"
                   stroke="currentColor"
@@ -139,40 +164,65 @@ export default function LeftSidebar() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <rect x="2" y="9" width="4" height="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="4" cy="4" r="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <rect
+                  x="2"
+                  y="9"
+                  width="4"
+                  height="12"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="4"
+                  cy="4"
+                  r="2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-2 gap-6 mt-6">
           <div>
-            <label className="block text-sm font-medium mb-2">Phone</label>
+            <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+              Phone
+            </label>
             <div className="relative">
               <input
                 type="tel"
-                className="w-full p-2 pl-8 border rounded-md"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
                 name="phone"
                 value={personalData.phone || ""}
                 onChange={handleChangePersonal}
                 placeholder="+1 (123) 456-7890"
               />
-              <FiPhone className="absolute left-2 top-3 text-gray-500" />
+              <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtitle hover:text-primary-accent transition-colors duration-200" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Location </label>
+            <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+              Location
+            </label>
             <div className="relative">
               <input
                 type="text"
-                className="w-full p-2 pl-8 border rounded-md"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
                 name="address"
                 value={personalData.address || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your location"
               />
-              <svg className="absolute left-2 top-3 text-gray-500 w-4 h-4" viewBox="0 0 24 24" fill="none">
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtitle w-6 h-6 hover:text-primary-accent transition-colors duration-200"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
                 <path
                   d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
                   stroke="currentColor"
@@ -194,20 +244,22 @@ export default function LeftSidebar() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-2 gap-6 mt-6">
           <div>
-            <label className="block text-sm font-medium mb-2">GitHub</label>
+            <label className="block text-sm font-medium mb-3 font-roboto text-text-subtitle tracking-tight uppercase">
+              GitHub
+            </label>
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-2 pl-8 border rounded-md"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
                 name="github"
                 value={personalData.github || ""}
                 onChange={handleChangePersonal}
                 placeholder="Your GitHub profile"
               />
               <svg
-                className="absolute left-2 top-3 text-gray-500 w-4 h-4"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtitle w-6 h-6 hover:text-primary-accent transition-colors duration-200"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
@@ -224,19 +276,12 @@ export default function LeftSidebar() {
       </section>
 
       <ExperienceInput />
-
       <EducationInput />
-
       <SkillsInput />
-
       <AchievementInput />
-
       <CertificationInput />
-
       <ProjectInput />
-
       <LanguageInput />
-
     </div>
   );
 }

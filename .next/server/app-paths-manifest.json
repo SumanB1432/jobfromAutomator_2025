@@ -1,7 +1,8 @@
 {
-  "/referral/page": "app/referral/page.js",
-  "/sign-up/page": "app/sign-up/page.js",
-  "/home/page": "app/home/page.js",
-  "/demo/page": "app/demo/page.js",
-  "/gemini/page": "app/gemini/page.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/settings/page": "app/settings/page.js",
+  "/payment/page": "app/payment/page.js",
+  "/atsresume/createresume/page": "app/atsresume/createresume/page.js"
 }

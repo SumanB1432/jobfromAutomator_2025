@@ -282,7 +282,7 @@ const Resume: React.FC = () => {
             <button
               ref={submitButtonRef}
               type="submit"
-              className="w-full py-2 bg-[#0FAE96] text-[#FFFFFF] rounded-md font-raleway font-medium text-base hover:opacity-90"
+              className="w-full py-2 bg-[#0FAE96] text-[#FFFFFF] rounded-md font-raleway font-medium text-base hover:opacity-90 bg-[#0FAE96] text-black px-4 py-2 rounded-md hover:bg-[#0FAE96]/80 transform transition duration-200 hover:scale-105 text-sm sm:text-base"
               disabled={isLoading}
             >
               Submit

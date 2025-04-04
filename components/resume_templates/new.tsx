@@ -10,8 +10,10 @@ import {
   useLanguageStore,
   useSkillStore,
 } from "@/app/store";
+import { useThemeStore } from  "@/app/store"; // Adjust the import path as needed
 
-export default function Resume() {
+export default function NewResume() {
+  // Access data from Zustand stores
   const { personalData } = usePersonalDataStore();
   const { certificates } = useCertificateStore();
   const { achievements } = useAchievementStore();
@@ -21,211 +23,213 @@ export default function Resume() {
   const { languages } = useLanguageStore();
   const { skills } = useSkillStore();
 
-  const originalBasePageHeight = 1123;
-  const basePageHeight = Math.round(originalBasePageHeight * 1.2);
-  const paddingTopBottom = 40;
-  const contentWrapperHeight = basePageHeight;
-  const availableContentHeight = contentWrapperHeight - 2 * paddingTopBottom;
+  // Access theme settings
+  const { primaryColor, fontSize, lineHeight } = useThemeStore();
 
-  const contentRef = useRef(null);
-  const [pageGroups, setPageGroups] = useState([]);
-  const [isMounted, setIsMounted] = useState(false);
-
+  const basePageHeight = 1124; // pixels, exact A4 height (297mm)
+  const paddingTopBottom = 40; // pixels, padding for screen display
+  const contentWrapperHeight = basePageHeight % 90;
+  const availableContentHeight = basePageHeight - 2 * paddingTopBottom; // 1043px for content
+  
   const pageHeightClass = `h-[${basePageHeight}px]`;
   const contentHeightClass = `h-[${contentWrapperHeight}px] print:h-auto`;
-  const paddingClass = `pt-[${paddingTopBottom}px] pb-[${paddingTopBottom}px]`;
+  
+  // Refs and state for pagination
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [pageGroups, setPageGroups] = useState<any[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
+  // Ensure component is mounted before measuring
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // Generate all resume elements in the desired order (unchanged)
   const generateElements = () => {
-    const headerElement = {
-      id: "header",
-      type: "header",
-      content: [
-        { id: "personal-header", type: "personal-header", data: personalData },
-        { id: "personal-contact", type: "personal-contact", data: personalData },
-      ],
-    };
+    const elements = [];
 
-    const sectionElements = [];
+    // 1. Contact Information - Personal Header
+    elements.push({ id: "personal-header", type: "personal-header", data: personalData });
 
-    if (personalData.headline) {
-      sectionElements.push({
-        id: "summary",
-        type: "section",
-        section: "SUMMARY",
-        content: [
-          {
-            id: "summary-content",
-            type: "summary",
-            data: { text: personalData.headline || "A brief summary about the candidate." },
-          },
-        ],
-      });
+    // 1. Contact Information - Personal Contact
+    if (personalData.address || personalData.phone || personalData.email) {
+      elements.push({ id: "personal-contact", type: "personal-contact", data: personalData });
     }
 
+    // 2. Work Experience
     if (experiences.length) {
-      const experienceContent = experiences.flatMap((exp, index) => [
-        { id: `experience-${index}-header`, type: "experience-header", data: exp },
-        ...(exp.description
-          ? exp.description.split(",").map((detail, i) => ({
+      elements.push({ id: "experience-header", type: "section-header", section: "WORK EXPERIENCE" });
+      experiences.forEach((exp, index) => {
+        elements.push({
+          id: `experience-${index}-header`,
+          type: "experience-header",
+          data: exp,
+          section: "WORK EXPERIENCE",
+        });
+        if (exp.description) {
+          const descriptionItems = exp.description.split(",").map((detail) => detail.trim());
+          descriptionItems.forEach((detail, i) =>
+            elements.push({
               id: `experience-${index}-desc-${i}`,
               type: "experience-desc",
-              data: { text: detail.trim(), parentId: index },
-            }))
-          : []),
-      ]);
-      sectionElements.push({
-        id: "experience",
-        type: "section",
-        section: "EXPERIENCE",
-        content: experienceContent,
+              data: { text: detail, parentId: index },
+              section: "WORK EXPERIENCE",
+            })
+          );
+        }
       });
     }
 
-    if (educations.length) {
-      const educationContent = educations.map((edu, index) => ({
-        id: `education-${index}`,
-        type: "education",
-        data: edu,
-      }));
-      sectionElements.push({
-        id: "education",
-        type: "section",
-        section: "EDUCATION",
-        content: educationContent,
-      });
-    }
-
-    if (skills.length) {
-      const skillContent = skills.map((skill, index) => ({
-        id: `skill-${index}`,
-        type: "skill",
-        data: skill,
-      }));
-      sectionElements.push({
-        id: "skills",
-        type: "section",
-        section: "SKILLS",
-        content: skillContent,
-      });
-    }
-
-    if (achievements.length) {
-      const awardContent = achievements.map((ach, index) => ({
-        id: `achievement-${index}`,
-        type: "achievement",
-        data: ach,
-      }));
-      sectionElements.push({
-        id: "awards",
-        type: "section",
-        section: "AWARDS",
-        content: awardContent,
-      });
-    }
-
-    const profileLinks = [];
-    if (personalData.twitter) {
-      profileLinks.push({ id: "profile-twitter", type: "profile", data: { name: "Twitter", link: personalData.twitter } });
-    }
-    if (personalData.linkedin) {
-      profileLinks.push({ id: "profile-linkedin", type: "profile", data: { name: "LinkedIn", link: personalData.linkedin } });
-    }
-    if (personalData.github) {
-      profileLinks.push({ id: "profile-github", type: "profile", data: { name: "GitHub", link: personalData.github } });
-    }
-    if (profileLinks.length) {
-      sectionElements.push({
-        id: "profiles",
-        type: "section",
-        section: "PROFILES",
-        content: profileLinks,
-      });
-    }
-
+    // 3. Projects
     if (projects.length) {
-      const projectContent = projects.map((proj, index) => ({
-        id: `project-${index}`,
-        type: "project",
-        data: proj,
-      }));
-      sectionElements.push({
-        id: "projects",
-        type: "section",
-        section: "PROJECTS",
-        content: projectContent,
+      elements.push({ id: "projects-header", type: "section-header", section: "PROJECTS" });
+      projects.forEach((proj, index) => {
+        elements.push({
+          id: `project-${index}-header`,
+          type: "project-header",
+          data: proj,
+          section: "PROJECTS",
+        });
+        if (proj.description) {
+          elements.push({
+            id: `project-${index}-desc`,
+            type: "project-desc",
+            data: { text: proj.description, parentId: index },
+            section: "PROJECTS",
+          });
+        }
       });
     }
 
+    // 4. Skills
+    if (skills.length) {
+      elements.push({ id: "skills-header", type: "section-header", section: "SKILLS" });
+      skills.forEach((skill, index) =>
+        elements.push({
+          id: `skill-${index}`,
+          type: "skill",
+          data: skill,
+          section: "SKILLS",
+        })
+      );
+    }
+
+    // 5. Education
+    if (educations.length) {
+      elements.push({ id: "education-header", type: "section-header", section: "EDUCATION" });
+      educations.forEach((edu, index) =>
+        elements.push({
+          id: `education-${index}`,
+          type: "education",
+          data: edu,
+          section: "EDUCATION",
+        })
+      );
+    }
+
+    // 6. Certifications
     if (certificates.length) {
-      const certificateContent = certificates.map((cert, index) => ({
-        id: `certificate-${index}`,
-        type: "certificate",
-        data: cert,
-      }));
-      sectionElements.push({
-        id: "certifications",
-        type: "section",
-        section: "CERTIFICATIONS",
-        content: certificateContent,
-      });
+      elements.push({ id: "certifications-header", type: "section-header", section: "CERTIFICATIONS" });
+      certificates.forEach((certificate, index) =>
+        elements.push({
+          id: `certificate-${index}`,
+          type: "certificate",
+          data: certificate,
+          section: "CERTIFICATIONS",
+        })
+      );
     }
 
+    // 7. Awards & Achievements
+    if (achievements.length) {
+      elements.push({ id: "awards-header", type: "section-header", section: "AWARDS" });
+      achievements.forEach((achievement, index) =>
+        elements.push({
+          id: `achievement-${index}`,
+          type: "achievement",
+          data: achievement,
+          section: "AWARDS",
+        })
+      );
+    }
+
+    // 8. Languages
     if (languages.length) {
-      const languageContent = languages.map((lang, index) => ({
-        id: `language-${index}`,
-        type: "language",
-        data: lang,
-      }));
-      sectionElements.push({
-        id: "languages",
-        type: "section",
-        section: "LANGUAGES",
-        content: languageContent,
-      });
+      elements.push({ id: "languages-header", type: "section-header", section: "LANGUAGES" });
+      languages.forEach((language, index) =>
+        elements.push({
+          id: `language-${index}`,
+          type: "language",
+          data: language,
+          section: "LANGUAGES",
+        })
+      );
     }
 
-    return { headerElement, sectionElements };
+    return elements;
   };
 
   useEffect(() => {
-    if (!contentRef.current || !isMounted) return;
-
-    const { headerElement, sectionElements } = generateElements();
+    const elements = generateElements();
+    const pageHeight = availableContentHeight;
     const pageGroupsTemp = [];
     let currentPage = [];
     let currentHeight = 0;
+    let i = 0;
 
-    const measureElementHeight = (id) => {
-      const elementNode = contentRef.current?.querySelector(`#${id}`);
+    const measureElementHeight = (element) => {
+      const elementNode = contentRef.current?.querySelector(`#${element.id}`);
       return elementNode?.scrollHeight || 0;
     };
 
-    const headerHeight = measureElementHeight("header");
-    if (headerHeight > 0) {
-      currentPage.push(headerElement);
-      currentHeight += headerHeight;
-    }
+    while (i < elements.length) {
+      const element = elements[i];
+      const elementHeight = measureElementHeight(element);
 
-    sectionElements.forEach((section) => {
-      const sectionHeight = measureElementHeight(section.id);
-      if (sectionHeight === 0) {
-        console.warn(`Section ${section.id} has zero height, skipping`);
-        return;
+      if (elementHeight === 0) {
+        console.warn(`Element ${element.id} has zero height, skipping`);
+        i++;
+        continue;
       }
-      if (currentHeight + sectionHeight > availableContentHeight) {
-        if (currentPage.length > 0) {
-          pageGroupsTemp.push(currentPage);
-          currentPage = [];
-          currentHeight = 0;
+
+      if (element.type === "experience-header") {
+        let nextDescHeight = 0;
+        if (i + 1 < elements.length && elements[i + 1].type === "experience-desc") {
+          nextDescHeight = measureElementHeight(elements[i + 1]);
         }
+        const totalHeight = elementHeight + nextDescHeight;
+        if (currentHeight + totalHeight > pageHeight) {
+          if (currentPage.length > 0) {
+            pageGroupsTemp.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+          }
+        }
+        currentPage.push(element);
+        currentHeight += elementHeight;
+        i++;
+        while (i < elements.length && elements[i].type === "experience-desc") {
+          const descHeight = measureElementHeight(elements[i]);
+          if (currentHeight + descHeight > pageHeight) {
+            break;
+          }
+          currentPage.push(elements[i]);
+          currentHeight += descHeight;
+          i++;
+        }
+      } else {
+        if (currentHeight + elementHeight > pageHeight) {
+          if (currentPage.length > 0) {
+            pageGroupsTemp.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+          }
+        }
+        currentPage.push(element);
+        currentHeight += elementHeight;
+        i++;
       }
-      currentPage.push(section);
-      currentHeight += sectionHeight;
-    });
+    }
 
     if (currentPage.length > 0) {
       pageGroupsTemp.push(currentPage);
@@ -244,61 +248,27 @@ export default function Resume() {
     isMounted,
   ]);
 
-  const renderElement = (element) => {
+  // Render individual resume elements with theme adjustments
+  const renderElement = (element, isFirstInSection) => {
     switch (element.type) {
-      case "header":
-        return (
-          <div key={element.id} className="mb-8 border-b border-gray-200 pb-4">
-            {element.content.map((item) => (
-              <div key={item.id}>{renderElement(item)}</div>
-            ))}
-          </div>
-        );
       case "personal-header":
         return (
-          <div key={element.id} className="mb-4 text-center">
-            <h1 className="text-3xl font-bold text-gray-800">
+          <section className="mb-6">
+            <h1 className="text-4xl font-bold text-gray-900">
               {element.data.name || "Your Name"}
             </h1>
-          </div>
+            <h2 className="text-lg italic text-gray-600 mt-2">
+              {element.data.headline || "Your Professional Headline"}
+            </h2>
+          </section>
         );
+
       case "personal-contact":
         return (
-          <section key={element.id} className="mb-4">
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-gray-600">
-              {element.data.address && (
-                <div key="address" className="flex items-center space-x-1">
-                  <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <circle cx="12" cy="9" r="2" stroke="currentColor" strokeWidth="2" />
-                  </svg>
-                  <p>{element.data.address}</p>
-                </div>
-              )}
-              {element.data.phone && (
-                <div key="phone" className="flex items-center space-x-1">
-                  <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M3 5l4-1 2 3-3 4 5 5 4-3 3 2-1 4H5L3 5z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <a href={`tel:${element.data.phone}`} className="text-blue-600 hover:underline">
-                    {element.data.phone}
-                  </a>
-                </div>
-              )}
+          <section className="contact-info mb-8 text-sm text-gray-600">
+            <div className="space-y-1">
               {element.data.email && (
-                <div key="email" className="flex items-center space-x-1">
+                <div className="flex items-center space-x-2">
                   <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M4 4h16v16H4V4zm0 4l8 5 8-5"
@@ -313,8 +283,47 @@ export default function Resume() {
                   </a>
                 </div>
               )}
+              {element.data.phone && (
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M3 5l4-1 2 3-3 4 5 5 4-3 3 2-1 4H5L3 5z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <a href={`tel:${element.data.phone}`} className="text-blue-600 hover:underline">
+                    {element.data.phone}
+                  </a>
+                </div>
+              )}
+              {element.data.address && (
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="9"
+                      r="2"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <p>{element.data.address}</p>
+                </div>
+              )}
               {element.data.website && (
-                <div key="website" className="flex items-center space-x-1 print:hidden">
+                <div className="flex items-center space-x-2">
                   <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 4a6 6 0 016 6 6 6 0 01-6 6 6 6 0 01-6-6 6 6 0 016-6zm0 2v8m-4-4h8"
@@ -325,7 +334,11 @@ export default function Resume() {
                     />
                   </svg>
                   <a
-                    href={element.data.website.startsWith("http") ? element.data.website : `https://${element.data.website}`}
+                    href={
+                      element.data.website.startsWith("http")
+                        ? element.data.website
+                        : `https://${element.data.website}`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
@@ -334,165 +347,179 @@ export default function Resume() {
                   </a>
                 </div>
               )}
+              {element.data.linkedin && (
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <rect
+                      x="2"
+                      y="9"
+                      width="4"
+                      height="12"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="4"
+                      cy="4"
+                      r="2"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <a
+                    href={`https://www.linkedin.com/in/${element.data.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {element.data.linkedin}
+                  </a>
+                </div>
+              )}
+              {element.data.github && (
+                <div className="flex items-center space-x-2">
+                  <svg
+                    className="w-4 h-4 text-gray-500"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577v-2.234c-3.338.726-4.033-1.415-4.033-1.415-.546-1.388-1.333-1.758-1.333-1.758-1.089-.745.082-.729.082-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.809 1.304 3.495.996.108-.775.418-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.933 0-1.311.467-2.382 1.235-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.513 11.513 0 013.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.119 3.176.77.84 1.233 1.911 1.233 3.221 0 4.61-2.807 5.625-5.48 5.922.43.372.814 1.102.814 2.222v3.293c0 .322.218.694.825.576C20.565 21.796 24 17.298 24 12c0-6.627-5.373-12-12-12z"
+                    />
+                  </svg>
+                  <a
+                    href={`https://github.com/${element.data.github}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {element.data.github}
+                  </a>
+                </div>
+              )}
             </div>
           </section>
         );
-      case "section":
+
+      case "section-header":
         return (
-          <div key={element.id} className="grid grid-cols-[1fr_3fr] gap-4 mb-6 items-start">
-            <div className="font-bold text-lg text-gray-800">{element.section}</div>
-            <div>
-              {element.content.map((item) => (
-                <div key={item.id}>{renderElement(item)}</div>
-              ))}
-            </div>
+          <div
+            className="py-2 px-4 mb-4"
+            style={{
+              backgroundColor: primaryColor, // Use theme primary color
+              color: "#ffffff", // Keep text white for contrast
+              fontSize: `${fontSize}px`, // Apply theme font size
+              lineHeight: lineHeight, // Apply theme line height
+              fontWeight: "bold", // Ensure bold for headers
+            }}
+          >
+            {element.section}
           </div>
         );
-      case "summary":
-        return <p key={element.id} className="text-sm text-gray-700">{element.data.text}</p>;
-      case "profile":
-        return (
-          <div key={element.id} className="flex items-center space-x-2 text-sm text-gray-700 mb-2">
-            {element.data.name === "Twitter" && (
-              <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M22 4.5a9 9 0 01-2.6.7 4.5 4.5 0 00-7.7 4c-4 0-7.5-2-10-5a4.5 4.5 0 001.5 6c-1 0-2-.3-2.5-1v.1a4.5 4.5 0 003.5 4.4 4.5 4.5 0 01-2 .1 4.5 4.5 0 004.2 3A9 9 0 012 19c2 1 4 1.5 6.5 1.5 7.5 0 12-6 12-12v-.5a8.5 8.5 0 002-2.5z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-              </svg>
-            )}
-            {element.data.name === "LinkedIn" && (
-              <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zm2-7a2 2 0 110 4 2 2 0 010-4z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
-            {element.data.name === "GitHub" && (
-              <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577v-2.234c-3.338.726-4.033-1.415-4.033-1.415-.546-1.388-1.333-1.758-1.333-1.758-1.089-.745.082-.729.082-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.809 1.304 3.495.996.108-.775.418-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.933 0-1.311.467-2.382 1.235-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.513 11.513 0 013.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.119 3.176.77.84 1.233 1.911 1.233 3.221 0 4.61-2.807 5.625-5.48 5.922.43.372.814 1.102.814 2.222v3.293c0 .322.218.694.825.576C20.565 21.796 24 17.298 24 12c0-6.627-5.373-12-12-12z"
-                />
-              </svg>
-            )}
-            <a
-              href={
-                element.data.name === "Twitter"
-                  ? `https://twitter.com/${element.data.link.replace("@", "")}`
-                  : element.data.name === "LinkedIn"
-                  ? `https://www.linkedin.com/in/${element.data.link}`
-                  : `https://github.com/${element.data.link}`
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              {element.data.link}
-            </a>
-          </div>
-        );
+
       case "experience-header":
         return (
-          <div key={element.id} className="mb-2">
-            <div className="flex justify-between">
-              <span className="text-base font-medium text-gray-700">
-                {element.data.company}, {element.data.location}
-              </span>
-              <span className="text-sm text-gray-500">{element.data.dateRange}</span>
-            </div>
-            <p className="text-sm italic text-gray-600">{element.data.position}</p>
-            {element.data.website && (
-              <p className="text-sm text-gray-500">{element.data.website}</p>
-            )}
+          <div className="mb-2">
+            <div className="text-base font-bold text-gray-900">{element.data.position}</div>
+            <div className="text-sm italic text-gray-600">{element.data.company}, {element.data.location}</div>
+            <div className="text-sm text-gray-500">{element.data.dateRange}</div>
           </div>
         );
+
       case "experience-desc":
         return (
-          <ul key={element.id} className="list-disc list-inside text-sm text-gray-700 mb-4 pl-4">
+          <ul className="list-disc list-inside text-sm text-gray-700 mb-4 pl-4">
             <li>{element.data.text}</li>
           </ul>
         );
-      case "project":
+
+      case "project-header":
         return (
-          <div key={element.id} className="mb-4">
-            <div className="flex justify-between">
-              <span className="text-base font-medium text-gray-700">{element.data.name}</span>
-              <span className="text-sm text-gray-500">{element.data.date}</span>
+          <div className="mb-2">
+            <div className="text-base font-bold text-gray-900">
+              <a
+                href={element.data.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                {element.data.name}
+              </a>
             </div>
-            {element.data.website && (
-              <p className="text-sm text-gray-500">{element.data.website}</p>
-            )}
-            {element.data.description && (
-              <p className="text-sm text-gray-700">{element.data.description}</p>
-            )}
+            <div className="text-sm text-gray-500">{element.data.date}</div>
           </div>
         );
+
+      case "project-desc":
+        return (
+          <p className="text-sm text-gray-700 mb-4">{element.data.text}</p>
+        );
+
       case "skill":
         return (
-          <div key={element.id} className="text-sm text-gray-700 mb-2 flex items-center">
-            <span className="font-medium mr-2">{element.data.heading}:</span>
-            <span>{element.data.items}</span>
-            <span className="ml-2">●●●●○</span>
+          <div className="text-sm text-gray-700 mb-2">
+            <span className="font-medium">{element.data.heading}:</span> {element.data.items}
           </div>
         );
+
       case "education":
         return (
-          <div key={element.id} className="mb-4">
-            <div className="flex justify-between">
-              <div>
-                <div className="text-base font-medium text-gray-700">
-                  {element.data.institute}
-                </div>
-                <p className="text-sm text-gray-600">
-                  {element.data.typeofstudy} in {element.data.areaofstudy}
-                </p>
-              </div>
-              <div className="text-right">
-                <span className="text-sm text-gray-500">{element.data.dateRange}</span>
-                {element.data.score && (
-                  <span className="text-sm text-gray-700 block">{element.data.score}</span>
-                )}
-              </div>
-            </div>
+          <div className="mb-4">
+            <div className="text-base font-bold text-gray-900">{element.data.typeofstudy} in {element.data.areaofstudy}</div>
+            <div className="text-sm italic text-gray-600">{element.data.institute}</div>
+            <div className="text-sm text-gray-500">{element.data.dateRange}</div>
+            {element.data.score && (
+              <div className="text-sm text-gray-700">{element.data.score}</div>
+            )}
           </div>
         );
+
       case "certificate":
         return (
-          <div key={element.id} className="mb-2">
-            <div className="flex justify-between">
-              <span className="text-base font-medium text-gray-700">{element.data.title}</span>
-              <span className="text-sm text-gray-500">{element.data.date}</span>
+          <div className="mb-2">
+            <div className="text-base font-bold text-gray-900">{element.data.title}</div>
+            <div className="text-sm text-gray-600">
+              <a
+                href={element.data.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                {element.data.awarder}
+              </a>
             </div>
-            <a
-              href={element.data.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-blue-600 hover:underline"
-            >
-              {element.data.awarder}
-            </a>
+            <div className="text-sm text-gray-500">{element.data.date}</div>
           </div>
         );
+
       case "achievement":
         return (
-          <div key={element.id} className="mb-2">
-            <div className="text-base font-medium text-gray-700">{element.data.name}</div>
+          <div className="mb-2">
+            <div className="text-base font-bold text-gray-900">{element.data.name}</div>
             <p className="text-sm text-gray-600">{element.data.details}</p>
           </div>
         );
+
       case "language":
         return (
-          <div key={element.id} className="text-sm text-gray-700 mb-2">
+          <div className="text-sm text-gray-700 mb-2">
             <span className="font-medium">{element.data.heading}:</span> {element.data.option}
           </div>
         );
+
       default:
         return null;
     }
@@ -500,69 +527,37 @@ export default function Resume() {
 
   return (
     <div className="resume-container min-h-screen font-sans print:p-0">
-      <div ref={contentRef} className="absolute top-0 left-0 w-[1080px] opacity-0 pointer-events-none">
-        {(() => {
-          const { headerElement, sectionElements } = generateElements();
-          return (
-            <>
-              <div key={headerElement.id} id={headerElement.id}>
-                {headerElement.content.map((item) => (
-                  <div key={item.id}>{renderElement(item)}</div>
-                ))}
-              </div>
-              {sectionElements.map((section) => (
-                <div key={section.id} id={section.id}>
-                  <div className="grid grid-cols-[1fr_3fr] gap-4 mb-6">
-                    <div className="font-bold text-lg text-gray-800">{section.section}</div>
-                    <div>
-                      {section.content.map((item) => (
-                        <div key={item.id}>{renderElement(item)}</div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </>
-          );
-        })()}
+      {/* Hidden content for measuring element heights */}
+      <div
+        ref={contentRef}
+        className="absolute top-0 left-0 w-[230mm] opacity-0 pointer-events-none"
+      >
+        {generateElements().map((element) => (
+          <div key={element.id} id={element.id} className="break-words">
+            {renderElement(element, true)}
+          </div>
+        ))}
       </div>
 
+      {/* Visible paginated content */}
       {pageGroups.length > 0 ? (
         pageGroups.map((page, pageIndex) => (
           <div
             key={pageIndex}
-            className={`page print-page bg-white text-gray-800 w-full max-w-[1080px] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:mt-0 print:mb-0`}
+            className={`page print-page bg-white text-gray-800 w-[230mm] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:page-break-after-always print:mt-0 print:mb-0`}
           >
             <div className={`content-wrapper p-8 ${contentHeightClass} print:p-0`}>
-              {page.map((element) => {
-                if (element.type === "header") {
-                  return (
-                    <div key={element.id} className="mb-8 border-b border-gray-200 pb-4">
-                      {element.content.map((item) => (
-                        <div key={item.id}>{renderElement(item)}</div>
-                      ))}
-                    </div>
-                  );
-                } else if (element.type === "section") {
-                  return (
-                    <div key={element.id} className="grid grid-cols-[1fr_3fr] gap-4 mb-6 items-start">
-                      <div className="font-bold text-lg text-gray-800">{element.section}</div>
-                      <div>
-                        {element.content.map((item) => (
-                          <div key={item.id}>{renderElement(item)}</div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                }
-                return null;
-              })}
+              {page.map((element: any, index: number) => (
+                <div key={element.id}>
+                  {renderElement(element, index === 0 || element.section !== page[index - 1]?.section)}
+                </div>
+              ))}
             </div>
           </div>
         ))
       ) : (
         <div
-          className={`page print-page bg-white text-gray-800 w-full max-w-[1080px] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:mt-0 print:mb-0`}
+          className={`page print-page bg-white text-gray-800 w-full max-w-[230mm] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:page-break-after-always print:mt-0 print:mb-0`}
         >
           <div className={`content-wrapper p-8 ${contentHeightClass} print:p-0`}>
             <p className="text-center text-gray-500">Loading content...</p>
