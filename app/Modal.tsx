@@ -1,4 +1,3 @@
-// components/Modal.tsx
 "use client";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -11,6 +10,7 @@ interface ModalProps {
   setInputValue: (value: string) => void;
   error: string;
   file: File | null;
+  setFile: (file: File | null) => void;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handelDataSubmit: () => void;
   handleGetExistingResume: () => void;
@@ -25,6 +25,7 @@ export default function Modal({
   setInputValue,
   error,
   file,
+  setFile,
   handleFileChange,
   handelDataSubmit,
   handleGetExistingResume,
@@ -33,6 +34,7 @@ export default function Modal({
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
+    console.log(loading, "loading");
     if (isOpen) {
       document.body.style.overflow = "hidden"; // Disable scrolling
     } else {
@@ -44,8 +46,11 @@ export default function Modal({
   }, [isOpen]);
 
   if (!isOpen) return null;
+
   const modalHeading = actionType === "build" ? "Build Your Resume" : "Analyze Your Resume";
-  let desc = modalHeading.toLowerCase()
+  const loadingText = actionType === "build" ? "Building..." : "Analyzing...";
+  const submitText = loading ? loadingText : "Submit";
+
   return (
     <div
       className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 pointer-events-auto z-50 ${isClosing ? "opacity-0" : "opacity-100"}`}
@@ -68,7 +73,7 @@ export default function Modal({
           {modalHeading}
         </h2>
         <p className="text-gray-300 mb-4 text-sm leading-relaxed">
-          Choose how you'd like to {desc}:
+          Choose how you'd like to {modalHeading.toLowerCase().replace("your ", "")}:
         </p>
 
         <div className="flex flex-col gap-4 items-center">
@@ -150,7 +155,7 @@ export default function Modal({
           >
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.2)] to-transparent animate-shimmer"></span>
             <span className="relative z-10">
-              {loading ? "Analyzing..." : "Submit"}
+              {submitText}
             </span>
           </button>
         </div>

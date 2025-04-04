@@ -1,8 +1,9 @@
 {
-  "/atsresume/page": "app/atsresume/page.js",
-  "/updateresume/page": "app/updateresume/page.js",
-  "/policy/page": "app/policy/page.js",
-  "/atsresume/createresume/page": "app/atsresume/createresume/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/ats-score/ats-next/page": "app/ats-score/ats-next/page.js",
-  "/home/page": "app/home/page.js"
+  "/page": "app/page.js",
+  "/atsresume/page": "app/atsresume/page.js",
+  "/atsresume/createresume/page": "app/atsresume/createresume/page.js",
+  "/ats-score/ats-skill/page": "app/ats-score/ats-skill/page.js"
 }
