@@ -22,10 +22,10 @@ const ContactUs = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const serviceId = "service_yze7ky8";
-    const templateId = "template_oxfdv2q";
-    const userId = "F2CUah0cRJS6yCSzN";
-
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const userId = process.env.NEXT_PUBLIC_EMAILJS_USER_ID;
+    
     const templateParams = {
       user_name: formData.name,
       from_email: formData.email,

@@ -47,7 +47,7 @@ const PasswordReset = () => {
         </form>
 
         <div className="text-center mt-4">
-          <a href="/login" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Back to Login</a>
+          <a href="/sign-in" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Back to Login</a>
         </div>
       </div>
     </div>

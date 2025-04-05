@@ -1,57 +1,57 @@
 import { FaBuilding, FaMapMarkerAlt, FaCode, FaPaperPlane, FaCheck, FaSpinner } from 'react-icons/fa';
 
 interface CompanyCardProps {
-  company_name: string;
-  recruiter_email: string;
+  name: string;
+  email: string;
   location: string;
   roles: string[];
   isSending: boolean;
   isSent: boolean;
 }
 
-const CompanyCard = ({ company_name, recruiter_email, location, roles, isSending, isSent }: CompanyCardProps) => {
+const CompanyCard = ({ name, email, location, roles, isSending, isSent }: CompanyCardProps) => {
   return (
-    <div className=" rounded-lg p-6 border border-gray-700 hover:border-blue-500 transition-all">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-          <FaBuilding className="text-white text-xl" />
+    <div className="bg-[rgba(255,255,255,0.02)] rounded-[18px] p-[30px] border border-[rgba(255,255,255,0.1)] hover:border-[#0FAE96] transition-all backdrop-blur-sm">
+      <div className="flex items-center gap-[16px] mb-[20px]">
+        <div className="w-[40px] h-[40px] bg-[#0FAE96] rounded-[10px] flex items-center justify-center">
+          <FaBuilding className="text-[#FFFFFF] text-[20px]" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-white">{company_name}</h3>
-          {/* <p className="text-gray-400 flex items-center gap-2">
-            <FaMapMarkerAlt className="text-blue-500" />
+          <h3 className="text-[28px]  font-semibold text-[#ECF1F0]">{name}</h3>
+          <p className="text-[#B6B6B6]  text-[16px] flex items-center gap-[8px]">
+            <FaMapMarkerAlt className="text-[#0FAE96]" />
             {location}
-          </p> */}
+          </p>
         </div>
       </div>
 
-      <div className="space-y-3 mb-4">
-        <div className="flex items-center gap-2 text-gray-300">
-          {/* <FaCode className="text-blue-500" />
-          <div className="flex flex-wrap gap-2">
+      <div className="space-y-[12px] mb-[24px]">
+        <div className="flex items-center gap-[12px] text-[#B6B6B6]">
+          <FaCode className="text-[#0FAE96]" />
+          <div className="flex flex-wrap gap-[8px]">
             {roles.map((role, index) => (
               <span 
                 key={index}
-                className="text-sm bg-gray-700 px-2 py-1 rounded"
+                className="text-[14px] bg-[rgba(255,255,255,0.05)] px-[10px] py-[6px] rounded-[10px]"
               >
                 {role}
               </span>
             ))}
-          </div> */}
+          </div>
         </div>
       </div>
 
       <div
-        className={`w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 transition-all ${
+        className={`w-full px-[16px] py-[12px] rounded-[10px] flex items-center justify-center gap-[8px] transition-all backdrop-blur-sm text-[16px] text-[#FFFFFF] ${
           isSent
-            ? 'bg-green-600'
-            : 'bg-blue-600'
+            ? 'bg-[#0FAE96]/90 hover:bg-[#0FAE96]'
+            : 'bg-[#0FAE96]/90 hover:bg-[#0FAE96]'
         }`}
       >
         {isSending ? (
           <>
             <FaSpinner className="animate-spin" />
-            <span>Sending to {recruiter_email}...</span>
+            <span>Sending to {email}...</span>
           </>
         ) : isSent ? (
           <>

@@ -35,7 +35,7 @@ function Register() {
 
         toast.success("Registered! Check your email for verification.", { position: "top-center" });
 
-        await axios.post("http://localhost:3001/send-email", {
+        await axios.post("https://welcomeemail-hrjd6kih3q-uc.a.run.app/send-email", {
           email: email,
           name: displayName || "User",
         });

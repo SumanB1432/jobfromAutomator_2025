@@ -65,7 +65,7 @@ const EmailPermission = ({ onPermissionGranted }: EmailPermissionProps) => {
       setIsGranted(true);
       localStorage.setItem("emailPermissionGranted", "true");
       localStorage.setItem("emailVerified","true");
-      window.location.href = "http://localhost:3001/auth/google";
+      window.location.href = "https://jobemailsending-hrjd6kih3q-uc.a.run.app/auth/google";
       onPermissionGranted?.();
     } catch (error) {
       console.error("Error granting email access:", error);

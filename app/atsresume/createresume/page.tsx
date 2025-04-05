@@ -66,7 +66,7 @@ const CreateResume: React.FC = () => {
     let api_key = localStorage.getItem("api_key");
     let JD = localStorage.getItem("jobDescription");
     let RD = localStorage.getItem("resumeText")
-    console.log(RD,JD);
+    console.log(RD, JD);
     setJD(JD);
     setRD(RD);
     if (!api_key) {
@@ -260,30 +260,36 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
   });
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden">
-        <LeftSidebar />
-      </div>
+<div className="flex h-screen overflow-hidden">
+  {/* Left Sidebar */}
+  <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden">
+    <LeftSidebar />
+  </div>
 
-      <div
-        ref={contentRef}
-        className="w-[250mm] h-screen p-4 bg-gray-200 overflow-y-auto scrollbar-hidden print:h-auto print:p-0 print:w-[250mm] mx-auto"
-      >
-        <div className="resume-container w-full max-w-[250mm] bg-gray-200 mx-auto p-4 print:p-0 print:w-full print:bg-white">
-          <SelectedTemplateComponent /> {/* Dynamically render selected template */}
-        </div>
-      </div>
-
-      <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden">
-        <Rightsidebar />
-        <button
-          className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200 print:hidden"
-          onClick={() => handlePrint()}
-        >
-          Print
-        </button>
-      </div>
+  {/* Main Resume Content */}
+  <div
+    ref={contentRef}
+    className="w-[250mm] h-screen p-4 bg-gray-200 overflow-y-auto scrollbar-hidden print:h-auto print:p-0 print:w-[250mm] mx-auto"
+  >
+    <div className="resume-container w-full max-w-[250mm] bg-gray-200 mx-auto p-4 print:p-0 print:w-full print:bg-white">
+      <SelectedTemplateComponent />
     </div>
+  </div>
+
+  {/* Right Sidebar with Print Button */}
+  <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden flex flex-col">
+    <div className="p-4">
+      <button
+        className="w-full inline-flex items-center justify-center px-4 py-2 mb-4 text-sm font-medium text-white bg-blue-600 border border-transparent rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        onClick={() => handlePrint()}
+      >
+        🖨️ Print Resume
+      </button>
+    </div>
+    <Rightsidebar />
+  </div>
+</div>
+
   );
 };
 

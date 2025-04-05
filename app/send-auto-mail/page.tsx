@@ -48,7 +48,7 @@ const Page = () => {
 
     return () => unsubscribe();
   }, []);
-// GET URD FROM DATABASE / LOCAL-STORAGE
+  // GET URD FROM DATABASE / LOCAL-STORAGE
   useEffect(() => {
     if (!uid) return;
 
@@ -79,7 +79,7 @@ const Page = () => {
   useEffect(() => {
     let checkVerifyEmail = async function (userEmail, userName) {
       if (userEmail && userName) {
-        let response = await fetch("http://localhost:3001/send-job-application", {
+        let response = await fetch("https://jobemailsending-hrjd6kih3q-uc.a.run.app/send-job-application", {
           method: "POST",
           body: JSON.stringify({
             sender_email: userEmail,
@@ -199,12 +199,12 @@ const Page = () => {
     const fetchCompany = async () => {
       try {
         console.log(jobTitle, location);
-        const response = await fetch("http://localhost:3002/job_search", {
+        const response = await fetch("https://api-hrjd6kih3q-uc.a.run.app/job_search", {
           method: "POST",
           body: JSON.stringify({
             jobTitle,
-            location:location,
-            experience: `${exp}`||"0-1",
+            location: location,
+            experience: `${exp}` || "0-1",
             geminiKey: gemini_key
           }),
           headers: {
@@ -239,7 +239,7 @@ const Page = () => {
     const sendEmails = async () => {
       try {
         for (const email of emailArray) {
-          let response = await fetch("http://localhost:3001/send-job-application", {
+          let response = await fetch("https://jobemailsending-hrjd6kih3q-uc.a.run.app/send-job-application", {
             method: "POST",
             body: JSON.stringify({
               sender_email: userEmail,
@@ -258,7 +258,7 @@ const Page = () => {
           // Wait for 5 seconds before sending the next email
           if (response.ok) {
             const data = await response.json();
-            toast.success(data.message);
+
           } else {
             const data = await response.json();
             console.error("Error from server:", data.error);
@@ -288,15 +288,22 @@ const Page = () => {
 
 
   return (
-    <div className="min-h-screen py-12">
-      <h1 className="text-3xl font-bold flex items-center gap-3">
-        <FaBriefcase className="text-blue-500" />
-        {isSending ? "Sending Applications..." : "Applications Status"}
-      </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {companies.map((company, index) => (
-          <CompanyCard key={index} {...company} isSending={isSending} isSent={isSent} />
-        ))}
+    <div className="min-h-screen bg-gradient-to-b from-[#11011E] via-[#35013e] to-[#11011E] py-12">
+      <div className="max-w-7xl mx-auto px-4">
+        <h1 className="text-3xl font-bold flex items-center gap-3">
+          <FaBriefcase className="text-blue-500" />
+          {isSending ? "Searching Jobs..." : "Applications Status"}
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {companies.map((company, index) => (
+            <CompanyCard
+              key={index}
+              {...company}
+              isSending={isSending}
+              isSent={isSent}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

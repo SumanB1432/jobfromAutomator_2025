@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent,useRef,useState } from "react";
 import { usePersonalDataStore } from "@/app/store";
 import { GoPerson } from "react-icons/go";
 import { BiWorld } from "react-icons/bi";
@@ -15,12 +15,26 @@ import LanguageInput from "./sections/LanguageInput";
 
 export default function LeftSidebar() {
   const { personalData, updatePersonalData } = usePersonalDataStore();
+  const fileInputRef = useRef(null);
+  const [profileImage, setProfileImage] = useState(null);
   const handleChangePersonal = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     updatePersonalData(name, value);
   };
+  
+    const handleImageSelect = (e) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setProfileImage(imageUrl);
+      }
+    };
+  
+    const handleIconClick = () => {
+      fileInputRef.current.click();
+    };
 
   return (
     <div className="w-full h-[1000px] overflow-y-scroll scrollbar-none bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] text-text-subtitle shadow-2xl rounded-xl">
@@ -40,12 +54,29 @@ export default function LeftSidebar() {
             Picture
           </label>
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary-accent via-[#0F8E76] to-[#0F6E56] rounded-full flex items-center justify-center text-pure-white text-2xl font-raleway shadow-lg ring-4 ring-[rgba(15,174,150,0.2)] transition-transform hover:scale-110 hover:ring-[rgba(15,174,150,0.4)] duration-300">
-              {personalData.name?.[0] || "M"}
+            <div className="w-16 h-16 bg-gradient-to-br from-primary-accent via-[#0F8E76] to-[#0F6E56] rounded-full flex items-center justify-center text-pure-white text-2xl font-raleway shadow-lg ring-4 ring-[rgba(15,174,150,0.2)] transition-transform hover:scale-110 hover:ring-[rgba(15,174,150,0.4)] duration-300 overflow-hidden">
+              {profileImage ? (
+                <img src={profileImage} alt="Profile" className="w-full h-full object-cover rounded-full" />
+              ) : (
+                personalData.name?.[0] || "M"
+              )}
             </div>
-            <button className="p-3 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm hover:bg-[rgba(15,174,150,0.1)] hover:border-primary-accent transition-all duration-300">
+
+            <button
+              onClick={handleIconClick}
+              className="p-3 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm hover:bg-[rgba(15,174,150,0.1)] hover:border-primary-accent transition-all duration-300"
+            >
               <AiOutlineLink className="text-text-subtitle hover:text-primary-accent transition-colors duration-200" />
             </button>
+
+            {/* Hidden file input */}
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleImageSelect}
+              className="hidden"
+            />
           </div>
         </div>
 
