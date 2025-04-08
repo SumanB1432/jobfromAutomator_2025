@@ -12,7 +12,7 @@ import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import master from "./mastercard.svg";
-import  visa from "./visa.svg"
+import visa from "./visa.svg"
 import rupay from "./rupay.svg";
 import upi from "./upi.svg"
 
@@ -31,12 +31,12 @@ const Payment = () => {
   const receiptId = "qwsaq1";
   const db = getDatabase(app);
   const socialLinks = [
-    { Icon: FaInstagram, href: "https://www.instagram.com/yourprofile" },
-    { Icon: FaFacebook, href: "https://www.facebook.com/yourprofile" },
-    { Icon: FaLinkedin, href: "https://www.linkedin.com/in/yourprofile" },
-    { Icon: FaYoutube, href: "https://www.youtube.com/yourchannel" },
+    { Icon: FaInstagram, color: "#ec4899", href: "https://www.instagram.com/yourprofile" },
+    { Icon: FaFacebook, color: "#2563eb", href: "https://www.facebook.com/yourprofile" },
+    { Icon: FaLinkedin, color: "#60a5fa", href: "https://www.linkedin.com/company/aikingsolutions/posts/?feedView=all" },
+    { Icon: FaYoutube, color: "#ef4444", href: "https://www.youtube.com/@JobFormAutomator" },
   ];
-  const paymentMethods = [master,visa,rupay,upi]
+  const paymentMethods = [master, visa, rupay, upi]
 
   useEffect(() => {
     // Redirect user if not signed in
@@ -46,7 +46,7 @@ const Payment = () => {
         window.location.href = "/sign-in";
       }
     });
-  
+
     // Fetch user location data
     fetch("https://ipapi.co/json/")
       .then((response) => response.json())
@@ -56,19 +56,19 @@ const Payment = () => {
         setCurrency(data.country === "IN" ? "INR" : "USD");
         setAmount(data.country === "IN" ? 1 : 20);
       });
-  
+
     // Load Razorpay script
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
     script.onload = () => console.log("Razorpay script loaded successfully.");
     document.body.appendChild(script);
-  
+
     return () => {
       unsubscribe();
     };
   }, []);
-  
+
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -116,14 +116,14 @@ const Payment = () => {
         },
         theme: { color: "#4CAF50" },
       };
-  
+
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } else {
       toast.error("Razorpay SDK failed to load. Please check your internet connection.");
     }
   };
-  
+
 
   const applyPromocode = async (e) => {
     e.preventDefault();
@@ -132,31 +132,31 @@ const Payment = () => {
     const userRef = ref(db, "promo_codes/" + promocode);
     // console.log(country,)
     get(userRef).then(async (snapshot) => {
-        console.log(snapshot.val())
-        if (snapshot.val() === null) {
-            toast.error("Invalid promocode!")
-            return;
-        }
-        // console.log(country,snapshot.val().currency_type , 'SUMAN')
-        if ((country === "IN" && snapshot.val().currency_type === "INR") || (country !== "IN" && snapshot.val().currency_type === "USD")) {
+      console.log(snapshot.val())
+      if (snapshot.val() === null) {
+        toast.error("Invalid promocode!")
+        return;
+      }
+      // console.log(country,snapshot.val().currency_type , 'SUMAN')
+      if ((country === "IN" && snapshot.val().currency_type === "INR") || (country !== "IN" && snapshot.val().currency_type === "USD")) {
 
 
-            if (snapshot.val().discount_type === "fixed") {
-                setCoupon(promocode);
-                setDiscount(snapshot.val().discount_value);
-            } else if (snapshot.val().discount_type === "percentage") {
-                setCoupon(promocode);
-                let finalValue = Math.floor(amount * (snapshot.val().discount_value / 100));
-                setDiscount(finalValue);
-            }
+        if (snapshot.val().discount_type === "fixed") {
+          setCoupon(promocode);
+          setDiscount(snapshot.val().discount_value);
+        } else if (snapshot.val().discount_type === "percentage") {
+          setCoupon(promocode);
+          let finalValue = Math.floor(amount * (snapshot.val().discount_value / 100));
+          setDiscount(finalValue);
         }
-        else {
-            toast.error(`Invalid Promocode :This promocode is not applicable for  ${country_name}`)
-        }
+      }
+      else {
+        toast.error(`Invalid Promocode :This promocode is not applicable for  ${country_name}`)
+      }
     }).catch((err) => {
-        toast.error(err);
+      toast.error(err);
     });
-};
+  };
 
 
   const deleteCoupon = () => {
@@ -231,21 +231,23 @@ const Payment = () => {
                   <span>support@jobformautomator.com</span>
                 </div>
               </div>
-              
+
               <div className="mt-6 flex justify-center gap-4 sm:gap-6">
-           
+
                 {socialLinks.map((
-                  { Icon, href }, idx) => (
-                    <motion.a
-                      key={idx}
-                      onClick={() => window.open(href, "_blank")}
-                      whileHover={{ scale: 1.2, rotate: 5, color: "#0FAE96" }}
-                      transition={{ duration: 0.3 }}
-                      className="text-[#B6B6B6]"
-                    >
-                      <Icon size={14} className="sm:size-14" />
-                    </motion.a>
-                  )
+                  { Icon, href, color }, idx) => (
+                  <motion.a
+                    key={idx}
+                    onClick={() => window.open(href, "_blank")}
+                    whileHover={{
+                      scale: 1.2, rotate: 5, color:`${color}`
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="text-[#B6B6B6]"
+                  >
+                    <Icon size={14} className="sm:size-14" />
+                  </motion.a>
+                )
                 )}
               </div>
             </div>

@@ -78,7 +78,7 @@ const Navbar = () => {
       <ul className="hidden sm:flex space-x-8 text-sm sm:text-base">
         {[
           { label: "Home", path: "/" },
-          { label: "Pricing", path: "/pricing" },
+          { label: "Referral", path: "/referral" },
           { label: "About", path: "/about" },
           { label: "Policy", path: "/policy" },
           { label: "ATS Resume", path: "/atsresume" },
@@ -120,10 +120,10 @@ const Navbar = () => {
         <ul className="space-y-6 text-base">
           {[
             { label: "Home", path: "/" },
-            { label: "Pricing", path: "/pricing" },
+            { label: "Referral", path: "/referral" },
             { label: "About", path: "/about" },
             { label: "Policy", path: "/policy" },
-            { label: "ATS Resume", path: "/ats-resume" },
+            { label: "ATS Resume", path: "/atsresume" },
           ].map((item) => (
             <li
               key={item.path}
@@ -131,7 +131,11 @@ const Navbar = () => {
                 ? "text-[#0FAE96] border-l-4 border-[#0FAE96]"
                 : "hover:text-[#0FAE96] hover:bg-[#0FAE96]/20"
                 } px-2 py-1 rounded-md transition duration-200 transform hover:scale-105`}>
-              <Link href={item.path} onClick={() => setIsMenuOpen(false)}>
+              <Link href={item.path} onClick={(e) => {
+                e.stopPropagation();
+                setIsMenuOpen(false);
+              }
+              }>
                 {item.label}
               </Link>
             </li>

@@ -15,6 +15,7 @@ export default function GetHired() {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [resumeText,setResumeText] = useState("")
   const [user, setUser] = useState<User | null>(null);
   const [pdfText, setPdfText] = useState("");
   const [ats, setAts] = useState(null);
@@ -336,6 +337,7 @@ export default function GetHired() {
 
         if (resumeText && resumeText.trim().length > 0) {
           setPdfText(resumeText);
+          setResumeText(resumeText)
         } else {
           console.warn("Fetched resume is empty.");
         }
@@ -499,6 +501,7 @@ export default function GetHired() {
         setInputValue={setInputValue}
         error={error}
         file={file}
+        resumeText={resumeText}
         setFile={setFile}
         handleFileChange={handleFileChange}
         handelDataSubmit={handelDataSubmit}

@@ -1,8 +1,4 @@
 {
-  "/sign-in/page": "app/sign-in/page.js",
-  "/passwordreset/page": "app/passwordreset/page.js",
-  "/sign-up/page": "app/sign-up/page.js",
-  "/email_auth/page": "app/email_auth/page.js",
-  "/page": "app/page.js",
-  "/send-auto-mail/page": "app/send-auto-mail/page.js"
+  "/atsresume/page": "app/atsresume/page.js",
+  "/atsresume/createresume/page": "app/atsresume/createresume/page.js"
 }

@@ -1,33 +1,33 @@
 "use client";
-import Link from 'next/link'
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { FaInstagram, FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
 import Image from "next/image";
 
 const Footer = () => {
-  const footerRef = useRef(null); // Ref for the footer
-  const [isInView, setIsInView] = useState(false); // State to track visibility
+  const footerRef = useRef(null);
+  const [isInView, setIsInView] = useState(false);
+  const socialLinks = [
+    { name: "instagram", color: "hover:text-pink-500",link:"" },
+    { name: "facebook", color: "hover:text-blue-600",link:"" },
+    { name: "linkedin", color: "hover:text-blue-400",link:"https://www.linkedin.com/company/aikingsolutions/posts/?feedView=all" },
+    { name: "youtube", color: "hover:text-red-500",link:"https://www.youtube.com/@JobFormAutomator" },
+  ];
 
-  // Set up Intersection Observer to detect when the footer is in view
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true); // Footer is in view
-          } else {
-            setIsInView(false); // Footer is out of view
-          }
+          setIsInView(entry.isIntersecting);
         });
       },
-      { threshold: 0.2 } // Trigger when 20% of the footer is in view
+      { threshold: 0.2 }
     );
 
     if (footerRef.current) {
-      observer.observe(footerRef.current); // Observe the footer
+      observer.observe(footerRef.current);
     }
 
-    // Cleanup observer on component unmount
     return () => {
       if (footerRef.current) {
         observer.unobserve(footerRef.current);
@@ -46,26 +46,27 @@ const Footer = () => {
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Logo and Social Links */}
           <div className="col-span-2 sm:col-span-2 lg:col-span-1 flex flex-col items-start space-y-6">
-            <Image 
-              src="/images/Logo.png" 
-              alt="Logo" 
-              width={45} 
-              height={45} 
-              className="hover:opacity-80 transition-opacity filter drop-shadow-lg" 
+            <Image
+              src="/images/Logo.png"
+              alt="Logo"
+              width={45}
+              height={45}
+              className="hover:opacity-80 transition-opacity filter drop-shadow-lg"
             />
+
             <div className="flex flex-wrap gap-5">
-              {['instagram', 'facebook', 'twitter', 'youtube'].map((social) => (
+              {socialLinks.map(({ name, color }) => (
                 <a
-                  key={social}
+                  key={name}
                   href="#"
-                  aria-label={`Follow us on ${social}`}
-                  className="text-gray-400 hover:text-white transform hover:scale-110 
-                  transition-all duration-300 ease-out hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
+                  aria-label={`Follow us on ${name}`}
+                  className={`text-gray-400 transform hover:scale-110 
+        transition-all duration-300 ease-out hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] ${color}`}
                 >
-                  {social === 'instagram' && <FaInstagram size={22} />}
-                  {social === 'facebook' && <FaFacebook size={22} />}
-                  {social === 'twitter' && <FaTwitter size={22} />}
-                  {social === 'youtube' && <FaYoutube size={22} />}
+                  {name === "instagram" && <FaInstagram size={22} />}
+                  {name === "facebook" && <FaFacebook size={22} />}
+                  {name === "linkedin" && <FaLinkedin size={22} />}
+                  {name === "youtube" && <FaYoutube size={22} />}
                 </a>
               ))}
             </div>
@@ -75,7 +76,7 @@ const Footer = () => {
           </div>
 
           {/* Navigation Sections */}
-          {['Quick Links', 'Features', 'Help'].map((section, index) => (
+          {["Quick Links", "Features", "Help"].map((section) => (
             <div key={section} className="flex flex-col space-y-4">
               <h3 className="text-lg font-bold text-white relative inline-flex items-center group">
                 {section}
@@ -83,26 +84,31 @@ const Footer = () => {
                 group-hover:w-full transition-all duration-300"></span>
               </h3>
               <ul className="space-y-3 mt-2">
-                {section === 'Quick Links' && [
-                  { name: 'Home', path: '/' },
-                  { name: 'Pricing', path: '/pricing' },
-                  { name: 'My Profile', path: '/auth' }
-                ].map((item) => (
-                  <FooterLink key={item.name} href={item.path} text={item.name} />
-                ))}
-                {section === 'Features' && [
-                  { name: 'My Forms', path: '/loop-form' },
-                  { name: 'Templates', path: '/atsresume' },
-                  { name: 'Applications', path: '/atsresume' }
-                ].map((item) => (
-                  <FooterLink key={item.name} href={item.path} text={item.name} />
-                ))}
-                {section === 'Help' && [
-                  { name: 'Help Center', path: '/about' },
-                  { name: 'Settings', path: '/settings' }
-                ].map((item) => (
-                  <FooterLink key={item.name} href={item.path} text={item.name} />
-                ))}
+                {section === "Quick Links" &&
+                  [
+                    { name: "Home", path: "/" },
+                    { name: "Referral", path: "/referral" },
+                    { name: "About", path: "/about" },
+                  ].map((item) => (
+                    <FooterLink key={item.name} href={item.path} text={item.name} />
+                  ))}
+
+                {section === "Features" &&
+                  [
+                    { name: "ATSCheck", path: "/atsresume" },
+                    { name: "QuickResume", path: "/atsresume" },
+                    { name: "SkillMatch", path: "/atsresume" },
+                  ].map((item) => (
+                    <FooterLink key={item.name} href={item.path} text={item.name} />
+                  ))}
+
+                {section === "Help" &&
+                  [
+                    { name: "Contact Us", path: "/contactUs" },
+                    { name: "Settings", path: "/settings" },
+                  ].map((item) => (
+                    <FooterLink key={item.name} href={item.path} text={item.name} />
+                  ))}
               </ul>
             </div>
           ))}
@@ -112,16 +118,17 @@ const Footer = () => {
   );
 };
 
-// Add a new FooterLink component for consistent link styling
 const FooterLink = ({ href, text }) => (
   <li>
-    <Link 
+    <Link
       href={href}
       className="text-gray-400 hover:text-white transition-all duration-200 flex items-center group
       hover:translate-x-1 relative overflow-hidden"
     >
-      <span className="absolute left-0 w-full h-[1px] bg-purple-500/30 -translate-x-full 
-      group-hover:translate-x-0 transition-transform duration-300"></span>
+      <span
+        className="absolute left-0 w-full h-[1px] bg-purple-500/30 -translate-x-full 
+        group-hover:translate-x-0 transition-transform duration-300"
+      ></span>
       <span className="opacity-0 group-hover:opacity-100 mr-2 transition-opacity">›</span>
       {text}
     </Link>

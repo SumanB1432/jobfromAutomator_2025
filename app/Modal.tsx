@@ -9,6 +9,7 @@ interface ModalProps {
   inputValue: string;
   setInputValue: (value: string) => void;
   error: string;
+  resumeText: String;
   file: File | null;
   setFile: (file: File | null) => void;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -24,6 +25,7 @@ export default function Modal({
   inputValue,
   setInputValue,
   error,
+  resumeText,
   file,
   setFile,
   handleFileChange,
@@ -121,6 +123,11 @@ export default function Modal({
           {file && (
             <div className="bg-[rgba(112,0,255,0.1)] rounded-xl px-3 py-1 text-sm text-[rgba(255,255,255,0.9)]">
               {file.name}
+            </div>
+          )}
+          {resumeText && (
+            <div className="bg-[rgba(112,0,255,0.1)] rounded-xl px-3 py-1 text-sm text-[rgba(255,255,255,0.9)]">
+              Your Resume Upload Successfully!
             </div>
           )}
         </div>
