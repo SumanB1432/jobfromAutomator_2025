@@ -113,7 +113,7 @@ function SignInwithGoogle() {
                 window.location.href = "/resume2";
               } else if (subscriptionType === "FreeTrialStarted" || subscriptionType === "Premium") {
                 // Redirect to Demo page if the user has a FreeTrial or Premium subscription
-                window.location.href = "/home";
+                window.location.href = "/";
               } else {
                 // Fallback to Gemini if the subscription type is not recognized
                 window.location.href = "/gemini";
@@ -244,7 +244,7 @@ function SignInwithGoogle() {
                   window.location.href = "/resume2";
                 } else if (subscriptionType === "FreeTrialStarted" || subscriptionType === "Premium") {
                   // Redirect to Demo page if the user has a FreeTrial or Premium subscription
-                  window.location.href = "/home";
+                  window.location.href = "/";
                 } else {
                   // Fallback to Gemini if the subscription type is not recognized
                   window.location.href = "/gemini";

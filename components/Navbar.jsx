@@ -9,6 +9,7 @@ import app from "@/firebase/config";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, ref, get } from "firebase/database";
 
+
 const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -71,7 +72,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full bg-gradient-to-r from-[#11011E] to-[#2A0A3A] text-white py-4 px-6 sm:px-12 flex items-center justify-between z-50 shadow-lg shadow-[#ffffff]/20">
       {/* Logo */}
       <div className="flex items-center">
-        <Image src="/images/logo.png" alt="Logo" width={40} height={40} className="animate-[logoFade_0.5s_ease-in-out] hover:scale-105 transition-transform duration-200" />
+        <Image src="/images/Logo.png" alt="Logo" width={40} height={40} className="animate-[logoFade_0.5s_ease-in-out] hover:scale-105 transition-transform duration-200" />
       </div>
 
       {/* Desktop Menu */}

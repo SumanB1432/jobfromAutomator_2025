@@ -59,21 +59,21 @@ const ValuesSection = () => {
   }, []);
 
   return (
-    <section className="py-16 px-4 sm:px-6 md:px-10 lg:px-20 bg-[#11011E] text-white overflow-x-hidden">
+    <section className="py-12 px-4 sm:px-6 md:px-10 lg:px-20 bg-[#11011E] text-white overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-center text-3xl sm:text-4xl font-bold mb-12">
+        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold mb-10 sm:mb-12">
           Our Values
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {values.map((value, index) => (
             <div
               key={index}
               ref={(el) => (valueRefs.current[index] = el)}
-              className={`bg-[#1A1125] border border-[#ffffff17] backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-md transition-all duration-700 ease-out transform hover:-translate-y-1 hover:shadow-xl ${
+              className={`bg-[#1A1125] border border-[#ffffff17] backdrop-blur-lg p-5 sm:p-6 md:p-8 rounded-2xl shadow-md transition-all duration-700 ease-out transform hover:-translate-y-1 hover:shadow-xl ${
                 isInView[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >
-              <div className="w-16 h-16 flex justify-center items-center bg-[#2C223B] rounded-full mb-6 mx-auto">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 flex justify-center items-center bg-[#2C223B] rounded-full mb-4 sm:mb-6 mx-auto">
                 <Image
                   src={value.icon}
                   alt={value.title}
@@ -83,10 +83,10 @@ const ValuesSection = () => {
                   priority
                 />
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-center">
+              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center">
                 {value.title}
               </h3>
-              <p className="text-sm sm:text-base text-gray-300 text-center">
+              <p className="text-sm sm:text-base text-gray-300 text-center leading-relaxed">
                 {value.description}
               </p>
             </div>

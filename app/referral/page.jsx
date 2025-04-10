@@ -47,15 +47,16 @@ const Referral = ({ params }) => {
 //       });
 //   };
 
-  return (
-<section className="py-16 px-24 bg-card-bg  rounded-2xl my-16 mx-24">
-  <ReferralInvite />
-  <div className="my-8 mb-16"></div>
-  <ReferralBenefit />
-  <div className="my-8"></div>
-  <ReferralStats />
-</section>
-  );
+return (
+  <section className="py-10 px-4 sm:px-8 md:px-16 lg:px-24 bg-card-bg rounded-2xl my-10 sm:my-12 md:my-16 mx-4 sm:mx-8 md:mx-16 lg:mx-24">
+    <ReferralInvite />
+    <div className="my-6 sm:my-8 md:mb-16"></div>
+    <ReferralBenefit />
+    <div className="my-6 sm:my-8"></div>
+    <ReferralStats />
+  </section>
+);
+
 };
 
 export default Referral;

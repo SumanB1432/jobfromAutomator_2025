@@ -48,7 +48,7 @@ function Login() {
 
         if (apiKey !== "null" && apiKey !== null) {
           if (subscriptionType === "FreeTrialStarted" || subscriptionType === "Premium") {
-            window.location.href = "/home";
+            window.location.href = "/";
           } else {
             window.location.href = "/resume2";
           }
@@ -131,7 +131,7 @@ function Login() {
 
         if (apiKey) {
           if (subscriptionType === "FreeTrialStarted" || subscriptionType === "Premium") {
-            window.location.href = "/home";
+            window.location.href = "/";
           } else {
             window.location.href = "/resume2";
           }

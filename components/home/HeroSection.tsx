@@ -6,8 +6,8 @@ const HeroSection = () => {
   return (
     <div className="relative bg-[#11011E] py-16 pt:16 px-6 md:px-16 lg:px-20 text-center overflow-hidden">
       {/* Blurred Accent Elements */}
-      <div className="absolute top-[-150px] left-[-150px] w-96 h-96 bg-[#90e6d9a9] opacity-40 blur-[200px]"></div>
-      <div className="absolute bottom-[-150px] right-[-150px] w-96 h-96 bg-[#90e6d9a9] opacity-40 blur-[200px]"></div>
+      <div className="absolute top-[-150px] left-[-150px] w-96 h-96 bg-[#90e6d959] opacity-40 blur-[200px]"></div>
+      <div className="absolute bottom-[-150px] right-[-150px] w-96 h-96 bg-[#90e6d959] opacity-40 blur-[200px]"></div>
 
       {/* Star Rating */}
       <div className="relative z-10 flex justify-center items-center mb-4 animate-fadeIn">
