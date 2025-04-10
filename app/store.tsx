@@ -1,7 +1,6 @@
 "use client"
 import { create } from "zustand";
 import React from "react";
-import sampleData from "./sampleResume.json"
 //change the personal data
 type PersonalData = {
   name: string;
@@ -490,11 +489,11 @@ export const useThemeStore = create<ThemeState>((set) => ({
   setFontStyle: (style) => set({ fontStyle: style }),
   fontSubset: 'latin', // Default font subset
   setFontSubset: (subset) => set({ fontSubset: subset }),
-  fontSize: 14.2,
+  fontSize: 18,
   setFontSize: (size) => set({ fontSize: size }),
   lineHeight: 1.5,
   setLineHeight: (height) => set({ lineHeight: height }),
-  primaryColor: '#dc2626',
+  primaryColor: '#565257',
   setPrimaryColor: (color) => set({ primaryColor: color }),
   backgroundColor: '#ffffff',
   setBackgroundColor: (color) => set({ backgroundColor: color }),

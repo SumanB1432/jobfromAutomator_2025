@@ -30,10 +30,10 @@ const RightSidebar: React.FC = () => {
   const [fontSubset, setFontSubset] = useState<string>("latin");
 
   const resumeTemplates = [
-    { name: "bonzor", image: "/images/bonzor.png" },
-    { name: "luxary", image: "/images/luxary.png" },
-    { name: "unique", image: "/images/unique.png" },
-    { name: "new resume", image: "/images/newResume.png" },
+    { name: "Bonzor", image: "/images/bonzor.png" },
+    { name: "Luxary", image: "/images/luxary.png" },
+    { name: "Unique", image: "/images/unique.png" },
+    { name: "Classic", image: "/images/classic.png" },
   ];
 
   const fonts = [
@@ -290,8 +290,8 @@ const RightSidebar: React.FC = () => {
         <div className="flex items-center gap-4">
           <input
             type="range"
-            min="8"
-            max="24"
+            min="18"
+            max="36"
             step="0.1"
             value={fontSize}
             onChange={(e) => setFontSize(parseFloat(e.target.value))}

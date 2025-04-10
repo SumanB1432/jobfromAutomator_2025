@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const HeroSection = () => {
   return (
-    <div className="relative bg-[#11011E] py-16 px-6 md:px-16 lg:px-20 text-center overflow-hidden">
+    <div className="relative bg-[#11011E] py-16 pt:16 px-6 md:px-16 lg:px-20 text-center overflow-hidden">
       {/* Blurred Accent Elements */}
       <div className="absolute top-[-150px] left-[-150px] w-96 h-96 bg-[#90e6d9a9] opacity-40 blur-[200px]"></div>
       <div className="absolute bottom-[-150px] right-[-150px] w-96 h-96 bg-[#90e6d9a9] opacity-40 blur-[200px]"></div>
@@ -30,16 +30,14 @@ const HeroSection = () => {
 
       {/* Main Heading */}
       <h1 className="relative z-10 font-raleway font-bold text-[#ECF1F0] text-3xl lg:text-5xl mb-4 leading-tight animate-slideInUp">
-        Apply 10x faster, <br />
-        Get 3x more interviews <br />
-        with automation
+      Stop Applying. <br />
+      Start Getting Interviews.
       </h1>
 
       {/* Subheading */}
+
       <p className="relative z-10 font-roboto text-[#B6B6B6] text-lg mb-8 animate-fadeIn">
-        Our AI Job search tool automatically applies to all the jobs on platforms like LinkedIn,
-        <br />
-        Indeed, and Monster Job using AI bots.
+      ⏱ Apply 10x faster <br /> 📈 Get 3x more interviews <br /> 💼 Spend time growing skills, not applying jobs
       </p>
 
       {/* CTA Button */}
@@ -66,11 +64,11 @@ const HeroSection = () => {
         </div>
         {/* User Base Text */}
         <p className="font-roboto text-[#B6B6B6] text-sm">
-          and <span className="text-[#0FAE96] font-bold">150+</span> jobseekers using Jobform Automator
+           <span className="text-[#0FAE96] font-bold">350+</span> JobSeeker using JobFrom Automator
         </p>
       </div>
     </div>
-  );
+  )
 };
 
 export default HeroSection;

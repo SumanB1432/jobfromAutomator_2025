@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent,useRef,useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { usePersonalDataStore } from "@/app/store";
 import { GoPerson } from "react-icons/go";
 import { BiWorld } from "react-icons/bi";
@@ -23,18 +23,18 @@ export default function LeftSidebar() {
     const { name, value } = e.target;
     updatePersonalData(name, value);
   };
-  
-    const handleImageSelect = (e) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const imageUrl = URL.createObjectURL(file);
-        setProfileImage(imageUrl);
-      }
-    };
-  
-    const handleIconClick = () => {
-      fileInputRef.current.click();
-    };
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+    }
+  };
+
+  const handleIconClick = () => {
+    fileInputRef.current.click();
+  };
 
   return (
     <div className="w-full h-[1000px] overflow-y-scroll scrollbar-none bg-gradient-to-b from-[#0F011E] via-[rgba(17,1,30,0.95)] to-[#0F011E] text-text-subtitle shadow-2xl rounded-xl">
@@ -86,12 +86,13 @@ export default function LeftSidebar() {
           </label>
           <input
             type="text"
-            className="w-full p-4 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+            className="w-full p-4 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-white hover:bg-white valid:bg-white hover:text-black transition-all duration-300 shadow-inner"
             name="name"
             value={personalData.name || ""}
             onChange={handleChangePersonal}
             placeholder="Your full name"
           />
+
         </div>
 
         <div className="mb-8">
@@ -100,7 +101,7 @@ export default function LeftSidebar() {
           </label>
           <input
             type="text"
-            className="w-full p-4 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+            className="w-full p-4 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-white hover:bg-white valid:bg-white hover:text-black transition-all duration-300 shadow-inner"
             name="headline"
             value={personalData.headline || ""}
             onChange={handleChangePersonal}
@@ -116,7 +117,10 @@ export default function LeftSidebar() {
             <div className="relative">
               <input
                 type="email"
-                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl 
+             bg-white placeholder-text-subtitle placeholder-shown:bg-[rgba(255,255,255,0.05)]
+             backdrop-blur-sm text-text-title font-roboto focus:ring-2 focus:ring-primary-accent 
+             focus:border-primary-accent hover:bg-white hover:text-black transition-all duration-300 shadow-inner"
                 name="email"
                 value={personalData.email || ""}
                 onChange={handleChangePersonal}
@@ -132,7 +136,10 @@ export default function LeftSidebar() {
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl 
+             bg-white placeholder-text-subtitle placeholder-shown:bg-[rgba(255,255,255,0.05)]
+             backdrop-blur-sm text-text-title font-roboto focus:ring-2 focus:ring-primary-accent 
+             focus:border-primary-accent hover:bg-white hover:text-black transition-all duration-300 shadow-inner"
                 name="website"
                 value={personalData.website || ""}
                 onChange={handleChangePersonal}
@@ -151,7 +158,10 @@ export default function LeftSidebar() {
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl 
+             bg-white placeholder-text-subtitle placeholder-shown:bg-[rgba(255,255,255,0.05)]
+             backdrop-blur-sm text-text-title font-roboto focus:ring-2 focus:ring-primary-accent 
+             focus:border-primary-accent hover:bg-white hover:text-black transition-all duration-300 shadow-inner"
                 name="twitter"
                 value={personalData.twitter || ""}
                 onChange={handleChangePersonal}
@@ -177,7 +187,10 @@ export default function LeftSidebar() {
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl 
+             bg-white placeholder-text-subtitle placeholder-shown:bg-[rgba(255,255,255,0.05)]
+             backdrop-blur-sm text-text-title font-roboto focus:ring-2 focus:ring-primary-accent 
+             focus:border-primary-accent hover:bg-white hover:text-black transition-all duration-300 shadow-inner"
                 name="linkedin"
                 value={personalData.linkedin || ""}
                 onChange={handleChangePersonal}
@@ -227,7 +240,10 @@ export default function LeftSidebar() {
             <div className="relative">
               <input
                 type="tel"
-                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl 
+             bg-white placeholder-text-subtitle placeholder-shown:bg-[rgba(255,255,255,0.05)]
+             backdrop-blur-sm text-text-title font-roboto focus:ring-2 focus:ring-primary-accent 
+             focus:border-primary-accent hover:bg-white hover:text-black transition-all duration-300 shadow-inner"
                 name="phone"
                 value={personalData.phone || ""}
                 onChange={handleChangePersonal}
@@ -243,7 +259,10 @@ export default function LeftSidebar() {
             <div className="relative">
               <input
                 type="text"
-                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl 
+             bg-white placeholder-text-subtitle placeholder-shown:bg-[rgba(255,255,255,0.05)]
+             backdrop-blur-sm text-text-title font-roboto focus:ring-2 focus:ring-primary-accent 
+             focus:border-primary-accent hover:bg-white hover:text-black transition-all duration-300 shadow-inner"
                 name="address"
                 value={personalData.address || ""}
                 onChange={handleChangePersonal}
@@ -283,7 +302,10 @@ export default function LeftSidebar() {
             <div className="relative">
               <input
                 type="url"
-                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl bg-[rgba(255,255,255,0.05)] backdrop-blur-sm text-text-title font-roboto placeholder-text-subtitle focus:ring-2 focus:ring-primary-accent focus:border-primary-accent focus:bg-[rgba(255,255,255,0.08)] transition-all duration-300 shadow-inner"
+                className="w-full p-4 pl-12 border border-[rgba(255,255,255,0.1)] rounded-xl 
+             bg-white placeholder-text-subtitle placeholder-shown:bg-[rgba(255,255,255,0.05)]
+             backdrop-blur-sm text-text-title font-roboto focus:ring-2 focus:ring-primary-accent 
+             focus:border-primary-accent hover:bg-white hover:text-black transition-all duration-300 shadow-inner"
                 name="github"
                 value={personalData.github || ""}
                 onChange={handleChangePersonal}

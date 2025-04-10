@@ -14,12 +14,12 @@ const FAQSection = () => {
     {
       question: "How does Jobform Automator work?",
       answer:
-        "Vitae congue eu consequat ac felis placerat vestibulum lectus mauris ultrices. Cursus sit amet dictum sit amet justo donec enim diam porttitor lacus luctus accumsan tortor posuere.",
+        "Jobform Automator uses AI to instantly apply to jobs, optimize your resume, and reach recruiters—so you can get hired faster with less effort.",
     },
     {
       question: "Can I customize the information that gets filled in?",
       answer:
-        "Yes, you can customize the information using advanced settings available in the Automator dashboard.",
+        "Yes, you can customize the information inside settings page in the Automator Site.",
     },
     {
       question: "Is there a cost to use Jobform Automator?",

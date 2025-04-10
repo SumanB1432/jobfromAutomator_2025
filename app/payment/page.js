@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { get, ref, getDatabase } from "firebase/database";
+
+import { get, ref,getDatabase} from "firebase/database";
 import app, { auth } from "@/firebase/config";
 import { toast } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
@@ -18,9 +18,7 @@ import upi from "./upi.svg"
 
 
 const Payment = () => {
-  const searchParams = useSearchParams();
-  const plan = searchParams.get("plan") || "Not specified";
-  const price = searchParams.get("price") || "0";
+
   const [currency, setCurrency] = useState("INR");
   const [amount, setAmount] = useState(999);
   const [promocode, setPromocode] = useState("");
@@ -29,7 +27,6 @@ const Payment = () => {
   const [country, setCountry] = useState("");
   const [country_name, setCountryname] = useState("");
   const receiptId = "qwsaq1";
-  const db = getDatabase(app);
   const socialLinks = [
     { Icon: FaInstagram, color: "#ec4899", href: "https://www.instagram.com/yourprofile" },
     { Icon: FaFacebook, color: "#2563eb", href: "https://www.facebook.com/yourprofile" },
@@ -54,7 +51,7 @@ const Payment = () => {
         setCountry(data.country);
         setCountryname(data.country_name);
         setCurrency(data.country === "IN" ? "INR" : "USD");
-        setAmount(data.country === "IN" ? 1 : 20);
+        setAmount(data.country === "IN" ? 499 : 20);
       });
 
     // Load Razorpay script
@@ -264,10 +261,10 @@ const Payment = () => {
               Your Order
             </h2>
             <div className="space-y-6">
-              <div className="flex justify-between text-[#B6B6B6] text-sm sm:text-base">
+              {/* <div className="flex justify-between text-[#B6B6B6] text-sm sm:text-base">
                 <span>Plan:</span>
                 <span className="font-medium">{plan}</span>
-              </div>
+              </div> */}
               <div className="flex justify-between text-[#B6B6B6] text-sm sm:text-base">
                 <span>Total ({currency}):</span>
                 <span className="font-medium text-lg sm:text-xl">

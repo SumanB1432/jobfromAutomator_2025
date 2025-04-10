@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
+
 import app from "@/firebase/config";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { toast } from "react-toastify";
 import { ref, get, getDatabase } from "firebase/database";
-import { pdfjs, Document, Page } from "react-pdf";
+import { pdfjs } from "react-pdf";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Modal from "@/app/Modal"; // Adjust the import path as necessary
 
@@ -15,23 +15,22 @@ export default function GetHired() {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [resumeText,setResumeText] = useState("")
   const [user, setUser] = useState<User | null>(null);
   const [pdfText, setPdfText] = useState("");
-  const [ats, setAts] = useState(null);
+
   const [buildLoading, setBuildLoading] = useState(false);
   const [analyzeLoading, setAnalyzeLoading] = useState(false);
   const [apiKey, setApiKey] = useState("");
   const [atsData, setAtsData] = useState(null);
   const [skill, setSkill] = useState(null);
-  const [build, setBuild] = useState(false);
+
   const [actionType, setActionType] = useState<"build" | "analyze" | null>(null);
   const db = getDatabase(app);
   const auth = getAuth();
   pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.js`;
 
   useEffect(() => {
-    let api_key = localStorage.getItem("api_key");
+    const api_key = localStorage.getItem("api_key");
     setApiKey(api_key);
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -114,7 +113,7 @@ export default function GetHired() {
     if (atsData != null) {
       const atsDataString = JSON.stringify(atsData);
       localStorage.setItem("atsData", atsDataString);
-      const encodedAtsData = encodeURIComponent(JSON.stringify(atsData));
+
       setAnalyzeLoading(false); // Ensure analyzeLoading is reset here for analyze
       setIsModalOpen(false);
 
@@ -159,7 +158,7 @@ export default function GetHired() {
     }
   };
 
-  async function analyzeResumeForATS(resumeText: any) {
+  async function analyzeResumeForATS(resumeText: unknown) {
     console.log("from analyzer", resumeText);
 
     const prompt = `
@@ -226,7 +225,7 @@ export default function GetHired() {
     }
   }
 
-  async function analyzeResumeForSkill(resumeText: any, jobData: any) {
+  async function analyzeResumeForSkill(resumeText: string, jobData: string) {
     console.log("from analyzer", resumeText);
 
     const prompt = `
@@ -332,12 +331,11 @@ export default function GetHired() {
       const snapshot = await get(userDocRef);
 
       if (snapshot.exists()) {
-        let resumeText = snapshot.val();
+        const resumeText = snapshot.val();
         console.log("Retrieved Resume Data:", resumeText);
 
         if (resumeText && resumeText.trim().length > 0) {
           setPdfText(resumeText);
-          setResumeText(resumeText)
         } else {
           console.warn("Fetched resume is empty.");
         }
@@ -380,7 +378,7 @@ export default function GetHired() {
             const page = await pdfDocument.getPage(i);
             const textContent = await page.getTextContent();
             const pageText = textContent.items
-              .map((item: any) => ("str" in item ? item.str : ""))
+              .map((item: unknown) => ("str" in item ? item.str : ""))
               .join(" ");
             fullText += pageText + "\n";
           }
@@ -446,9 +444,9 @@ export default function GetHired() {
               <span>4.5 star rated</span>
             </span>
           </div>
-          <h1 className="text-4xl font-bold leading-tight">Not getting hired? <br /> It's your resume</h1>
+          <h1 className="text-4xl font-bold leading-tight">Only rejections? <br />  Resume and skills to blame.</h1>
           <p className="text-gray-300 text-lg">
-            Create a professional resume with ease. Our builder features 30+ templates, step-by-step guidance, and endless customizable content options.
+            You&apos;re not getting rejected—you&rsquo;re being filtered out. Fix your resume, Work on right skills, and pass the ATS with one click.
           </p>
           <div className="flex gap-x-4">
             <button
@@ -472,13 +470,13 @@ export default function GetHired() {
               {["Img1.png", "Img2.png", "Img3.png", "Img4.png"].map((img, index) => (
                 <img
                   key={index}
-                  src={`Images/${img}`}
+                  src={`images/${img}`}
                   alt={`Avatar ${index + 1}`}
                   className="w-10 h-10 rounded-full border border-gray-700 transition-all duration-300 hover:scale-110"
                 />
               ))}
             </div>
-            <span className="text-sm text-gray-300">and 150+ jobseekers using JobForm Automator</span>
+            <span className="text-sm text-gray-300">and 350+ jobseekers using JobForm Automator</span>
           </div>
         </div>
 
@@ -501,7 +499,6 @@ export default function GetHired() {
         setInputValue={setInputValue}
         error={error}
         file={file}
-        resumeText={resumeText}
         setFile={setFile}
         handleFileChange={handleFileChange}
         handelDataSubmit={handelDataSubmit}

@@ -1,4 +1,6 @@
+/** @format */
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
@@ -30,8 +32,8 @@ const ValuesSection = () => {
     },
   ];
 
-  const valueRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [isInView, setIsInView] = useState<boolean[]>(new Array(values.length).fill(false));
+  const valueRefs = useRef([]);
+  const [isInView, setIsInView] = useState([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -46,7 +48,7 @@ const ValuesSection = () => {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.2 }
     );
 
     valueRefs.current.forEach((card) => card && observer.observe(card));
@@ -57,39 +59,39 @@ const ValuesSection = () => {
   }, []);
 
   return (
-    <section className="py-16 px-6 md:px-10 lg:px-20 bg-[#11011E] text-white overflow-x-auto">
-      <h2 className="text-center text-2xl md:text-3xl font-semibold mb-8 md:mb-12">
-        Our Values
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-        {values.map((value, index) => (
-          <div
-            key={index}
-            ref={(el) => {
-              valueRefs.current[index] = el;
-            }}
-            className={`bg-[#1A1125] border-[1px] border-[#ffffff17] backdrop-blur-3xl p-6 md:p-8 rounded-lg shadow-lg transition-all duration-700 ease-in-out transform ${
-              isInView[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
-          >
-            <div className="w-14 h-14 md:w-16 md:h-16 flex justify-center items-center bg-[#2C223B] rounded-full mb-4 md:mb-6">
-              <Image
-                src={value.icon}
-                alt={value.title}
-                width={32}
-                height={32}
-                className="w-6 h-6 md:w-8 md:h-8"
-                priority
-              />
+    <section className="py-16 px-4 sm:px-6 md:px-10 lg:px-20 bg-[#11011E] text-white overflow-x-hidden">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-center text-3xl sm:text-4xl font-bold mb-12">
+          Our Values
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {values.map((value, index) => (
+            <div
+              key={index}
+              ref={(el) => (valueRefs.current[index] = el)}
+              className={`bg-[#1A1125] border border-[#ffffff17] backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-md transition-all duration-700 ease-out transform hover:-translate-y-1 hover:shadow-xl ${
+                isInView[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+            >
+              <div className="w-16 h-16 flex justify-center items-center bg-[#2C223B] rounded-full mb-6 mx-auto">
+                <Image
+                  src={value.icon}
+                  alt={value.title}
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                  priority
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-4 text-center">
+                {value.title}
+              </h3>
+              <p className="text-sm sm:text-base text-gray-300 text-center">
+                {value.description}
+              </p>
             </div>
-            <h3 className="text-lg md:text-xl font-semibold mb-2 md:mb-4">
-              {value.title}
-            </h3>
-            <p className="text-sm md:text-base text-gray-400">
-              {value.description}
-            </p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

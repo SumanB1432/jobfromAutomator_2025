@@ -85,7 +85,7 @@ const SkillsSuggestions: React.FC<{ skillsData: SkillsData }> = ({ skillsData })
 
         {/* Detailed Skills Evaluation */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {Object.entries(skillsData["Detailed Skills Compatibility Evaluation"] || {}).map(([key, text], index) => (
+          {Object.entries(skillsData["Detailed Skills Compatibility Evaluation"] || {}).map(([key, text]:[any,any], index) => (
             <div
               key={index}
               className="bg-[rgba(255,255,255,0.06)] backdrop-blur-2xl rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-[rgba(255,255,255,0.08)] transform hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all duration-500 relative overflow-hidden"

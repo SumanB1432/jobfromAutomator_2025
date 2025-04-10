@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FaTimes, FaTag } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { BiBook } from "react-icons/bi";
 import { Pencil, Trash2 } from "lucide-react";
 import { useProjectStore } from "@/app/store";

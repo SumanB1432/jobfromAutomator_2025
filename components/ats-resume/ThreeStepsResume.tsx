@@ -1,33 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+
 
 export default function ThreeStepsResume() {
   const steps = [
     {
       id: 1,
-      title: "Step 1",
+      title: "Check Resume & Skills",
       description:
-        "Pick a template and follow the prompts. Input your details, and the builder tailors your resume to the job.",
-      icon: "/images/folder.png", // Path to the image for step 1
+        "Find what’s missing and create the perfect ATS resume.",
+      icon: "/images/resume.svg", // Path to the image for step 1
     },
     {
       id: 2,
-      title: "Step 2",
+      title: "Learn & Apply with AI",
       description:
-        "Get customized text that fits your work story. The builder features professionally written content options to choose from.",
-      icon: "/images/pen.png", // Path to the image for step 2
+        "Fill skill gaps for free and auto-apply to jobs.",
+      icon: "/images/skill.svg", // Path to the image for step 2
     },
     {
       id: 3,
-      title: "Step 3",
+      title: "Get Hired",
       description:
-        "Download and send to employers. Save and send it as a PDF, Word DOC, or any file format the employer requests.",
-      icon: "/images/download.png", // Path to the image for step 3
+        "Stand out. Get interviews. Land your dream job.",
+      icon: "/images/job.svg", // Path to the image for step 3
     },
   ];
 
   const stepRefs = useRef([]); // Reference for steps
   const [isInView, setIsInView] = useState(false); // State to track visibility of steps
+
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -63,10 +65,9 @@ export default function ThreeStepsResume() {
           <div className="w-3 h-3 bg-[#0FAE96] rounded-full"></div>
           <div className="text-[#0FAE96] text-sm">How it works ?</div>
         </div>
-        <h2 className="text-3xl font-bold">3 steps to a perfect resume</h2>
+        <h2 className="text-3xl font-bold">3 Steps to Get Your Dream Job</h2>
         <p className="text-gray-400">
-          Follow these simple steps to build a standout resume that highlights
-          your skills, experience, and achievements effortlessly.
+        Build your resume in one click, fix skill gaps, auto-apply with AI, and get hired for your dream job—faster than ever.
         </p>
 
         {/* Steps */}
@@ -98,9 +99,11 @@ export default function ThreeStepsResume() {
         </div>
 
         {/* Call to Action */}
-        <button className="bg-[#0FAE96] hover:bg-[#228273] text-white py-3 px-6 rounded-lg font-semibold mt-8">
-          Build your Resume
-        </button>
+        {/* <button className="bg-[#0FAE96] hover:bg-[#228273] text-white py-3 px-6 rounded-lg font-semibold mt-8"
+                      onClick={openModalForAnalyze}
+                      disabled={analyzeLoading}>
+          Analyze Your Skills
+        </button> */}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import app from "@/firebase/config";
 import { getDatabase, ref, set } from "firebase/database";
 import axios from "axios";
+import Link from 'next/link';
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -97,7 +98,7 @@ function Register() {
         </form>
 
         <p className="text-center text-gray-400 mt-4">
-          Already registered? <a href="/sign-in" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Login</a>
+          Already registered? <Link href="/sign-in" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Login</Link>
         </p>
       </div>
     </main>

@@ -1,7 +1,7 @@
 /** @format */
 
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import StepOne from "@/components/loop-form/stepOne";
 import StepTwo from "@/components/loop-form/stepTwo";
 import StepThree from "@/components/loop-form/stepThree";
@@ -20,8 +20,11 @@ export default function StepperForm() {
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
-  const handleChange = (e:any) =>
+ 
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  
 
   return (
     <div className="bg-gradient-to-b from-[#11011E] via-[#35013e] to-[#11011E] min-h-screen flex items-center justify-center px-4 py-10">

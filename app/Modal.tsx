@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,7 +8,7 @@ interface ModalProps {
   inputValue: string;
   setInputValue: (value: string) => void;
   error: string;
-  resumeText: String;
+  resumeText: string;
   file: File | null;
   setFile: (file: File | null) => void;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -27,12 +26,12 @@ export default function Modal({
   error,
   resumeText,
   file,
-  setFile,
   handleFileChange,
   handelDataSubmit,
   handleGetExistingResume,
   actionType,
 }: ModalProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
@@ -45,7 +44,7 @@ export default function Modal({
     return () => {
       document.body.style.overflow = "auto"; // Cleanup on unmount
     };
-  }, [isOpen]);
+  }, [isOpen, loading]);
 
   if (!isOpen) return null;
 
@@ -75,7 +74,7 @@ export default function Modal({
           {modalHeading}
         </h2>
         <p className="text-gray-300 mb-4 text-sm leading-relaxed">
-          Choose how you'd like to {modalHeading.toLowerCase().replace("your ", "")}:
+          Choose how you&rsquo;d like to {modalHeading.toLowerCase().replace("your ", "")}:
         </p>
 
         <div className="flex flex-col gap-4 items-center">

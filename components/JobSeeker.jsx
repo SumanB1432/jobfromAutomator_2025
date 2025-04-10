@@ -31,6 +31,13 @@ const JobSeeker = () => {
     };
   }, []);
 
+  const handleClick = function (){
+    window.open(
+      "https://chromewebstore.google.com/detail/jobform-automator-ai-auto/lknamgjmcmbfhcjjeicdndokedcmpbaa",
+      "_blank"
+    );
+  }
+
   // Background animation: subtle scale and opacity transition
   const bgVariants = {
     hidden: { 
@@ -119,8 +126,8 @@ const JobSeeker = () => {
         </motion.p>
 
         <motion.div variants={childVariants}>
-          <button className="group relative px-4 md:px-6 lg:px-8 py-2 md:py-3 bg-[#0FAE96] text-white font-semibold rounded-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105">
-            <span className="relative z-10">Sign Up for Free</span>
+          <button className="group relative px-4 md:px-6 lg:px-8 py-2 md:py-3 bg-[#0FAE96] text-white font-semibold rounded-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105" onClick={handleClick}>
+            <span className="relative z-10">Add To Chrome</span>
             <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
           </button>
         </motion.div>

@@ -7,22 +7,20 @@ import { useReactToPrint } from "react-to-print";
 import { ref, getDatabase, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import app from "@/firebase/config";
-import fillResumeData from "../../oneclick/page"; // Import the function
+import fillResumeData from "../../../components/oneclick/page"; // Import the function
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useThemeStore } from "@/app/store";
 import Luxary from "@/components/resume_templates/luxary";
 import Unique from "@/components/resume_templates/Unique";
-import NewResume from "@/components/resume_templates/new";
-
+import Classic from "@/components/resume_templates/Classic";
 
 const CreateResume: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [uid, setUid] = useState<string | null>(null);
-  const [resumeData, setResumeData] = useState<any>(null); // Store fetched data
-  const [loading, setLoading] = useState(false);
+  const [resumeData, setResumeData] = useState<unknown>(null);
   const [apiKey, setApiKey] = useState("");
-  const [job_description, setJD] = useState("");
-  const [previous_resume_data, setRD] = useState("")
+  const [job_description, setJD] = useState<string | null>(null);;
+  const [previous_resume_data, setRD] = useState<string | null>(null);
   const { selectedTemplate } = useThemeStore(); // Get selected template from store
 
 
@@ -31,12 +29,13 @@ const CreateResume: React.FC = () => {
   const datapath = ref(db, "user/" + uid + "/" + "resume_data/" + "newData/");
 
   // In CreateResume.tsx
-  const templateComponents: any = {
-    'bonzor': Resume,
-    'luxary': Luxary,
-    'unique': Unique,
-    'new resume': NewResume,
+  const templateComponents: Record<string, React.FC> = {
+    bonzor: Resume,
+    luxary: Luxary,
+    unique: Unique,
+    classic: Classic,
   };
+  
 
   // Fix the selected template logic
   const SelectedTemplateComponent = templateComponents[selectedTemplate.toLowerCase()] || Resume;
@@ -64,10 +63,9 @@ const CreateResume: React.FC = () => {
   useEffect(() => {
     const auth = getAuth();
     setUid(auth.currentUser ? auth.currentUser.uid : null);
-    let api_key = localStorage.getItem("api_key");
-    let JD = localStorage.getItem("jobDescription");
-    let RD = localStorage.getItem("resumeText")
-    console.log(RD, JD);
+    const api_key = localStorage.getItem("api_key");
+    const JD = localStorage.getItem("jobDescription");
+    const RD = localStorage.getItem("resumeText")
     setJD(JD);
     setRD(RD);
     if (!api_key) {
@@ -209,7 +207,7 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
       try {
         const model = geminiClient.getGenerativeModel({ model: "gemini-2.0-flash" });
         const response = await model.generateContent(prompt);
-        const textResponse = response.response.candidates[0].content.parts[0].text;
+        const textResponse = response?.response?.candidates[0]?.content?.parts[0]?.text;
 
         if (!textResponse) {
           return { message: "Empty response from Gemini API." };
@@ -227,7 +225,6 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
         setResumeData(parsedJSON)
         return parsedJSON;
       } catch (error) {
-        setLoading(false);
         console.error("Error processing Gemini API response:", error);
         return { message: "Failed to process Gemini API response.", error: error.message };
       }
@@ -241,7 +238,7 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
   useEffect(() => {
     setResumeData(resumeData);
     fillResumeData(resumeData)
-  }, [resumeData])
+  }, [resumeData,geminiClient])
 
   const handlePrint = useReactToPrint({
     contentRef,
@@ -263,47 +260,49 @@ Return the updated resume in **JSON format** ensuring all key names, structures,
   return (
     <>
       {resumeData ? (
-        <div className="flex h-screen overflow-hidden">
-          {/* Left Sidebar */}
-          <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden">
-            <LeftSidebar />
-          </div>
+    <div className="flex h-screen overflow-hidden">
+      {/* Left Sidebar */}
+      <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden">
+        <LeftSidebar />
+      </div>
 
-          {/* Main Resume Content */}
-          <div
-            ref={contentRef}
-            className="w-[250mm] h-full max-h-screen overflow-y-auto scrollbar-hidden print:h-auto print:p-0 print:w-[250mm] mx-auto"
+      {/* Main Resume Content */}
+      <div
+        ref={contentRef}
+        className="w-[250mm] flex-1 p-4 bg-gray-200 overflow-y-auto scrollbar-hidden print:h-auto print:p-0 print:w-[250mm] mx-auto"
+      >
+        <div className="resume-container w-full max-w-[250mm] bg-gray-200 mx-auto p-4 pt-4 pb-0 min-h-full print:p-0 print:w-full print:bg-white">
+          <SelectedTemplateComponent className="mb-0 pb-0" />
+        </div>
+      </div>
+
+      {/* Right Sidebar with Print Button */}
+      <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden flex flex-col">
+        <div className="p-4">
+          <button
+            className="w-70% inline-flex items-center justify-center px-6 py-3 mb-2 text-base font-semibold text-white bg-[#0FAE96] rounded-md hover:bg-[#0FAE96]/90 focus:outline-none focus:ring-2 focus:ring-[#0FAE96]/60"
+            onClick={() => handlePrint()}
           >
-            <div className="resume-container w-full max-w-[250mm] min-h-full bg-gray-200 mx-auto p-4 print:p-0 print:w-full print:bg-white print:min-h-0">
-              <SelectedTemplateComponent />
-            </div>
-          </div>
+            🖨️ Print Resume
+          </button>
 
-          {/* Right Sidebar with Print Button */}
-          <div className="w-3/12 h-screen overflow-y-auto scrollbar-hidden print:hidden flex flex-col">
-            <div className="p-4">
-              <button
-                className="w-full inline-flex items-center justify-center px-4 py-2 mb-4 text-sm font-medium text-white bg-blue-600 border border-transparent rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                onClick={() => handlePrint()}
-              >
-                🖨️ Print Resume
-              </button>
-            </div>
-            <Rightsidebar />
-          </div>
         </div>
-      ) : (
-        <div className="flex items-center justify-center h-screen w-full bg-[#11011E]">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#00FFD1] border-solid"></div>
-            <p className="text-white text-lg font-medium">Analyzing and building your resume...</p>
-          </div>
+        <Rightsidebar />
+      </div>
+    </div>
+     ) : (
+      <div className="flex items-center justify-center h-screen w-full bg-[#11011E]">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#00FFD1] border-solid"></div>
+          <p className="text-white text-lg font-medium">Analyzing and building your resume...</p>
         </div>
+      </div>
 
-      )}
-    </>
-  )
+    )}
+  </>
 
+
+  );
 };
 
 export default CreateResume;

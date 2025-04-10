@@ -1,8 +1,4 @@
 import React from "react";
-import Img1 from "@/public/images/Img1.png";
-import Img2 from "@/public/images/Img2.png";
-import Img3 from "@/public/images/Img3.png";
-import Img4 from "@/public/images/Img4.png";
 //"Img1.png", "Img2.png", "Img3.png", "Img4.png"
 export default function Demo() {
   return (
@@ -115,7 +111,7 @@ export default function Demo() {
         <section className="mt-8 mb-12">
           <div className="bg-gradient-to-r from-[rgba(15,174,150,0.1)] to-[rgba(91,52,234,0.1)] rounded-2xl p-8 lg:p-10 text-center">
             <h2 className="text-2xl font-bold mb-4">Ready to revolutionize your job search?</h2>
-            <p className="text-[#B6B6B6] max-w-2xl mx-auto mb-6">Join thousands of job seekers who are landing interviews faster with AutoApply's one-click application tool.</p>
+            <p className="text-[#B6B6B6] max-w-2xl mx-auto mb-6">Join thousands of job seekers who are landing interviews faster with AutoApply&apos;s one-click application tool.</p>
             
             <button className="bg-[#0FAE96] text-white font-medium text-lg px-10 py-4 rounded-lg transition-all duration-200 hover:bg-opacity-90 hover:shadow-lg hover:shadow-[#0FAE96]/20 mx-auto hover:bg-[#0FAE96]/80 transform transition duration-200 hover:scale-105 text-sm sm:text-base">
               Start Applying For Free

@@ -36,7 +36,7 @@ export default function Unique() {
 
   // Refs and state for pagination
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const [pageGroups, setPageGroups] = useState<any[]>([]);
+  const [pageGroups, setPageGroups] = useState<unknown[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
   // Ensure component is mounted before measuring
@@ -249,7 +249,7 @@ export default function Unique() {
   ]);
 
   // Render individual resume elements
-  const renderElement = (element: any, isFirstInSection: boolean) => {
+  const renderElement = (element: unknown) => {
     const isSectionHeader = element.type === "section-header";
     const isTargetSection = [
       "WORK EXPERIENCE",
@@ -267,12 +267,13 @@ export default function Unique() {
           borderColor: primaryColor,
         }
       : {};
-
+      const nameFontSize = fontSize; 
+  
     switch (element.type) {
       case "personal-header":
         return (
           <div className="mb-8 text-center">
-            <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight" >
+            <h1 style={{ fontSize: `${nameFontSize}px`, lineHeight: lineHeight }} className="text-4xl font-extrabold text-gray-900 tracking-tight" >
               {element.data.name || "Your Name"}
             </h1>
             <h2 className="text-xl font-medium text-gray-600 mt-2 italic">
@@ -405,8 +406,7 @@ export default function Unique() {
           <div className={`mt-10 mb-4 border-l-4 pl-3`} style={{ borderColor: isTargetSection ? primaryColor : '#blue-500' }}>
             <h3 
               className="text-2xl font-bold text-gray-800 uppercase tracking-wide" 
-              style={isTargetSection ? { fontSize: `${fontSize}px`, lineHeight: lineHeight } : {}}
-            >
+              style={isSectionHeader ? sectionHeaderStyle : {}}            >
               {element.section}
             </h3>
           </div>
@@ -516,7 +516,7 @@ export default function Unique() {
       {/* Hidden content for measuring element heights */}
       <div
         ref={contentRef}
-        className="absolute top-0 left-0 w-[230mm] opacity-0 pointer-events-none"
+        className="absolute -top-[9999px] -left-[9999px] w-[230mm] pointer-events-non"
       >
         {generateElements().map((element) => (
           <div key={element.id} id={element.id} className="break-words">
@@ -533,7 +533,7 @@ export default function Unique() {
             className={`page print-page bg-white text-gray-800 w-[230mm] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:page-break-after-always print:mt-0 print:mb-0`}
           >
             <div className={`content-wrapper p-8 ${contentHeightClass} print:p-0`}>
-              {page.map((element: any, index: number) => (
+              {page.map((element: unknown, index: number) => (
                 <div key={element.id}>
                   {renderElement(element, index === 0 || element.section !== page[index - 1]?.section)}
                 </div>

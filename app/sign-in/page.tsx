@@ -5,7 +5,8 @@ import app, { auth } from "@/firebase/config";
 import { toast } from "react-toastify";
 import { getDatabase, get, ref, set } from "firebase/database";
 import SignInwithGoogle from "../loginwithgoogle/page";
-import PasswordReset from "../passwordreset/page";
+import Link from 'next/link';
+
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -88,7 +89,7 @@ function Login() {
         //** SAVE REFERAL CODE IN DATABASE  */
         const currentDate = new Date();
         const formattedDateTime = currentDate.toISOString().replace("T", " ").split(".")[0];
-        let currentUser = auth?.currentUser?.uid;
+        const currentUser = auth?.currentUser?.uid;
 
         if (referralCode) {
           console.log("Save in database/firebase")
@@ -120,7 +121,12 @@ function Login() {
         const apiSnapshot2 = await get(apiRef2);
 
         let apiKey = "";
-        apiSnapshot1.exists() ? (apiKey = apiSnapshot1.val()) : (apiKey = apiSnapshot2.val());
+        if (apiSnapshot1.exists()) {
+          apiKey = apiSnapshot1.val();
+        } else {
+          apiKey = apiSnapshot2.val();
+        }
+        
         localStorage.setItem("api_key", apiKey);
 
         if (apiKey) {
@@ -167,7 +173,7 @@ function Login() {
             className="w-full p-3 border border-gray-600 rounded-lg bg-[#1A1A2E] text-white focus:ring-2 focus:ring-[#0FAE96]"
           />
           <div className="text-right">
-            <a href="/passwordreset" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Forgot password?</a>
+            <Link href="/passwordreset" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Forgot password?</Link>
           </div>
           <button type="submit" disabled={loading} className="w-full bg-[#0FAE96] text-white p-3 rounded-lg hover:opacity-90 transition duration-300 transform hover:scale-105">
             {loading ? "Signing in..." : "Sign in"}
@@ -180,7 +186,7 @@ function Login() {
           </div>
         </form>
         <p className="text-center text-gray-400 mt-4">
-          Don&apos;t have an account? <a href="/sign-up" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Sign up</a>
+          Don&apos;t have an account? <Link href="/sign-up" className="text-[#0FAE96] hover:text-[#FF00C7] transition-colors duration-200">Sign up</Link>
         </p>
       </div>
     </main>

@@ -8,8 +8,10 @@ import ResumeATSChecker from '@/components/home/ResumeATSChecker';
 import PricingSection from '@/components/pricing/PricingSection';
 import TestimonialSection from "../components/TestimonialSection";
 import JobSeeker from "../components/JobSeeker";
+import VideoSection from "../components/home/video";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+
 
 export default function Mainpage({ params }) {
   const router = useRouter();
@@ -24,6 +26,7 @@ export default function Mainpage({ params }) {
   return (
     <div className='bg-[#11011E]'>
       <HeroSection />
+      <VideoSection/>
       <CompaniesSection />
       <HowItWorks />
       <FeaturesSection />

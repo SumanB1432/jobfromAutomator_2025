@@ -1,21 +1,21 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
-import { LucideIcon, CheckCircle, Lightbulb, Layout, FileText, Star } from 'lucide-react';
-import { useSearchParams } from "next/navigation";
+import { CheckCircle, Lightbulb, Layout, FileText, Star } from 'lucide-react';
+
 
 
 const ATSResumeEvaluation = () => {
-  const searchParams = useSearchParams();
-  const [atsData, setAtsData] = useState(null);
+
+  const [atsData, setAtsData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true); // Add loading state
-  const[skillData,setSkilllsData] = useState("")
+  const [skillData, setSkilllsData] = useState<any>(null)
 
 
 
   useEffect(() => {
-    const dataParam = searchParams.get("data");
+
     let storedAtsData = localStorage.getItem("atsData");
-    let storedSkillData = localStorage.getItem("skill")
+    const storedSkillData = localStorage.getItem("skill")
     if (storedSkillData) {
       setSkilllsData(JSON.parse(storedSkillData));
     }
@@ -23,8 +23,9 @@ const ATSResumeEvaluation = () => {
     if (storedAtsData) {
       try {
         storedAtsData = JSON.parse(storedAtsData);
-        console.log(storedAtsData.atsScore);
-        setAtsData(storedAtsData);
+        // @ts-ignore
+        setAtsData(JSON.parse(storedAtsData));
+
       } catch (error) {
         console.error("Error parsing atsData from localStorage:", error);
         // Handle error appropriately, maybe set atsData to an error state or null
@@ -35,19 +36,19 @@ const ATSResumeEvaluation = () => {
       setIsLoading(false); // If no data in localStorage, still set loading to false
     }
 
-  }, [searchParams]);
+  }, []);
 
-  const handleSkills = function(){
-    window.location.href ="/ats-score/ats-skill";
-    
+  const handleSkills = function () {
+    window.location.href = "/ats-score/ats-skill";
+
   }
 
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  console.log("skill Data",skillData)
+  console.log("skill Data", skillData)
 
   useEffect(() => {
-   
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -156,6 +157,7 @@ const ATSResumeEvaluation = () => {
         {/* Floating Navbar with Glassmorphism */}
         <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-20 bg-[rgba(255,255,255,0.05)] backdrop-blur-xl rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-[rgba(255,255,255,0.08)] w-[90%] max-w-3xl flex items-center justify-between">
           <h1 className="text-2xl font-bold text-[#0FAE96] tracking-wide">ATS Resume Analyzer</h1>
+
           <StarRating rating={Math.round(atsData.atsScore / 20)} />
         </nav>
 
@@ -214,7 +216,7 @@ const ATSResumeEvaluation = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <StarRating rating={Math.round(skillData["Skills Compatibility Score"]/ 20)} />
+              <StarRating rating={Math.round(skillData["Skills Compatibility Score"] / 20)} />
               <button className="px-6 py-2 bg-gradient-to-r from-[#0FAE96] to-[#7000FF] text-white font-semibold rounded-xl shadow-[0_6px_24px_rgba(15,174,150,0.6)] hover:shadow-[0_8px_32px_rgba(112,0,255,0.7)] hover:scale-105 transition-all duration-300 transform relative overflow-hidden group" onClick={handleSkills}>
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.3)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer"></span>
                 <span className="relative z-10 flex items-center">
@@ -230,7 +232,7 @@ const ATSResumeEvaluation = () => {
 
         {/* Detailed Evaluation Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {Object.entries(atsData.detailedEvaluation).map(([key, { text, rating }], index) => (
+          {atsData?.detailedEvaluation && Object.entries(atsData.detailedEvaluation).map(([key, value]: any, index: number) => (
             <div
               key={index}
               className="bg-[rgba(255,255,255,0.06)] backdrop-blur-2xl rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-[rgba(255,255,255,0.08)] transform hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all duration-500 relative overflow-hidden"
@@ -244,10 +246,10 @@ const ATSResumeEvaluation = () => {
                   {index === 2 && <FileText className="w-5 h-5 mr-2 text-[#E02529] glow-effect" />}
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </h3>
-                <StarRating rating={rating} />
+                <StarRating rating={value.rating} />
               </div>
               <p className="text-[rgba(255,255,255,0.9)]  text-sm leading-relaxed">
-                {text}
+                {value.text}
               </p>
             </div>
           ))}
@@ -260,17 +262,17 @@ const ATSResumeEvaluation = () => {
             Actionable Suggestions
           </h2>
           <div className="space-y-6">
-            {Object.entries(atsData.suggestions).map(([key, items], index) => (
+            {Object.entries(atsData.suggestion).map(([key, items]:[any,any], index) => (
               <div key={index}>
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="text-lg font-medium text-white capitalize">{key}</h3>
                   {/* <StarRating rating={3} /> */}
                 </div>
                 <ul className="space-y-2">
-                  {items.map((item, i) => (
+                  {items.map((item: string, i: number) => (
                     <li
                       key={i}
-                      className="text-[rgba(255,255,255,0.85)]  text-sm pl-4 relative flex items-center before:content-['•'] before:absolute before:left-0 before:text-[#E02529] before:font-bold hover:text-[#0FAE96] transition-colors duration-200"
+                      className="text-[rgba(255,255,255,0.85)] text-sm pl-4 relative flex items-center before:content-['•'] before:absolute before:left-0 before:text-[#E02529] before:font-bold hover:text-[#0FAE96] transition-colors duration-200"
                     >
                       <Star className="w-3 h-3 mr-2 text-[#0FAE96] opacity-50" />
                       {item}
@@ -279,6 +281,7 @@ const ATSResumeEvaluation = () => {
                 </ul>
               </div>
             ))}
+
           </div>
           <button className="mt-8 px-6 py-3 bg-[#0FAE96] text-white font-semibold rounded-xl shadow-[0_4px_20px_rgba(15,174,150,0.5)] hover:bg-[#0E8C77] hover:scale-105 hover:shadow-[0_6px_30px_rgba(15,174,150,0.7)] transition-all duration-300 transform relative overflow-hidden">
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.2)] to-transparent animate-shimmer"></span>

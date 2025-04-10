@@ -22,10 +22,10 @@ const ReferralInvite = () => {
       if (userId) {
         const findUser = ref(db, `user/${userId}`);
         get(findUser).then((snapshot) => {
-          let Name = snapshot.val()?.name;
-          let fname = snapshot.val()?.fname;
-          let lname = snapshot.val()?.lname;
-          let user = Name || `${fname} ${lname}`;
+          const Name = snapshot.val()?.name;
+          const fname = snapshot.val()?.fname;
+          const lname = snapshot.val()?.lname;
+          const user = Name || `${fname} ${lname}`;
           setFullName(user.replace(/\s/g, ""));
         });
       }
@@ -57,10 +57,10 @@ const ReferralInvite = () => {
       <div className="absolute bottom-[-150px] right-[-100px] w-[400px] h-[400px] bg-[#FF00C7] opacity-30 blur-[200px] rounded-full z-0" />
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="text-center md:text-left">
-          <h3 className="font-raleway font-bold text-4xl md:text-4xl text-text-title mb-4 tracking-wide transition-colors duration-300 hover:text-primary-accent">
+          <h3 className="font-raleway font-bold text-white text-4xl md:text-4xl text-text-title mb-4 tracking-wide transition-colors duration-300 hover:text-primary-accent">
             Earn Money While You Job Hunt!
           </h3>
-          <p className="font-roboto text-base md:text-lg text-text-body mb-6 max-w-md mx-auto md:mx-0">
+          <p className="font-roboto text-base text-white md:text-lg text-text-body mb-6 max-w-md mx-auto md:mx-0">
             Refer a friend and earn $9 for every successful referral—no limit, just extra cash while you search!
           </p>
           <button

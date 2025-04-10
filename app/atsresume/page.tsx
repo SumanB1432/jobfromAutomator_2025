@@ -1,7 +1,5 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
-import Header from "@/components/createResume/Header";
 import JobSeeker from "../../components/JobSeeker";
 import FAQSection from "../../components/home/FAQSection";
 import TestimonialSection from "../../components/TestimonialSection";

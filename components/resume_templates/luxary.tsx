@@ -28,7 +28,6 @@ export default function Luxary() {
     backgroundColor,
     selectedFont,
     fontSubset,
-    setFontSubset,
     fontWeight,
     fontStyle,
     fontSize,
@@ -47,7 +46,7 @@ export default function Luxary() {
 
   // Refs and state for pagination
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const [pageGroups, setPageGroups] = useState<any[]>([]);
+  const [pageGroups, setPageGroups] = useState<unknown[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
   // Ensure component is mounted before measuring
@@ -226,7 +225,7 @@ export default function Luxary() {
     let currentHeight = 0;
     let i = 0;
 
-    const measureElementHeight = (element : any) => {
+    const measureElementHeight = (element : unknown) => {
       const elementNode = contentRef.current?.querySelector(`#${element.id}`);
       return elementNode?.scrollHeight || 0;
     };
@@ -301,21 +300,22 @@ export default function Luxary() {
   ]);
 
   // Render individual resume elements
-  const renderElement = (element : any) => {
+  const renderElement = (element : unknown) => {
     const linkStyle = underlineLinks ? "underline" : "no-underline";
     const iconDisplay = hideIcons ? "hidden" : "block";
-
+    const nameFontSize = fontSize; 
+    const headerFontSize = Math.max(fontSize - 5, 12);
     // Heading typography style
     const headingStyle = {
       fontFamily: selectedFont,
       fontWeight,
       fontStyle,
-      fontSize: `${fontSize}px`,
+      fontSize: `${headerFontSize}px`,
       lineHeight,
       color: primaryColor,
     };
 
-    const adjustColor = (color : any, amount : any) => {
+    const adjustColor = (color : unknown, amount : unknown) => {
   let usePound = false;
 
   if (color[0] === "#") {
@@ -357,7 +357,7 @@ export default function Luxary() {
                 fontFamily: selectedFont,
                 fontWeight,
                 fontStyle,
-                fontSize: `${fontSize}px`,
+                fontSize: `${nameFontSize}px`,
                 lineHeight,
               }}
             >
@@ -600,7 +600,7 @@ export default function Luxary() {
               {element.data.heading}:
             </span>
             <div className="flex flex-wrap gap-2 mt-1">
-              {element.data.items.split(",").map((item : any, index : any) => (
+              {element.data.items.split(",").map((item : unknown, index : unknown) => (
                 <span
                   key={index}
                   className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs shadow-sm"
@@ -700,7 +700,7 @@ export default function Luxary() {
       {/* Hidden content for measuring element heights */}
       <div
         ref={contentRef}
-        className="absolute top-0 left-0 w-[230mm] opacity-0 pointer-events-none"
+        className="absolute -top-[9999px] -left-[9999px] w-[230mm] pointer-events-non"
       >
         {generateElements().map((element) => (
           <div key={element.id} id={element.id} className="break-words">

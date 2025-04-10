@@ -55,13 +55,8 @@ const Resume: React.FC = () => {
     }
   }, [downloadUrl, pdfText]);
 
-  const handleRemoveFile = (index) => {
-    const updatedFiles = pdf.filter((_, i) => i !== index);
-    // const updatedPreviews = previews.filter((_, i) => i !== index);
 
-    setPdf(updatedFiles);
-    // setPreviews(updatedPreviews);
-  };
+  
 
 
   const handleFileUpload = async (
@@ -121,7 +116,7 @@ const Resume: React.FC = () => {
     e.preventDefault();
 
     console.log("User before submitting:", user); // Debugging user data before submission
-    function notifyExtensionOnResumeSubmit(urdData: any) {
+    function notifyExtensionOnResumeSubmit(urdData: unknown) {
       const event = new CustomEvent('resumeSubmitted', {
         detail: {
           urdData: urdData,
@@ -168,7 +163,7 @@ const Resume: React.FC = () => {
       const getSubscription = ref(db, `user/${uid}/Payment`);
       await update(getSubscription, { SubscriptionType: "FreeTrialStarted" });
 
-      window.location.href = "/home";
+      window.location.href = "/";
     } catch (err) {
       toast.error(
         err instanceof Error

@@ -2,7 +2,6 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Image from "next/image";
 import app from "@/firebase/config";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDatabase, ref, get } from "firebase/database";
@@ -12,34 +11,32 @@ export default function Home() {
 
   const [user] = useAuthState(auth);
   console.log(user)
-  const router = useRouter();
   console.log(user)
   const db = getDatabase(app);
 
 
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+
   const [fullName, setFullName] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const loginStatus = localStorage.getItem("IsLogin");
-      setIsLogin(loginStatus == "true");
-
+   
+    
       const userId = localStorage.getItem("UID");
       if (userId) {
         const findUser = ref(db, `user/${userId}`);
         get(findUser).then((snapshot) => {
-          let Name = snapshot.val()?.name;
-          let fname = snapshot.val()?.fname;
-          let lname = snapshot.val()?.lname;
+          const Name = snapshot.val()?.name;
+          const fname = snapshot.val()?.fname;
+          const lname = snapshot.val()?.lname;
           let user = "";
           if (Name) {
             user = Name;
-            const cleanedName = user.replace(/\s/g, "");
+         
             setFullName(user);
           } else {
             user = fname + " " + lname;
-            const cleanedName = user.replace(/\s/g, "");
+           
             setFullName(user);
           }
         });

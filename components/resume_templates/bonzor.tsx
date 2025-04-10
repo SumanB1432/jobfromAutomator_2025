@@ -35,7 +35,7 @@ export default function Resume() {
     hideIcons,
   } = useThemeStore();
 
-  const basePageHeight = 964; // pixels, exact A4 height (297mm)
+  const basePageHeight = 1124; // pixels, exact A4 height (297mm)
   const paddingTopBottom = 40; // pixels, padding for screen display
   const contentWrapperHeight = basePageHeight % 90;
   const availableContentHeight = basePageHeight - 2 * paddingTopBottom; // 1043px for content
@@ -45,7 +45,7 @@ export default function Resume() {
 
   // Refs and state for pagination
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const [pageGroups, setPageGroups] = useState<any[]>([]);
+  const [pageGroups, setPageGroups] = useState<unknown[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
   // Ensure component is mounted before measuring
@@ -224,7 +224,7 @@ export default function Resume() {
     let currentHeight = 0;
     let i = 0;
 
-    const measureElementHeight = (element: any) => {
+    const measureElementHeight = (element: unknown) => {
       const elementNode = contentRef.current?.querySelector(`#${element.id}`);
       return elementNode?.scrollHeight || 0;
     };
@@ -299,10 +299,11 @@ export default function Resume() {
   ]);
 
   // Render individual resume elements
-  const renderElement = (element: any, isFirstInSection: boolean) => {
+  const renderElement = (element: unknown) => {
     const linkStyle = underlineLinks ? "underline" : "no-underline";
     const iconDisplay = hideIcons ? "hidden" : "block";
-
+    const nameFontSize = fontSize; 
+    const headerFontSize = Math.max(fontSize - 5, 12);
     switch (element.type) {
       case "personal-header":
         return (
@@ -314,7 +315,7 @@ export default function Resume() {
                 fontFamily: selectedFont,
                 fontWeight,
                 fontStyle,
-                fontSize: `${fontSize}px`,
+                fontSize: `${nameFontSize}px`,
                 lineHeight: lineHeight,
                 color: primaryColor,
               }}
@@ -376,7 +377,7 @@ export default function Resume() {
                     href={
                       element.data.website.startsWith("http")
                         ? element.data.website
-                        : `https://${element.data.website}`
+                        : `${element.data.website}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -400,10 +401,7 @@ export default function Resume() {
                     />
                   </svg>
                   <a
-                    href={`https://twitter.com/${element.data.twitter.replace(
-                      "@",
-                      ""
-                    )}`}
+                    href={`${element.data.twitter}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`text-blue-600 ${linkStyle}`}
@@ -447,7 +445,7 @@ export default function Resume() {
                     />
                   </svg>
                   <a
-                    href={`https://www.linkedin.com/in/${element.data.linkedin}`}
+                    href={`${element.data.linkedin}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`text-blue-600 ${linkStyle}`}
@@ -521,7 +519,7 @@ export default function Resume() {
                     />
                   </svg>
                   <a
-                    href={`https://github.com/${element.data.github}`}
+                    href={`${element.data.github}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`text-blue-600 ${linkStyle}`}
@@ -543,7 +541,7 @@ export default function Resume() {
                 fontFamily: selectedFont,
                 fontWeight,
                 fontStyle,
-                fontSize: `${fontSize}px`,
+                fontSize: `${headerFontSize}px`,
                 lineHeight: lineHeight,
                 color: primaryColor,
               }}
@@ -682,16 +680,12 @@ export default function Resume() {
         return null;
     }
   };
-
   return (
-    <div
-      className="resume-container min-h-screen font-sans print:p-0"
-      style={{ backgroundColor }}
-    >
+    <>
       {/* Hidden content for measuring element heights */}
       <div
         ref={contentRef}
-        className="absolute top-0 left-0 w-[230mm] opacity-0 pointer-events-none"
+        className="absolute -top-[9999px] -left-[9999px] w-[230mm] pointer-events-non"
       >
         {generateElements().map((element) => (
           <div key={element.id} id={element.id} className="break-words">
@@ -699,39 +693,41 @@ export default function Resume() {
           </div>
         ))}
       </div>
-
-      {/* Visible paginated content */}
-      {pageGroups.length > 0 ? (
-        pageGroups.map((page, pageIndex) => (
+  
+      <div className="resume-container font-sans print:p-0">
+        {/* Visible paginated content */}
+        {pageGroups.length > 0 ? (
+          pageGroups.map((page, pageIndex) => (
+            <div
+              key={pageIndex}
+              className={`page print-page bg-white text-gray-800 w-[230mm] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:page-break-after-always print:mt-0 print:mb-0`}
+            >
+              <div
+                className={`content-wrapper p-8 ${contentHeightClass} overflow-y-auto print:p-0`}
+              >
+                {page.map((element, index) => (
+                  <div key={element.id}>
+                    {renderElement(
+                      element,
+                      index === 0 || element.section !== page[index - 1]?.section
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        ) : (
           <div
-            key={pageIndex}
-            className={`page print-page bg-white text-gray-800 w-[230mm] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:page-break-after-always print:mt-0 print:mb-0`}
+            className={`page print-page bg-white text-gray-800 w-full max-w-[230mm] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:page-break-after-always print:mt-0 print:mb-0`}
           >
             <div
               className={`content-wrapper p-8 ${contentHeightClass} print:p-0`}
             >
-              {page.map((element: any, index: number) => (
-                <div key={element.id}>
-                  {renderElement(
-                    element,
-                    index === 0 || element.section !== page[index - 1]?.section
-                  )}
-                </div>
-              ))}
+              <p className="text-center text-gray-500">Loading content...</p>
             </div>
           </div>
-        ))
-      ) : (
-        <div
-          className={`page print-page bg-white text-gray-800 w-full max-w-[230mm] mx-auto ${pageHeightClass} mb-[20px] shadow-lg print:h-auto print:shadow-none print:page-break-after-always print:mt-0 print:mb-0`}
-        >
-          <div
-            className={`content-wrapper p-8 ${contentHeightClass} print:p-0`}
-          >
-            <p className="text-center text-gray-500">Loading content...</p>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }

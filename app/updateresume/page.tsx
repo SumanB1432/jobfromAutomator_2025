@@ -115,7 +115,7 @@ const Resume: React.FC = () => {
     e.preventDefault();
 
     console.log("User before submitting:", user); // Debugging user data before submission
-    function notifyExtensionOnResumeSubmit(urdData:any) {
+    function notifyExtensionOnResumeSubmit(urdData:unknown) {
       const event = new CustomEvent('resumeUpdated', {
         detail: {
           urd : urdData,

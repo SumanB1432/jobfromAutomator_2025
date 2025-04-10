@@ -9,7 +9,7 @@ const StepOne = ({ formData , handleChange }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [validationError, setValidationError] = useState("");
 
-  const handleJobTitleChange = (e:any) => {
+  const handleJobTitleChange = (e:unknown) => {
     const value = e.target.value;
     handleChange(e);
     
@@ -29,7 +29,7 @@ const StepOne = ({ formData , handleChange }) => {
     }
   };
 
-  const handleSuggestionClick = (suggestion:any) => {
+  const handleSuggestionClick = (suggestion:unknown) => {
     handleChange({ target: { name: 'jobTitle', value: suggestion } });
     setShowSuggestions(false);
   };

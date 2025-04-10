@@ -1,17 +1,12 @@
 /** @format */
 
 import { useState, useEffect, useRef } from "react";
-import TemplateCard from "../ats-resume/TemplateCard";
 
 const templates = [
   { name: "Efficient", imgSrc: "/images/resumeCard.png" },
   { name: "Minimal", imgSrc: "/images/resumeCard.png" },
   { name: "Clean", imgSrc: "/images/resumeCard.png" },
   { name: "Efficient", imgSrc: "/images/resumeCard.png" },
-  { name: "Minimal", imgSrc: "/images/resumeCard.png" },
-  { name: "Clean", imgSrc: "/images/resumeCard.png" },
-  { name: "Efficient", imgSrc: "/images/resumeCard.png" },
-  { name: "Minimal", imgSrc: "/images/resumeCard.png" },
   // Add more templates as needed
 ];
 
@@ -56,17 +51,74 @@ export default function Template() {
         ref={scrollContainerRef}
         className="mt-10 flex space-x-6 overflow-x-auto hide-scrollbar px-4 ml-6 lg:ml-16"
         style={{ scrollSnapType: "x mandatory" }}>
-        {templates.map((template, index) => (
-          <div
-            key={index}
-            style={{
-              flex: "0 0 auto",
-              scrollSnapAlign: "start",
-            }}
-            className="w-full sm:w-full md:w-full lg:w-1/3"> {/* 100% on mobile and 1/3 on larger screens */}
-            <TemplateCard name={template.name} imgSrc={template.imgSrc} />
+        <div
+          style={{
+            flex: "0 0 auto",
+            scrollSnapAlign: "start",
+          }}
+          className="w-full sm:w-full md:w-full lg:w-1/3"
+        >
+          <div className="flex flex-col items-center rounded-lg">
+            <img
+              src="/images/classic.png"
+              alt="Template 1"
+              className="w-full sm:w-80  h-90% object-cover rounded"
+            />
+            <h3 className="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">Template 1</h3>
           </div>
-        ))}
+        </div>
+
+        <div
+          style={{
+            flex: "0 0 auto",
+            scrollSnapAlign: "start",
+          }}
+          className="w-full sm:w-full md:w-full lg:w-1/3"
+        >
+          <div className="flex flex-col items-center rounded-lg">
+            <img
+              src="/images/unique.png"
+              alt="Template 2"
+              className="w-full sm:w-80  h-90% object-cover rounded"
+            />
+            <h3 className="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">Template 2</h3>
+          </div>
+        </div>
+
+        <div
+          style={{
+            flex: "0 0 auto",
+            scrollSnapAlign: "start",
+          }}
+          className="w-full sm:w-full md:w-full lg:w-1/3"
+        >
+          <div className="flex flex-col items-center rounded-lg">
+            <img
+              src="/images/luxary.png"
+              alt="Template 3"
+              className="w-full sm:w-80  h-90% object-cover rounded"
+            />
+            <h3 className="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">Template 3</h3>
+          </div>
+        </div>
+
+        <div
+          style={{
+            flex: "0 0 auto",
+            scrollSnapAlign: "start",
+          }}
+          className="w-full sm:w-full md:w-full lg:w-1/3"
+        >
+          <div className="flex flex-col items-center rounded-lg">
+            <img
+              src="/images/bonzor.png"
+              alt="Template 4"
+              className="w-full sm:w-80  h-90% object-cover rounded"
+            />
+            <h3 className="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">Template 4</h3>
+          </div>
+        </div>
+
       </div>
 
       {/* Progress Indicator */}
@@ -74,9 +126,8 @@ export default function Template() {
         {templates.map((_, index) => (
           <div
             key={index}
-            className={`w-3 h-3 rounded-full transition-opacity duration-300 ${
-              index === activeIndex ? "bg-[#0FAE96]" : "bg-gray-600"
-            }`}
+            className={`w-3 h-3 rounded-full transition-opacity duration-300 ${index === activeIndex ? "bg-[#0FAE96]" : "bg-gray-600"
+              }`}
           />
         ))}
       </div>

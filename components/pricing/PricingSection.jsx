@@ -9,9 +9,9 @@ const PricingSection = () => {
       price: "Free",
       description: "Essential Tools to Kickstart Your Job Search",
       features: [
-        "Limited offer: Free access",
-        "Auto-Apply 10 jobs Daily",
-        "AI-powered Auto-Fills",
+        "Auto-Apply up to 10 jobs/day",
+        "AI Autofill on job forms",
+        "One click ATS Resume Builder",
         "Delete your data anytime",
       ],
       buttonText: "Get Started",
@@ -20,13 +20,14 @@ const PricingSection = () => {
     },
     {
       name: "Premium",
-      price: "$10",
+      price: "$20",
       description: "Advanced Features for the Serious Job Seeker",
       features: [
         "All in Beginner plan",
-        "Call & Mail Support",
-        "Auto-Apply 100 jobs Daily",
-        "Personalized Interview Tips",
+        "100 Auto Email to Recruiters",
+        "Auto-Apply 300 jobs Daily",
+        "Skill Suggestions Based on Job Market Trends",
+        "Advanced AI-Crafted Resume",
       ],
       buttonText: "Subscribe",
       buttonStyle:
@@ -35,13 +36,13 @@ const PricingSection = () => {
     },
     {
       name: "Silver",
-      price: "$30",
-      description: "Ultimate Tools for Landing Your Dream Job Faster",
+      price: "$99",
+      description: "Untill you are hired",
       features: [
         "All in Premium Plan",
-        "Advanced AI model",
-        "LinkedIn Profile Optimization",
-        "Skill Gap Analysis",
+        "Priority Email + Call Supportl",
+        "1000 Auto Email to Recruiters",
+        "Real-Time Skill Gap Analysis with Free Learning Links",
       ],
       buttonText: "Subscribe",
       buttonStyle:

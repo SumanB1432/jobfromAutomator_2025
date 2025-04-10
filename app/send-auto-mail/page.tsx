@@ -3,31 +3,34 @@ import { useState, useEffect, useRef } from "react";
 import { FaBriefcase } from 'react-icons/fa';
 import CompanyCard from '@/components/companies/CompanyCard';
 import { toast } from "react-toastify";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {onAuthStateChanged } from "firebase/auth";
 import app, { auth } from "@/firebase/config";
-
-import { getDatabase, ref, set, get } from "firebase/database";
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+import { getDatabase, ref, get } from "firebase/database";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const Page = () => {
   const [isSending, setIsSending] = useState(true);
   const [isSent, setIsSent] = useState(false);
   const [emailArray, setEmailArray] = useState<string[]>([]);
-  const [companies, setCompanies] = useState<any[]>([]);
+  const [companies, setCompanies] = useState<unknown[]>([]);
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [uid, setUid] = useState("");
   const [urd, setUrd] = useState("");
-  const [jsonData, setJsonData] = useState<any[]>([]);
+  const [jsonData, setJsonData] = useState<unknown[]>([]);
   const [jobTitle, setJobTitle] = useState<string[]>([]);
   const [exp, setExp] = useState<number>(0);
   const [location, setLocation] = useState<string[]>([]);
   const hasRun = useRef(false);
+  const [dotCount, setDotCount] = useState(0);
 
   const db = getDatabase(app);
+  if (typeof window !== "undefined"){
   const gemini_key = localStorage.getItem("api_key");
+  }
 
   useEffect(() => {
+    if (typeof window !== "undefined"){
     const email = localStorage.getItem("userEmail");
     const name = localStorage.getItem("userName");
     const verified = localStorage.getItem("emailVerified");
@@ -36,6 +39,8 @@ const Page = () => {
     }
     setUserEmail(email);
     setUserName(name);
+    }
+ 
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -53,22 +58,27 @@ const Page = () => {
     if (!uid) return;
 
     const getUserData = async () => {
-      let URD = localStorage.getItem("URD");
+      if (typeof window !== "undefined"){
+      const URD = localStorage.getItem("URD");
       if (URD) {
         setUrd(URD);
       }
+      }
+   
       else {
         try {
           const userRef = ref(db, `user/${uid}/forms/keyvalues/URD`);
           const snapshot = await get(userRef);
           if (snapshot.exists()) {
             setUrd(snapshot.val());
+            if (typeof window !== "undefined"){
             localStorage.setItem("URD", snapshot.val())
+            }
           } else {
             toast.error("No URD data found");
           }
         } catch (err) {
-          toast.error("Error fetching user data");
+          toast.error("Error fetching user data",err);
         }
       };
     }
@@ -77,9 +87,9 @@ const Page = () => {
   }, [uid]);
 
   useEffect(() => {
-    let checkVerifyEmail = async function (userEmail, userName) {
+    const checkVerifyEmail = async function (userEmail, userName) {
       if (userEmail && userName) {
-        let response = await fetch("https://jobemailsending-hrjd6kih3q-uc.a.run.app/send-job-application", {
+        const response = await fetch("https://jobemailsending-hrjd6kih3q-uc.a.run.app/send-job-application", {
           method: "POST",
           body: JSON.stringify({
             sender_email: userEmail,
@@ -92,11 +102,13 @@ const Page = () => {
             "Content-Type": "application/json",
           },
         });
-        const data = await response.json();
+       
         if (response.status === 401) {
           // Redirect to EmailAuth component (or your authentication route)
           toast.info("For security reasons, please verify your email again.");
+          if (typeof window !== "undefined"){
           localStorage.setItem("emailPermissionGranted", "false");
+          }
           setTimeout(() => {
             window.location.href = "/email_auth"; // Adjust route as needed
           }, 2000); // Give the user a moment to see the toast
@@ -173,6 +185,17 @@ const Page = () => {
     processData();
   }, [jsonData]);
 
+  
+    useEffect(() => {
+      if (!isSending) return;
+  
+      const interval = setInterval(() => {
+        setDotCount((prev) => (prev + 1) % 4); // 0 → 1 → 2 → 3 → 0
+      }, 500); // update every 0.5s
+  
+      return () => clearInterval(interval); // cleanup
+    }, [isSending]);
+
   useEffect(() => {
     if (!userEmail) return;
 
@@ -219,7 +242,7 @@ const Page = () => {
         setCompanies(jobData);
 
         if (jobData) {
-          const emails = jobData.map((company: any) => company.recruiter_email);
+          const emails = jobData.map((company: unknown) => company.recruiter_email);
           setEmailArray(emails);
           console.log("Recruiter Emails:", emails);
         }
@@ -231,6 +254,9 @@ const Page = () => {
     fetchCompany();
   }, [jobTitle]);
 
+
+  
+
   useEffect(() => {
     if (emailArray.length === 0 || hasRun.current) return; // Prevent double execution
 
@@ -239,7 +265,7 @@ const Page = () => {
     const sendEmails = async () => {
       try {
         for (const email of emailArray) {
-          let response = await fetch("https://jobemailsending-hrjd6kih3q-uc.a.run.app/send-job-application", {
+          const response = await fetch("https://jobemailsending-hrjd6kih3q-uc.a.run.app/send-job-application", {
             method: "POST",
             body: JSON.stringify({
               sender_email: userEmail,
@@ -257,7 +283,7 @@ const Page = () => {
 
           // Wait for 5 seconds before sending the next email
           if (response.ok) {
-            const data = await response.json();
+           
 
           } else {
             const data = await response.json();
@@ -266,7 +292,9 @@ const Page = () => {
             if (response.status === 401) {
               // Redirect to EmailAuth component (or your authentication route)
               toast.info("For security reasons, please verify your email again.");
+              if (typeof window !== "undefined"){
               localStorage.setItem("emailPermissionGranted", "false");
+              }
               setTimeout(() => {
                 window.location.href = "/email_auth"; // Adjust route as needed
               }, 2000); // Give the user a moment to see the toast
@@ -288,24 +316,26 @@ const Page = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#11011E] via-[#35013e] to-[#11011E] py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl font-bold flex items-center gap-3">
-          <FaBriefcase className="text-blue-500" />
-          {isSending ? "Searching Jobs..." : "Applications Status"}
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {companies.map((company, index) => (
-            <CompanyCard
-              key={index}
-              {...company}
-              isSending={isSending}
-              isSent={isSent}
-            />
-          ))}
-        </div>
-      </div>
+<div className="min-h-screen bg-gradient-to-b from-[#11011E] via-[#35013e] to-[#11011E] py-12 text-white">
+  <div className="max-w-7xl mx-auto px-4 space-y-6">
+    <h1 className="text-3xl font-bold flex items-center gap-3">
+      <FaBriefcase className="text-white" />
+      {isSending ? `Searching Jobs${".".repeat(dotCount)}` : "Applications Status"}
+    </h1>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {companies.map((company, index) => (
+        <CompanyCard
+          key={index}
+          {...company}
+          isSending={isSending}
+          isSent={isSent}
+        />
+      ))}
     </div>
+  </div>
+</div>
+
   );
 };
 

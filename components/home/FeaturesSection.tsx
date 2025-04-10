@@ -7,27 +7,27 @@ const FeaturesSection = () => {
   const features = [
     {
       icon: "/images/Bag.png",
-      title: "One-Click Autofill",
+      title: "Apply Without the Burnout",
       description:
         "No more repetitive typing. Upload your resume once, and we handle the rest.",
     },
     {
       icon: "/images/globle.png",
-      title: "Multiple Platforms",
+      title: "Stand Out. Get Picked",
       description:
-        "Our extension supports all major platforms, including LinkedIn, Indeed, and more.",
+        "Build an ATS-optimized resume that passes filters. Send personalized AI emails to recruiters.",
+    },
+    {
+      icon: "/images/bolt.png",
+      title: "Know What You’re Missing",
+      description:
+        "Our Skill Engine scans real job listings and tells you exactly which skills you need—and where to learn them for free.",
     },
     {
       icon: "/images/shield.png",
       title: "Secure & Private",
       description:
         "Your personal information is encrypted and never shared—ensuring complete privacy.",
-    },
-    {
-      icon: "/images/bolt.png",
-      title: "10x Job Offers",
-      description:
-        "Increase your chances of getting noticed by filling out forms faster than others.",
     },
   ];
 
@@ -76,12 +76,12 @@ const FeaturesSection = () => {
 
         {/* Section Header - responsive text sizes */}
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-[#ECF1F0] text-center mt-6 max-w-3xl mx-auto leading-tight">
-          Why Settle For Slow? Supercharge Your Job Hunt
+        The Future Doesn’t Wait. Neither Do You
         </h2>
 
         {/* Section Subheading - improved readability */}
         <p className="mt-4 text-base md:text-lg text-[#B6B6B6] text-center max-w-2xl mx-auto">
-          Transform tedious job applications into a breeze with our instant autofill technology.
+        The job you want isn’t waiting. Neither should you.
         </p>
 
         {/* Features Grid - better responsive layout */}

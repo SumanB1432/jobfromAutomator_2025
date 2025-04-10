@@ -8,8 +8,8 @@ const Footer = () => {
   const footerRef = useRef(null);
   const [isInView, setIsInView] = useState(false);
   const socialLinks = [
-    { name: "instagram", color: "hover:text-pink-500",link:"" },
-    { name: "facebook", color: "hover:text-blue-600",link:"" },
+    { name: "instagram", color: "hover:text-pink-500",link:"https://www.instagram.com/jobform.automator_offical" },
+    { name: "facebook", color: "hover:text-blue-600",link:"https://www.facebook.com/people/Job-Tips/61556365446390/" },
     { name: "linkedin", color: "hover:text-blue-400",link:"https://www.linkedin.com/company/aikingsolutions/posts/?feedView=all" },
     { name: "youtube", color: "hover:text-red-500",link:"https://www.youtube.com/@JobFormAutomator" },
   ];

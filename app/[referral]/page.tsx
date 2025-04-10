@@ -3,7 +3,11 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { use } from "react"; // Unwraps promises in Next.js 14+
 
-export default function ReferralPage({ params }) {
+type ReferralParams = {
+    referral?: string;
+};
+
+export default function ReferralPage({ params }: { params: Promise<ReferralParams> }) {
     const router = useRouter();
     const resolvedParams = use(params); // Unwrap the Promise
 
