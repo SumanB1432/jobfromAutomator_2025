@@ -38,8 +38,9 @@ const ValuesSection = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting) {
+        entries.forEach((entry) => {
+          const index = valueRefs.current.findIndex((card) => card === entry.target);
+          if (index !== -1 && entry.isIntersecting) {
             setIsInView((prev) => {
               const newInView = [...prev];
               newInView[index] = true;
